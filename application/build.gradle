@@ -1,10 +1,10 @@
 plugins {
     id 'java'
+    id 'jacoco-report-aggregation'
 }
 
 group 'com.kaua.ecommerce.users.application'
 version '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
 
 repositories {
     mavenCentral()
@@ -13,6 +13,12 @@ repositories {
 dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+jacocoTestReport {
+    reports {
+        csv.required = true
+    }
 }
 
 test {
