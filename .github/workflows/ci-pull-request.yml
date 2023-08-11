@@ -1,0 +1,51 @@
+name: Pull Request Analysis
+
+on:
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  code-analysis:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Run tests and calculate coverage for domain
+        run: ./gradlew :domain:test jacocoTestReport
+
+      - name: Run tests and calculate coverage for application
+        run: ./gradlew :application:test jacocoTestReport
+
+      - name: Run tests and calculate coverage for infrasctructure
+        run: ./gradlew :infrastructure:test jacocoTestReport
+
+      - name: Check test coverage
+        run: |
+          modules=("application" "domain" "infrastructure")
+          required_coverage=85  # Cobertura mínima requerida em porcentagem
+
+          for module in "${modules[@]}"; do
+            coverage=$(awk -F"," '/total/ {print $3}' < "$module/build/reports/jacoco/test/jacocoTestReport.csv")
+
+            if (( $(echo "$coverage >= $required_coverage" | bc -l) )); then
+              echo "$module coverage is above or equal to $required_coverage%: $coverage%"
+            else
+              echo "$module coverage is below $required_coverage%: $coverage%"
+              exit 1  # Isso interromperá o fluxo de CI com um erro
+            fi
+          done
+
+      - name: Upload test coverage artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-coverage-report
+          path: build/reports/jacoco/test/html/index.html
