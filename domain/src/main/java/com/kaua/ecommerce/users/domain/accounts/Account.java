@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.AggregateRoot;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
+import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 
@@ -89,5 +90,10 @@ public class Account extends AggregateRoot<AccountID> {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    @Override
+    public void validate(final ValidationHandler handler) {
+        new AccountValidator(this, handler).validate();
     }
 }
