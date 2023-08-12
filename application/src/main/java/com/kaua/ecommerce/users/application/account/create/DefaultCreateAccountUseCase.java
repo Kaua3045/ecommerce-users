@@ -5,7 +5,6 @@ import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
-import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 
 import java.util.Objects;
 
@@ -19,7 +18,6 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
 
     @Override
     public Either<NotificationHandler, CreateAccountOutput> execute(final CreateAccountCommand aCommand) {
-        // TODO: testar já iniciar um um erro no notification, talvez até faz uma verificação antes, caso tenha erro já retorna
         final var notification = NotificationHandler.create();
 
         if (this.accountGateway.existsByEmail(aCommand.email())) {
