@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.AggregateRoot;
+import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 
 import java.time.Instant;
 
@@ -44,7 +45,7 @@ public class Account extends AggregateRoot<AccountID> {
             final String aPassword
     ) {
         final var id = AccountID.unique();
-        final var now = Instant.now();
+        final var now = InstantUtils.now();
         return new Account(
                 id,
                 aFirstName,
