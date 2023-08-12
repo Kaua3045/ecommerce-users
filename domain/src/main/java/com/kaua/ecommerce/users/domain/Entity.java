@@ -1,5 +1,7 @@
 package com.kaua.ecommerce.users.domain;
 
+import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
+
 import java.util.Objects;
 
 // Entity definida por um ID
@@ -14,6 +16,8 @@ public abstract class Entity<ID extends Identifier> {
         Objects.requireNonNull(id, "'id' should not be null");
         this.id = id;
     }
+
+    public abstract void validate(ValidationHandler handler);
 
     public ID getId() {
         return id;
