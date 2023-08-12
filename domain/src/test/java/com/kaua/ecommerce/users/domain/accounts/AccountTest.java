@@ -178,4 +178,139 @@ public class AccountTest {
         // then
         Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
     }
+
+    @Test
+    public void givenAValidValues_whenCallsUpdateAccount_thenAnAccountShouldBeUpdated() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+        final var aMailStatus = AccountMailStatus.CONFIRMED;
+        final var aAvatarUrl = "http://teste.com/avatar.png";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                "87654321Ab*"
+        );
+
+        final var aAccountUpdatedAt = aAccount.getUpdatedAt();
+
+        final var aAccountUpdated = aAccount.update(
+                aMailStatus,
+                aPassword,
+                aAvatarUrl
+        );
+
+        //then
+        Assertions.assertDoesNotThrow(() -> aAccountUpdated.validate(new ThrowsValidationHandler()));
+        Assertions.assertEquals(aAccount.getId(), aAccountUpdated.getId());
+        Assertions.assertEquals(aAccount.getFirstName(), aAccountUpdated.getFirstName());
+        Assertions.assertEquals(aAccount.getLastName(), aAccountUpdated.getLastName());
+        Assertions.assertEquals(aAccount.getEmail(), aAccountUpdated.getEmail());
+        Assertions.assertEquals(aMailStatus, aAccountUpdated.getMailStatus());
+        Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
+        Assertions.assertEquals(aAvatarUrl, aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
+        Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
+    }
+
+    @Test
+    public void givenAnInvalidPassword_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final String aPassword = null;
+        final var aMailStatus = AccountMailStatus.CONFIRMED;
+        final var aAvatarUrl = "http://teste.com/avatar.png";
+        final var expectedErrorMessage = "'password' should not be null or blank";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                "87654321Ab*"
+        );
+
+        final var aAccountUpdated = aAccount.update(
+                aMailStatus,
+                aPassword,
+                aAvatarUrl
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
+                .validate(new ThrowsValidationHandler()));
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordLength_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345";
+        final var aMailStatus = AccountMailStatus.CONFIRMED;
+        final var aAvatarUrl = "http://teste.com/avatar.png";
+        final var expectedErrorMessage = "'password' should be at least 8 characters";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                "87654321Ab*"
+        );
+
+        final var aAccountUpdated = aAccount.update(
+                aMailStatus,
+                aPassword,
+                aAvatarUrl
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
+                .validate(new ThrowsValidationHandler()));
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678";
+        final var aMailStatus = AccountMailStatus.CONFIRMED;
+        final var aAvatarUrl = "http://teste.com/avatar.png";
+        final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                "87654321Ab*"
+        );
+
+        final var aAccountUpdated = aAccount.update(
+                aMailStatus,
+                aPassword,
+                aAvatarUrl
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
+                .validate(new ThrowsValidationHandler()));
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
 }
