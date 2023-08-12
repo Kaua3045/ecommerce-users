@@ -35,5 +35,9 @@ public class AccountValidator extends Validator {
         if (account.getPassword() != null && account.getPassword().length() < PASSWORD_MINIMUM_LENGTH) {
             this.validationHandler().append(new Error("'password' should be at least " + PASSWORD_MINIMUM_LENGTH + " characters"));
         }
+
+        if (account.getPassword() != null && !account.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z]).*$")) {
+            this.validationHandler().append(new Error("'password' should contain at least one uppercase letter, one lowercase letter and one number"));
+        }
     }
 }
