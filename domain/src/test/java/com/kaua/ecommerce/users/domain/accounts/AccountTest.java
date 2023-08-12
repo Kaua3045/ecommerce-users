@@ -60,6 +60,64 @@ public class AccountTest {
     }
 
     @Test
+    public void givenAnInvalidFirstNameLengthLessThan3_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Ka ";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "123456Ab";
+        final var expectedErrorMessage = "'firstName' must be between 3 and 255 characters";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
+                .validate(new ThrowsValidationHandler()));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidFirstNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = """
+                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
+                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo 
+                qual a constante divulgação das informações talvez venha a ressaltar a relatividade 
+                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa 
+                atividade assume importantes posições no estabelecimento das condições inegavelmente 
+                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia 
+                a preparação e a composição das novas proposições. As experiências acumuladas 
+                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo 
+                de reformulação e modernização do processo de comunicação como um todo.
+                """;
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+        final var expectedErrorMessage = "'firstName' must be between 3 and 255 characters";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
+                .validate(new ThrowsValidationHandler()));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
     public void givenAnInvalidLastName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
@@ -67,6 +125,64 @@ public class AccountTest {
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
         final var expectedErrorMessage = "'lastName' should not be null or blank";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
+                .validate(new ThrowsValidationHandler()));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidLastNameLengthLessThan3_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pe ";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "123456Ab";
+        final var expectedErrorMessage = "'lastName' must be between 3 and 255 characters";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
+                .validate(new ThrowsValidationHandler()));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidLastNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = """
+                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
+                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo 
+                qual a constante divulgação das informações talvez venha a ressaltar a relatividade 
+                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa 
+                atividade assume importantes posições no estabelecimento das condições inegavelmente 
+                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia 
+                a preparação e a composição das novas proposições. As experiências acumuladas 
+                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo 
+                de reformulação e modernização do processo de comunicação como um todo.
+                """;
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+        final var expectedErrorMessage = "'lastName' must be between 3 and 255 characters";
 
         // when
         final var aAccount = Account.newAccount(
@@ -132,13 +248,47 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLength_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    public void givenAnInvalidPasswordLengthLessThan8_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "1234";
-        final var expectedErrorMessage = "'password' should be at least 8 characters";
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
+                .validate(new ThrowsValidationHandler()));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = """
+                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
+                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo
+                qual a constante divulgação das informações talvez venha a ressaltar a relatividade
+                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa
+                atividade assume importantes posições no estabelecimento das condições inegavelmente
+                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia
+                a preparação e a composição das novas proposições. As experiências acumuladas
+                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo
+                de reformulação e modernização do processo de comunicação como um todo.
+                """;
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
         final var aAccount = Account.newAccount(
@@ -251,7 +401,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLength_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    public void givenAnInvalidPasswordLengthLessThan8_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -259,7 +409,49 @@ public class AccountTest {
         final var aPassword = "12345";
         final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
-        final var expectedErrorMessage = "'password' should be at least 8 characters";
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                "87654321Ab*"
+        );
+
+        final var aAccountUpdated = aAccount.update(
+                aMailStatus,
+                aPassword,
+                aAvatarUrl
+        );
+
+        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
+                .validate(new ThrowsValidationHandler()));
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordLengthMoreThan255_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = """
+                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
+                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo
+                qual a constante divulgação das informações talvez venha a ressaltar a relatividade
+                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa
+                atividade assume importantes posições no estabelecimento das condições inegavelmente
+                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia
+                a preparação e a composição das novas proposições. As experiências acumuladas
+                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo
+                de reformulação e modernização do processo de comunicação como um todo.
+                """;
+        final var aMailStatus = AccountMailStatus.CONFIRMED;
+        final var aAvatarUrl = "http://teste.com/avatar.png";
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
         final var aAccount = Account.newAccount(
