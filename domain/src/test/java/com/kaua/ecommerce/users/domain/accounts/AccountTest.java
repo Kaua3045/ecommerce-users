@@ -357,7 +357,7 @@ public class AccountTest {
 
         //then
         Assertions.assertDoesNotThrow(() -> aAccountUpdated.validate(new ThrowsValidationHandler()));
-        Assertions.assertEquals(aAccount.getId(), aAccountUpdated.getId());
+        Assertions.assertEquals(aAccount.getId().getValue(), aAccountUpdated.getId().getValue());
         Assertions.assertEquals(aAccount.getFirstName(), aAccountUpdated.getFirstName());
         Assertions.assertEquals(aAccount.getLastName(), aAccountUpdated.getLastName());
         Assertions.assertEquals(aAccount.getEmail(), aAccountUpdated.getEmail());
