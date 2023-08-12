@@ -19,45 +19,58 @@ public class AccountValidator extends Validator {
 
     @Override
     public void validate() {
-        if (account.getFirstName() == null || account.getFirstName().isBlank()) {
+        checkFirstNameConstraints();
+        checkLastNameConstraints();
+        checkEmailConstraints();
+        checkPasswordConstraints();
+    }
+
+    private void checkFirstNameConstraints() {
+        if (this.account.getFirstName() == null || this.account.getFirstName().isBlank()) {
             this.validationHandler().append(new Error("'firstName' should not be null or blank"));
             return;
         }
 
-        if (account.getFirstName().trim().length() < NAME_MINIMUM_LENGTH ||
-                account.getFirstName().trim().length() > NAME_MAXIMUM_LENGTH) {
+        if (this.account.getFirstName().trim().length() < NAME_MINIMUM_LENGTH ||
+                this.account.getFirstName().trim().length() > NAME_MAXIMUM_LENGTH) {
             this.validationHandler().append(new Error("'firstName' must be between " + NAME_MINIMUM_LENGTH + " and " + NAME_MAXIMUM_LENGTH + " characters"));
             return;
         }
+    }
 
-        if (account.getLastName() == null || account.getLastName().isBlank()) {
+    private void checkLastNameConstraints() {
+        if (this.account.getLastName() == null || this.account.getLastName().isBlank()) {
             this.validationHandler().append(new Error("'lastName' should not be null or blank"));
             return;
         }
 
-        if (account.getLastName().trim().length() < NAME_MINIMUM_LENGTH ||
-                account.getLastName().trim().length() > NAME_MAXIMUM_LENGTH) {
+        if (this.account.getLastName().trim().length() < NAME_MINIMUM_LENGTH ||
+                this.account.getLastName().trim().length() > NAME_MAXIMUM_LENGTH) {
             this.validationHandler().append(new Error("'lastName' must be between " + NAME_MINIMUM_LENGTH + " and " + NAME_MAXIMUM_LENGTH + " characters"));
             return;
         }
+    }
 
-        if (account.getEmail() == null || account.getEmail().isBlank()) {
+    private void checkEmailConstraints() {
+        if (this.account.getEmail() == null || this.account.getEmail().isBlank()) {
             this.validationHandler().append(new Error("'email' should not be null or blank"));
             return;
         }
+    }
 
-        if (account.getPassword() == null || account.getPassword().isBlank()) {
+    private void checkPasswordConstraints() {
+        if (this.account.getPassword() == null || this.account.getPassword().isBlank()) {
             this.validationHandler().append(new Error("'password' should not be null or blank"));
             return;
         }
 
-        if (account.getPassword().trim().length() < PASSWORD_MINIMUM_LENGTH ||
-                account.getPassword().trim().length() > PASSWORD_MAXIMUM_LENGTH) {
+        if (this.account.getPassword().trim().length() < PASSWORD_MINIMUM_LENGTH ||
+                this.account.getPassword().trim().length() > PASSWORD_MAXIMUM_LENGTH) {
             this.validationHandler().append(new Error("'password' must be between " + PASSWORD_MINIMUM_LENGTH + " and " + PASSWORD_MAXIMUM_LENGTH + " characters"));
             return;
         }
 
-        if (!account.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z]).*$")) {
+        if (!this.account.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z]).*$")) {
             this.validationHandler().append(new Error("'password' should contain at least one uppercase letter, one lowercase letter and one number"));
             return;
         }
