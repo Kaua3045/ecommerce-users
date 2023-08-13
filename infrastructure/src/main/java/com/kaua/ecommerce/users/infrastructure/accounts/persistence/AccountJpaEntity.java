@@ -61,7 +61,7 @@ public class AccountJpaEntity {
         this.updatedAt = updatedAt;
     }
 
-    public static AccountJpaEntity fromDomain(final Account aAccount) {
+    public static AccountJpaEntity toEntity(final Account aAccount) {
         return new AccountJpaEntity(
                 aAccount.getId().getValue(),
                 aAccount.getFirstName(),
