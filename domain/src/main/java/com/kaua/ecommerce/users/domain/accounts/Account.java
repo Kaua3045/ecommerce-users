@@ -72,6 +72,30 @@ public class Account extends AggregateRoot<AccountID> {
         return this;
     }
 
+    public static Account with(
+            final String aId,
+            final String aFirstName,
+            final String aLastName,
+            final String aEmail,
+            final AccountMailStatus aMailStatus,
+            final String aPassword,
+            final String aAvatarUrl,
+            final Instant aCreatedAt,
+            final Instant aUpdatedAt
+    ) {
+        return new Account(
+                AccountID.from(aId),
+                aFirstName,
+                aLastName,
+                aEmail,
+                aMailStatus,
+                aPassword,
+                aAvatarUrl,
+                aCreatedAt,
+                aUpdatedAt
+        );
+    }
+
     public String getFirstName() {
         return firstName;
     }
