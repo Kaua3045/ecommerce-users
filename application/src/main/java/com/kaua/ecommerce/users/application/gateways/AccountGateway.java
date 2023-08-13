@@ -1,10 +1,11 @@
 package com.kaua.ecommerce.users.application.gateways;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import reactor.core.publisher.Mono;
 
 public interface AccountGateway {
 
-    Account create(Account aAccount);
+    Mono<Account> create(Account aAccount);
 
-    boolean existsByEmail(String aEmail);
+    Mono<Boolean> existsByEmail(String aEmail);
 }

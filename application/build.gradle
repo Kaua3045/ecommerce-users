@@ -17,9 +17,13 @@ repositories {
 dependencies {
     implementation(project(":domain"))
 
+    implementation platform('io.projectreactor:reactor-bom:2022.0.9')
+    implementation 'io.projectreactor:reactor-core:3.5.8'
+
     testImplementation 'org.mockito:mockito-junit-jupiter:4.8.1'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'io.projectreactor:reactor-test:3.5.8'
 }
 
 jacocoTestReport {
