@@ -505,4 +505,44 @@ public class AccountTest {
         //then
         Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
     }
+
+    @Test
+    public void givenValidValues_whenCalledWithInAccount_shouldReturnAnAccountObjectWithDataEqualToWhatWasPassed() {
+        // given
+        final var aFirstName = "Fulano";
+        final var aLastName = "Teste";
+        final var aEmail = "test@teste.com";
+        final var aPassword = "1234567Ab";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aAccountCloned = Account.with(
+                aAccount.getId().getValue(),
+                aAccount.getFirstName(),
+                aAccount.getLastName(),
+                aAccount.getEmail(),
+                aAccount.getMailStatus(),
+                aAccount.getPassword(),
+                aAccount.getAvatarUrl(),
+                aAccount.getCreatedAt(),
+                aAccount.getUpdatedAt()
+        );
+
+        // then
+        Assertions.assertEquals(aAccount.getId().getValue(), aAccountCloned.getId().getValue());
+        Assertions.assertEquals(aAccount.getFirstName(), aAccountCloned.getFirstName());
+        Assertions.assertEquals(aAccount.getLastName(), aAccountCloned.getLastName());
+        Assertions.assertEquals(aAccount.getEmail(), aAccountCloned.getEmail());
+        Assertions.assertEquals(aAccount.getMailStatus(), aAccountCloned.getMailStatus());
+        Assertions.assertEquals(aAccount.getPassword(), aAccountCloned.getPassword());
+        Assertions.assertEquals(aAccount.getAvatarUrl(), aAccountCloned.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getCreatedAt(), aAccountCloned.getCreatedAt());
+        Assertions.assertEquals(aAccount.getUpdatedAt(), aAccountCloned.getUpdatedAt());
+    }
 }
