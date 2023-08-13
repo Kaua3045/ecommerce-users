@@ -8,3 +8,5 @@ spring:
     console:
       enabled: true
       path: /h2
+  flyway:
+    locations: classpath:db/tests/migration
