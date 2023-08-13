@@ -28,6 +28,7 @@ public class AccountJpaEntity {
     @Column(name = "avatar_url")
     private String avatarUrl;
 
+    @Column(name = "mail_status", nullable = false)
     @Enumerated(EnumType.STRING)
     private AccountMailStatus mailStatus;
 
