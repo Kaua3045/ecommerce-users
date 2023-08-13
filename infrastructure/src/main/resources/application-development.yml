@@ -3,3 +3,25 @@ server:
     threads:
       worker: 10
       io: 2
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/poc-oauth2?useSSL=true&serverTimezone=UTC
+    username: root
+    password: 123456
+    hikari:
+      auto-commit: false
+      connection-timeout: 250
+      max-lifetime: 600000
+      maximum-pool-size: 20
+      minimum-idle: 10
+      pool-name: master
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      "[hibernate.dialect]": org.hibernate.dialect.MySQLDialect
+      "[hibernate.generate_statistics]": false
+      "[hibernate.connection.provider_disables_autocommit]": true
