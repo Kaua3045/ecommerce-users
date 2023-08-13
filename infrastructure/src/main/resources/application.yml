@@ -10,6 +10,8 @@ server:
       io: 4
 
 spring:
+  flyway:
+    enabled: false
   datasource:
     hikari:
       auto-commit: false
