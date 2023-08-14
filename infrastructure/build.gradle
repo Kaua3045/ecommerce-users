@@ -1,6 +1,9 @@
 plugins {
     id 'java'
     id 'jacoco-report-aggregation'
+    id 'org.springframework.boot' version '3.1.2'
+    id 'io.spring.dependency-management' version '1.1.2'
+    id 'org.flywaydb.flyway' version '9.8.1'
 }
 
 group 'com.kaua.ecommerce.users.infrastructure'
@@ -15,13 +18,40 @@ repositories {
 }
 
 dependencies {
+    implementation(project(":domain"))
+    implementation(project(":application"))
+
+    implementation 'mysql:mysql-connector-java:8.0.26'
+
+    implementation('org.springframework.boot:spring-boot-starter-web:3.1.2') {
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation 'org.springframework.boot:spring-boot-starter-undertow:3.1.2'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.1'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.0.1'
+
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.flywaydb:flyway-mysql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testRuntimeOnly 'com.h2database:h2'
 }
 
 jacocoTestReport {
     reports {
         csv.required = true
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.7
+            }
+        }
     }
 }
 
