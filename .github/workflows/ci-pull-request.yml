@@ -32,14 +32,31 @@ jobs:
         run: |
           modules=("application" "domain" "infrastructure")
           required_coverage=70  # Cobertura mínima requerida em porcentagem
-
+          
           for module in "${modules[@]}"; do
-            coverage=$(awk -F"," '/total/ {print $3}' < "$module/build/reports/jacoco/test/jacocoTestReport.csv")
-
-            if (( $(echo "$coverage >= $required_coverage" | bc -l) )); then
-              echo "$module coverage is above or equal to $required_coverage%: $coverage%"
+            total_missed_instructions=0
+            total_covered_instructions=0
+            num_classes=0
+          
+            while IFS=, read -r _ _ _ missed_instructions covered_instructions _ _ _ _ _ _ _ _; do
+              if [[ "$missed_instructions" != "INSTRUCTION_MISSED" ]]; then
+                total_missed_instructions=$((total_missed_instructions + missed_instructions))
+                total_covered_instructions=$((total_covered_instructions + covered_instructions))
+                num_classes=$((num_classes + 1))
+              fi
+            done < "$module/build/reports/jacoco/test/jacocoTestReport.csv"
+          
+            total_instructions=$((total_missed_instructions + total_covered_instructions))
+            if ((total_instructions > 0)); then
+              average_coverage=$((total_covered_instructions * 100 / total_instructions))
             else
-              echo "$module coverage is below $required_coverage%: $coverage%"
+              average_coverage=0
+            fi
+          
+            if ((average_coverage >= required_coverage)); then
+              echo "$module coverage is above or equal to $required_coverage%: $average_coverage%"
+            else
+              echo "$module coverage is below $required_coverage%: $average_coverage%"
               exit 1  # Isso interromperá o fluxo de CI com um erro
             fi
           done
