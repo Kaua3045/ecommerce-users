@@ -1,11 +1,14 @@
 package com.kaua.ecommerce.users.application.account.create;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @IntegrationTest
 public class CreateAccountUseCaseIT {
@@ -15,6 +18,9 @@ public class CreateAccountUseCaseIT {
 
     @Autowired
     private AccountJpaRepository accountRepository;
+
+    @SpyBean
+    private AccountGateway accountGateway;
 
     @Test
     public void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
@@ -48,5 +54,30 @@ public class CreateAccountUseCaseIT {
         Assertions.assertNull(actualAccount.getAvatarUrl());
         Assertions.assertNotNull(actualAccount.getCreatedAt());
         Assertions.assertNotNull(actualAccount.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'firstName' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+        Assertions.assertEquals(0, accountRepository.count());
+
+        Mockito.verify(accountGateway, Mockito.never()).create(Mockito.any());
     }
 }
