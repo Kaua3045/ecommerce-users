@@ -80,4 +80,79 @@ public class CreateAccountUseCaseIT {
 
         Mockito.verify(accountGateway, Mockito.never()).create(Mockito.any());
     }
+
+    @Test
+    public void givenAnInvalidLastName_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "Fulano";
+        final String aLastName = null;
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'lastName' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+        Assertions.assertEquals(0, accountRepository.count());
+
+        Mockito.verify(accountGateway, Mockito.never()).create(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidEmail_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silveira";
+        final var aEmail = "";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'email' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+        Assertions.assertEquals(0, accountRepository.count());
+
+        Mockito.verify(accountGateway, Mockito.never()).create(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidPassword_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final String aPassword = null;
+        final var expectedErrorMessage = "'password' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+        Assertions.assertEquals(0, accountRepository.count());
+
+        Mockito.verify(accountGateway, Mockito.never()).create(Mockito.any());
+    }
 }
