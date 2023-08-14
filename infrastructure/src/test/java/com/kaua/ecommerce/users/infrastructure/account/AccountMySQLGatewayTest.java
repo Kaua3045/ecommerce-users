@@ -38,6 +38,7 @@ public class AccountMySQLGatewayTest {
         Assertions.assertEquals(aLastName, actualAccount.getLastName());
         Assertions.assertEquals(aEmail, actualAccount.getEmail());
         Assertions.assertEquals(aPassword, actualAccount.getPassword());
+        Assertions.assertNull(actualAccount.getAvatarUrl());
         Assertions.assertEquals(aAccount.getMailStatus(), actualAccount.getMailStatus());
         Assertions.assertEquals(aAccount.getCreatedAt(), actualAccount.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), actualAccount.getUpdatedAt());
@@ -49,6 +50,7 @@ public class AccountMySQLGatewayTest {
         Assertions.assertEquals(aLastName, actualEntity.getLastName());
         Assertions.assertEquals(aEmail, actualEntity.getEmail());
         Assertions.assertEquals(aPassword, actualEntity.getPassword());
+        Assertions.assertNull(actualEntity.getAvatarUrl());
         Assertions.assertEquals(aAccount.getMailStatus(), actualEntity.getMailStatus());
         Assertions.assertEquals(aAccount.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), actualEntity.getUpdatedAt());
