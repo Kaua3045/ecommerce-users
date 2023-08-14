@@ -34,7 +34,7 @@ jobs:
           required_coverage=70  # Cobertura mínima requerida em porcentagem
 
           for module in "${modules[@]}"; do
-            coverage=$(awk -F"," '/total/ {print $3}' < "$module/build/reports/jacoco/test/jacocoTestReport.csv")
+            coverage=$(awk -F"," '/INSTRUCTION/ {print $3}' < "$module/build/reports/jacoco/test/jacocoTestReport.csv")
 
             if (( $(echo "$coverage >= $required_coverage" | bc -l) )); then
               echo "$module coverage is above or equal to $required_coverage%: $coverage%"
