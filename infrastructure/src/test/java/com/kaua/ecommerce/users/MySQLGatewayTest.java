@@ -16,7 +16,7 @@ import java.lang.annotation.*;
 @ComponentScan(
         basePackages = "com.kaua.ecommerce.users",
         includeFilters = {
-                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*MySQLGateway")}
+                @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".[MySQLGateway]")}
 )
 @ExtendWith(CleanUpExtension.class)
 public @interface MySQLGatewayTest {
