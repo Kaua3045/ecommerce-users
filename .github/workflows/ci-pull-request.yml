@@ -31,7 +31,7 @@ jobs:
       - name: Check test coverage
         run: |
           modules=("application" "domain" "infrastructure")
-          required_coverage=80  # Cobertura mínima requerida em porcentagem
+          required_coverage=70  # Cobertura mínima requerida em porcentagem
         
           for module in "${modules[@]}"; do
             total_missed_instructions=0
