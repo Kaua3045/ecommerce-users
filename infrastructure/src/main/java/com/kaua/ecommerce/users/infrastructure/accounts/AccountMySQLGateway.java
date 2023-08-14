@@ -26,6 +26,6 @@ public class AccountMySQLGateway implements AccountGateway {
 
     @Override
     public boolean existsByEmail(String aEmail) {
-        return false;
+        return this.accountJpaRepository.existsByEmail(aEmail);
     }
 }
