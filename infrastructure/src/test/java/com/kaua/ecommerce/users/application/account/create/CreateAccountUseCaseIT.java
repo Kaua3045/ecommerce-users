@@ -45,9 +45,9 @@ public class CreateAccountUseCaseIT {
 
         Assertions.assertEquals(1, accountRepository.count());
 
-        final var actualAccount = accountRepository.findById(aOutput.id().getValue()).get();
+        final var actualAccount = accountRepository.findById(aOutput.id()).get();
 
-        Assertions.assertEquals(aOutput.id().getValue(), actualAccount.getId());
+        Assertions.assertEquals(aOutput.id(), actualAccount.getId());
         Assertions.assertEquals(aFirstName, actualAccount.getFirstName());
         Assertions.assertEquals(aLastName, actualAccount.getLastName());
         Assertions.assertEquals(aEmail, actualAccount.getEmail());
