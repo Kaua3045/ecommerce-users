@@ -10,6 +10,7 @@ import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -61,7 +62,7 @@ public class AccountAPITest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpectAll(
                         MockMvcResultMatchers.status().isCreated(),
-                        MockMvcResultMatchers.jsonPath("$.id").value(aId)
+                        MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(aId))
                 );
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
