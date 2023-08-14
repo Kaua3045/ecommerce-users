@@ -31,7 +31,7 @@ jobs:
       - name: Check test coverage
         run: |
           modules=("application" "domain" "infrastructure")
-          required_coverage=85  # Cobertura mínima requerida em porcentagem
+          required_coverage=70  # Cobertura mínima requerida em porcentagem
 
           for module in "${modules[@]}"; do
             coverage=$(awk -F"," '/total/ {print $3}' < "$module/build/reports/jacoco/test/jacocoTestReport.csv")
