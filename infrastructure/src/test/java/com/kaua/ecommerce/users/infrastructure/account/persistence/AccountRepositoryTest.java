@@ -135,4 +135,28 @@ public class AccountRepositoryTest {
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
         Assertions.assertEquals(expectedErrorMessage, actualCause.getMessage());
     }
+
+    @Test
+    public void givenAnInvalidNullCreatedAt_whenCallSave_shouldReturnAnException() {
+        final var expectedPropertyName = "createdAt";
+        final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.createdAt";
+
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silva",
+                "teste@teste.com",
+                "1234567Ab");
+
+        final var aEntity = AccountJpaEntity.toEntity(aAccount);
+        aEntity.setCreatedAt(null);
+
+        final var actualException = Assertions.assertThrows(DataIntegrityViolationException.class,
+                () -> accountRepository.save(aEntity));
+
+        final var actualCause = Assertions.assertInstanceOf(PropertyValueException.class,
+                actualException.getCause());
+
+        Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
+        Assertions.assertEquals(expectedErrorMessage, actualCause.getMessage());
+    }
 }
