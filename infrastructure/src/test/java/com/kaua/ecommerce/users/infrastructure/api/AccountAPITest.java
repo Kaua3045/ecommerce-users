@@ -9,6 +9,9 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.domain.exceptions.DomainException;
+import com.kaua.ecommerce.users.domain.validation.Error;
+import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Assertions;
@@ -26,6 +29,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Objects;
 
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.*;
 
 @ControllerTest(controllers = AccountAPI.class)
@@ -62,13 +66,77 @@ public class AccountAPITest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(aId)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
                         Objects.equals(aFirstName, cmd.firstName()) &&
                                 Objects.equals(aLastName, cmd.lastName()) &&
                                 Objects.equals(aEmail, cmd.email()) &&
                                 Objects.equals(aPassword, cmd.password())
+        ));
+    }
+
+    @Test
+    public void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnNotification() throws Exception {
+        final String aFirstName = null;
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'firstName' should not be null or blank";
+
+        final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
+
+        Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.post("/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aFirstName, cmd.firstName()) &&
+                        Objects.equals(aLastName, cmd.lastName()) &&
+                        Objects.equals(aEmail, cmd.email()) &&
+                        Objects.equals(aPassword, cmd.password())
+        ));
+    }
+
+    @Test
+    public void givenAnInvalidCommand_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+        final String aFirstName = null;
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'firstName' should not be null or blank";
+
+        final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
+
+        Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
+                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+
+        final var request = MockMvcRequestBuilders.post("/accounts")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aFirstName, cmd.firstName()) &&
+                        Objects.equals(aLastName, cmd.lastName()) &&
+                        Objects.equals(aEmail, cmd.email()) &&
+                        Objects.equals(aPassword, cmd.password())
         ));
     }
 }
