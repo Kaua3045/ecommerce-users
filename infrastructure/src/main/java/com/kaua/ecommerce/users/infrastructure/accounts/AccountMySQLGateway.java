@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.accounts;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +19,9 @@ public class AccountMySQLGateway implements AccountGateway {
 
     @Override
     public Account create(Account aAccount) {
-        return null;
+        return this.accountJpaRepository
+                .save(AccountJpaEntity.toEntity(aAccount))
+                .toDomain();
     }
 
     @Override
