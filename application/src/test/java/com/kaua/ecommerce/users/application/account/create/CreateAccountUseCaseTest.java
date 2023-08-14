@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.account.create;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -28,6 +29,9 @@ public class CreateAccountUseCaseTest {
     @InjectMocks
     private DefaultCreateAccountUseCase useCase;
 
+    @Mock
+    private EncrypterGateway encrypterGateway;
+
     @Test
     public void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
         // given
@@ -41,6 +45,8 @@ public class CreateAccountUseCaseTest {
         // when
         Mockito.when(accountGateway.existsByEmail(Mockito.any()))
                 .thenReturn(false);
+        Mockito.when(encrypterGateway.encrypt(Mockito.any()))
+                .thenAnswer(returnsFirstArg());
         Mockito.when(accountGateway.create(Mockito.any()))
                 .thenAnswer(returnsFirstArg());
 
@@ -64,6 +70,8 @@ public class CreateAccountUseCaseTest {
                         Objects.nonNull(aAccount.getUpdatedAt()) &&
                         Objects.isNull(aAccount.getAvatarUrl())
                 ));
+        Mockito.verify(encrypterGateway, Mockito.times(1))
+                .encrypt(aPassword);
     }
 
     @Test
@@ -89,6 +97,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -114,6 +124,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -149,6 +161,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -174,6 +188,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -199,6 +215,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -234,6 +252,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -259,6 +279,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -287,6 +309,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(aEmail);
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -312,6 +336,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -337,6 +363,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -372,6 +400,8 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 
     @Test
@@ -397,5 +427,7 @@ public class CreateAccountUseCaseTest {
                 .existsByEmail(Mockito.any());
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 }
