@@ -2,7 +2,9 @@ package com.kaua.ecommerce.users.application.account.create;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -154,5 +156,41 @@ public class CreateAccountUseCaseIT {
         Assertions.assertEquals(0, accountRepository.count());
 
         Mockito.verify(accountGateway, Mockito.never()).create(Mockito.any());
+    }
+
+    @Test
+    public void givenAnExistingEmail_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'email' already exists";
+        final var expectedErrorCount = 1;
+
+        Assertions.assertEquals(0, accountRepository.count());
+        accountRepository.save(
+                AccountJpaEntity.toEntity(Account.newAccount(
+                        "Test",
+                        "Teste",
+                        "teste@teste.com",
+                        "1234567Ab")));
+        Assertions.assertEquals(1, accountRepository.count());
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+
+        Assertions.assertEquals(1, accountRepository.count());
+
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .existsByEmail(aEmail);
+        Mockito.verify(accountGateway, Mockito.never())
+                .create(Mockito.any());
     }
 }
