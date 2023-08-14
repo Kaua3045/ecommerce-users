@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.account.create;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
+import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -429,5 +430,14 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+    }
+
+    @Test
+    public void givenAValidAccountId_whenCallFrom_shouldReturnId() {
+        final var aAccountId = AccountID.unique();
+
+        final var aOutput = CreateAccountOutput.from(aAccountId);
+
+        Assertions.assertEquals(aAccountId.getValue(), aOutput.id());
     }
 }
