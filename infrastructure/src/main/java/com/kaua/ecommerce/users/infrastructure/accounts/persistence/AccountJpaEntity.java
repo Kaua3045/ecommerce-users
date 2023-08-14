@@ -83,8 +83,8 @@ public class AccountJpaEntity {
                 getLastName(),
                 getEmail(),
                 getMailStatus(),
-                getAvatarUrl(),
                 getPassword(),
+                getAvatarUrl(),
                 getCreatedAt(),
                 getUpdatedAt()
         );
