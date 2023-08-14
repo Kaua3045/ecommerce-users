@@ -33,6 +33,11 @@ public class AccountTest {
         Assertions.assertNull(aAccount.getAvatarUrl());
         Assertions.assertNotNull(aAccount.getCreatedAt());
         Assertions.assertNotNull(aAccount.getUpdatedAt());
+
+        Assertions.assertTrue(aAccount.getId().equals(aAccount.getId()));
+        Assertions.assertFalse(aAccount.getId().equals(AccountID.unique()));
+        Assertions.assertFalse(aAccount.getId().equals(null));
+        Assertions.assertNotNull(aAccount.getId().hashCode());
     }
 
     @Test
