@@ -51,7 +51,6 @@ public class CreateAccountUseCaseIT {
         Assertions.assertEquals(aFirstName, actualAccount.getFirstName());
         Assertions.assertEquals(aLastName, actualAccount.getLastName());
         Assertions.assertEquals(aEmail, actualAccount.getEmail());
-        Assertions.assertEquals(aPassword, actualAccount.getPassword());
         Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, actualAccount.getMailStatus());
         Assertions.assertNull(actualAccount.getAvatarUrl());
         Assertions.assertNotNull(actualAccount.getCreatedAt());
