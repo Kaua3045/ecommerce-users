@@ -20,49 +20,10 @@ jobs:
           distribution: 'temurin'
 
       - name: Run tests and calculate coverage for domain
-        run: ./gradlew :domain:test jacocoTestReport
+        run: ./gradlew :domain:test jacocoTestCoverageVerification
 
       - name: Run tests and calculate coverage for application
-        run: ./gradlew :application:test jacocoTestReport
+        run: ./gradlew :application:test jacocoTestCoverageVerification
 
       - name: Run tests and calculate coverage for infrasctructure
-        run: ./gradlew :infrastructure:test jacocoTestReport
-
-      - name: Check test coverage
-        run: |
-          modules=("application" "domain" "infrastructure")
-          required_coverage=70  # Cobertura mínima requerida em porcentagem
-          
-          for module in "${modules[@]}"; do
-            total_missed_instructions=0
-            total_covered_instructions=0
-            num_classes=0
-          
-            while IFS=, read -r _ _ _ missed_instructions covered_instructions _ _ _ _ _ _ _ _; do
-              if [[ "$missed_instructions" != "INSTRUCTION_MISSED" ]]; then
-                total_missed_instructions=$((total_missed_instructions + missed_instructions))
-                total_covered_instructions=$((total_covered_instructions + covered_instructions))
-                num_classes=$((num_classes + 1))
-              fi
-            done < "$module/build/reports/jacoco/test/jacocoTestReport.csv"
-          
-            total_instructions=$((total_missed_instructions + total_covered_instructions))
-            if ((total_instructions > 0)); then
-              average_coverage=$((total_covered_instructions * 100 / total_instructions))
-            else
-              average_coverage=0
-            fi
-          
-            if ((average_coverage >= required_coverage)); then
-              echo "$module coverage is above or equal to $required_coverage%: $average_coverage%"
-            else
-              echo "$module coverage is below $required_coverage%: $average_coverage%"
-              exit 1  # Isso interromperá o fluxo de CI com um erro
-            fi
-          done
-
-      - name: Upload test coverage artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-coverage-report
-          path: build/reports/jacoco/test/html/index.html
+        run: ./gradlew :infrastructure:test jacocoTestCoverageVerification
