@@ -60,10 +60,9 @@ public class AccountAPITest {
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpectAll(
-                        MockMvcResultMatchers.status().isCreated(),
-                        MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(aId))
-                );
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.equalTo(aId)));
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
                         Objects.equals(aFirstName, cmd.firstName()) &&
