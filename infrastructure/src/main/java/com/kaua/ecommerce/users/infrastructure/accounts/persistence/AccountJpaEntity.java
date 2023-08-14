@@ -76,17 +76,17 @@ public class AccountJpaEntity {
         );
     }
 
-    public static Account toDomain(final AccountJpaEntity aEntity) {
+    public Account toDomain() {
         return Account.with(
-                aEntity.getId(),
-                aEntity.getFirstName(),
-                aEntity.getLastName(),
-                aEntity.getEmail(),
-                aEntity.getMailStatus(),
-                aEntity.getAvatarUrl(),
-                aEntity.getPassword(),
-                aEntity.getCreatedAt(),
-                aEntity.getUpdatedAt()
+                getId(),
+                getFirstName(),
+                getLastName(),
+                getEmail(),
+                getMailStatus(),
+                getAvatarUrl(),
+                getPassword(),
+                getCreatedAt(),
+                getUpdatedAt()
         );
     }
 
