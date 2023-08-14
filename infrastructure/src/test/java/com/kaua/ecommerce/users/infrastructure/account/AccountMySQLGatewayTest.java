@@ -3,6 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.account;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.infrastructure.MySQLGatewayTest;
 import com.kaua.ecommerce.users.infrastructure.accounts.AccountMySQLGateway;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -51,5 +52,29 @@ public class AccountMySQLGatewayTest {
         Assertions.assertEquals(aAccount.getMailStatus(), actualEntity.getMailStatus());
         Assertions.assertEquals(aAccount.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), actualEntity.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAValidEmailButNotExistis_whenCallExistsByEmail_shouldReturnFalse() {
+        final var aEmail = "teste@teste.com";
+
+        Assertions.assertEquals(0, accountRepository.count());
+        Assertions.assertFalse(accountGateway.existsByEmail(aEmail));
+    }
+
+    @Test
+    public void givenAValidExistingEmail_whenCallExistsByEmail_shouldReturnTrue() {
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silva";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+
+        Account aAccount = Account.newAccount(aFirstName, aLastName, aEmail, aPassword);
+
+        Assertions.assertEquals(0, accountRepository.count());
+        accountRepository.save(AccountJpaEntity.toEntity(aAccount));
+        Assertions.assertEquals(1, accountRepository.count());
+
+        Assertions.assertTrue(accountGateway.existsByEmail(aEmail));
     }
 }
