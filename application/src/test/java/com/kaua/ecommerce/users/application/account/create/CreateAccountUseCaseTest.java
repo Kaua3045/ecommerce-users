@@ -61,7 +61,8 @@ public class CreateAccountUseCaseTest {
                         Objects.nonNull(aAccount.getId()) &&
                         Objects.equals(AccountMailStatus.WAITING_CONFIRMATION, aAccount.getMailStatus()) &&
                         Objects.nonNull(aAccount.getCreatedAt()) &&
-                        Objects.nonNull(aAccount.getUpdatedAt())
+                        Objects.nonNull(aAccount.getUpdatedAt()) &&
+                        Objects.isNull(aAccount.getAvatarUrl())
                 ));
     }
 
