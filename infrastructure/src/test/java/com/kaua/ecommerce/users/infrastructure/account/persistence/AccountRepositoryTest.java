@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.account.persistence;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
-import com.kaua.ecommerce.users.infrastructure.MySQLGatewayTest;
+import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.hibernate.PropertyValueException;

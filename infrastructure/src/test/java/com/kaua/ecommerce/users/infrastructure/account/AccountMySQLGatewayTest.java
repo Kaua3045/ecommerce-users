@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.account;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
-import com.kaua.ecommerce.users.infrastructure.MySQLGatewayTest;
+import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.infrastructure.accounts.AccountMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
