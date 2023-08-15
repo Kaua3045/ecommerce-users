@@ -5,6 +5,7 @@ import com.kaua.ecommerce.users.domain.validation.Validation;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import com.kaua.ecommerce.users.domain.validation.Validator;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
+import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -72,6 +73,14 @@ public class NotificationTest {
 
         Assertions.assertDoesNotThrow(() -> handler.validate(null));
         Assertions.assertEquals(expectedErrorMessage, handler.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAValidHandler_whenCallAppend_thenShouldReturnNotification() {
+        final var handler = NotificationHandler.create();
+        ValidationHandler anotherHandler = new ThrowsValidationHandler();
+
+        Assertions.assertDoesNotThrow(() -> handler.append(anotherHandler));
     }
 
     static class TestValidation extends Validator {
