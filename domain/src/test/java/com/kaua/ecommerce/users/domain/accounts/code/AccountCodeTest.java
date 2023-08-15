@@ -2,11 +2,11 @@ package com.kaua.ecommerce.users.domain.accounts.code;
 
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
+import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.Random;
 import java.util.UUID;
 
 public class AccountCodeTest {
@@ -15,7 +15,7 @@ public class AccountCodeTest {
     public void givenAValidValues_whenCallNewAccountCode_thenShouldCreateANewAccountCode() {
         // Given
         final var code = generateCode();
-        final var codeChallenge = generateCodeChallenge(100);
+        final var codeChallenge = RandomStringUtils.generateValue(100);
         final var accountID = AccountID.unique();
 
         // When
@@ -34,7 +34,7 @@ public class AccountCodeTest {
     public void givenAInvalidCodeBlank_whenCallNewAccountCode_thenShouldThrowAnException() {
         // Given
         final var code = "";
-        final var codeChallenge = generateCodeChallenge(100);
+        final var codeChallenge = RandomStringUtils.generateValue(100);
         final var accountID = AccountID.unique();
         final var expectedErrorMessage = "'code' should not be null or blank";
 
@@ -51,7 +51,7 @@ public class AccountCodeTest {
     public void givenAInvalidCodeNull_whenCallNewAccountCode_thenShouldThrowAnException() {
         // Given
         final String code = null;
-        final var codeChallenge = generateCodeChallenge(100);
+        final var codeChallenge = RandomStringUtils.generateValue(100);
         final var accountID = AccountID.unique();
         final var expectedErrorMessage = "'code' should not be null or blank";
 
@@ -68,7 +68,7 @@ public class AccountCodeTest {
     public void givenAInvalidCodeLengthMoreThan36_whenCallNewAccountCode_thenShouldThrowAnException() {
         // Given
         final var code = generateCode()+"1234567890123456789012345678901234567890";
-        final var codeChallenge = generateCodeChallenge(100);
+        final var codeChallenge = RandomStringUtils.generateValue(100);
         final var accountID = AccountID.unique();
         final var expectedErrorMessage = "'code' must be less than 36 characters";
 
@@ -117,19 +117,5 @@ public class AccountCodeTest {
 
     private String generateCode() {
         return UUID.randomUUID().toString().toLowerCase().replace("-", "");
-    }
-
-    private String generateCodeChallenge(int length) {
-        String characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-
-        for (int i = 0; i < length; i++) {
-            int randomIndex = random.nextInt(characters.length());
-            char randomChar = characters.charAt(randomIndex);
-            sb.append(randomChar);
-        }
-
-        return sb.toString();
     }
 }
