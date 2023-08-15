@@ -2,6 +2,9 @@ package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaua.ecommerce.users.ControllerTest;
+import com.kaua.ecommerce.users.application.account.code.CreateAccountCodeCommand;
+import com.kaua.ecommerce.users.application.account.code.CreateAccountCodeOutput;
+import com.kaua.ecommerce.users.application.account.code.CreateAccountCodeUseCase;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
@@ -41,6 +44,9 @@ public class AccountAPITest {
     private CreateAccountUseCase createAccountUseCase;
 
     @MockBean
+    private CreateAccountCodeUseCase createAccountCodeUseCase;
+
+    @MockBean
     private BCryptPasswordEncoder passwordEncoder;
 
     @Test
@@ -51,8 +57,13 @@ public class AccountAPITest {
         final var aEmail = "teste@teste.com";
         final var aPassword = "1234567Ab";
         final var aId = "123";
+        final var aCode = "code";
+        final var aCodeChallenge = "codeChallenge";
 
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
+
+        Mockito.when(createAccountCodeUseCase.execute(Mockito.any(CreateAccountCodeCommand.class)))
+                        .thenReturn(new CreateAccountCodeOutput(aCode, aCodeChallenge));
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
                 .thenReturn(Either.right(CreateAccountOutput.from(AccountID.from(aId))));
@@ -65,7 +76,9 @@ public class AccountAPITest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.code", equalTo(aCode)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.codeChallenge", equalTo(aCodeChallenge)));
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
                         Objects.equals(aFirstName, cmd.firstName()) &&
