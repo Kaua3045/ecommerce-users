@@ -48,14 +48,21 @@ public class AccountCode extends AggregateRoot<AccountCodeID> {
         );
     }
 
-    public static AccountCode with(final AccountCode aAccountCode) {
+    public static AccountCode with(
+            final String aId,
+            final String aCode,
+            final String aCodeChallenge,
+            final AccountID aAccountID,
+            final Instant aCreatedAt,
+            final Instant aUpdatedAt
+    ) {
         return new AccountCode(
-                aAccountCode.getId(),
-                aAccountCode.getCode(),
-                aAccountCode.getCodeChallenge(),
-                aAccountCode.getAccountID(),
-                aAccountCode.getCreatedAt(),
-                aAccountCode.getUpdatedAt()
+                AccountCodeID.from(aId),
+                aCode,
+                aCodeChallenge,
+                aAccountID,
+                aCreatedAt,
+                aUpdatedAt
         );
     }
 
