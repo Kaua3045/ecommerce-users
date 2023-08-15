@@ -41,7 +41,7 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
     }
 
     private Account accountWithPasswordEncodded(final Account aAccount) {
-        return this.accountGateway.create(
+        this.accountGateway.create(
                 Account.with(
                         aAccount.getId().getValue(),
                         aAccount.getFirstName(),
@@ -53,5 +53,6 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                         aAccount.getCreatedAt(),
                         aAccount.getUpdatedAt())
         );
+        return aAccount;
     }
 }
