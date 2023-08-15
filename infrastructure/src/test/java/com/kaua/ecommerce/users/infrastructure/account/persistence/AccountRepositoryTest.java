@@ -1,14 +1,16 @@
 package com.kaua.ecommerce.users.infrastructure.account.persistence;
 
-import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.MySQLGatewayTest;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.hibernate.PropertyValueException;
+import org.hibernate.id.IdentifierGenerationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.orm.jpa.JpaSystemException;
 
 @MySQLGatewayTest
 public class AccountRepositoryTest {
@@ -182,5 +184,43 @@ public class AccountRepositoryTest {
 
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
         Assertions.assertEquals(expectedErrorMessage, actualCause.getMessage());
+    }
+
+    @Test
+    public void givenAnInvalidNullId_whenCallSave_shouldReturnAnException() {
+        final var expectedErrorMessage = "ids for this class must be manually assigned before calling save(): com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity";
+
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silva",
+                "teste@teste.com",
+                "1234567Ab");
+
+        final var aEntity = AccountJpaEntity.toEntity(aAccount);
+        aEntity.setId(null);
+
+        final var actualException = Assertions.assertThrows(JpaSystemException.class,
+                () -> accountRepository.save(aEntity));
+
+        final var actualCause = Assertions.assertInstanceOf(IdentifierGenerationException.class,
+                actualException.getCause());
+
+        Assertions.assertEquals(expectedErrorMessage, actualCause.getMessage());
+    }
+
+    @Test
+    public void givenAValidAvatarUrl_whenCallSave_shouldDoesNotThrowException() {
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silva",
+                "teste@teste.com",
+                "1234567Ab");
+
+        final var aEntity = AccountJpaEntity.toEntity(aAccount);
+        aEntity.setAvatarUrl("http://localhost/avatar.png");
+
+        final var actualOutput = Assertions.assertDoesNotThrow(() -> accountRepository.save(aEntity));
+
+        Assertions.assertEquals(aEntity.getAvatarUrl(), actualOutput.getAvatarUrl());
     }
 }
