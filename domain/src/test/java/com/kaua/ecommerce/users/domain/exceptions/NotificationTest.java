@@ -57,6 +57,23 @@ public class NotificationTest {
         Assertions.assertEquals(1, aNotification.getErrors().size());
     }
 
+    @Test
+    public void givenAValidValidation_whenCallValidate_thenShouldDoesNotThrow() {
+        Validation validation = () -> {};
+        NotificationHandler handler = NotificationHandler.create();
+
+        Assertions.assertDoesNotThrow(() -> handler.validate(validation));
+    }
+
+    @Test
+    public void givenAValidValidation_whenCallValidate_thenShouldThrowsException() {
+        final var expectedErrorMessage = "Cannot invoke \"com.kaua.ecommerce.users.domain.validation.Validation.validate()\" because \"aValidation\" is null";
+        NotificationHandler handler = NotificationHandler.create();
+
+        Assertions.assertDoesNotThrow(() -> handler.validate(null));
+        Assertions.assertEquals(expectedErrorMessage, handler.getErrors().get(0).message());
+    }
+
     static class TestValidation extends Validator {
 
         private final String name;
