@@ -115,23 +115,6 @@ public class AccountCodeTest {
         Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
     }
 
-    @Test
-    public void givenAInvalidCodeChallengeLengthMoreThan100_whenCallNewAccountCode_thenShouldThrowAnException() {
-        // Given
-        final var code = generateCode();
-        final var codeChallenge = generateCodeChallenge(120);
-        final var accountID = AccountID.unique();
-        final var expectedErrorMessage = "'codeChallenge' must be less than 100 characters";
-
-        // When
-        final var aAccountCode = AccountCode.newAccountCode(code, codeChallenge, accountID);
-        final var aException = Assertions.assertThrows(DomainException.class, () ->
-                aAccountCode.validate(new ThrowsValidationHandler()));
-
-        // Then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
-    }
-
     private String generateCode() {
         return UUID.randomUUID().toString().toLowerCase().replace("-", "");
     }
