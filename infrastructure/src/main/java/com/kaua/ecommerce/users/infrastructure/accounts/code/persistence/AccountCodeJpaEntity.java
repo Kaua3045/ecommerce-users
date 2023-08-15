@@ -21,7 +21,7 @@ public class AccountCodeJpaEntity {
     @Column(name = "code_challenge", nullable = false)
     private String codeChallenge;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "account_id")
     private AccountJpaEntity account;
 
