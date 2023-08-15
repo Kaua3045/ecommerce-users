@@ -49,7 +49,7 @@ public class AccountCodeJpaEntity {
         this.updatedAt = updatedAt;
     }
 
-    public static AccountCodeJpaEntity from(final AccountCode aAccountCode, final Account aAccount) {
+    public static AccountCodeJpaEntity toEntity(final AccountCode aAccountCode, final Account aAccount) {
         return new AccountCodeJpaEntity(
                 aAccountCode.getId().getValue(),
                 aAccountCode.getCode(),

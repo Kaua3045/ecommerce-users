@@ -27,7 +27,7 @@ public class AccountCodeMySQLGateway implements AccountCodeGateway {
         final var aAccountEntity = this.accountJpaRepository.findById(aAccountCode.getAccountID().getValue())
                 .orElseThrow(() -> NotFoundException.with(Account.class, aAccountCode.getAccountID().getValue()));
 
-        final var aEntity = AccountCodeJpaEntity.from(aAccountCode, aAccountEntity.toDomain());
+        final var aEntity = AccountCodeJpaEntity.toEntity(aAccountCode, aAccountEntity.toDomain());
         return this.repository.save(aEntity).toDomain();
     }
 }
