@@ -22,7 +22,7 @@ public class AccountCodeJpaEntity {
     private String codeChallenge;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "account_id")
     private AccountJpaEntity account;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
