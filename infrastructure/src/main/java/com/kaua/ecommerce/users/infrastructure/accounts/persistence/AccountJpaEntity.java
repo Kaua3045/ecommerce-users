@@ -38,7 +38,7 @@ public class AccountJpaEntity {
     @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant updatedAt;
 
-    private AccountJpaEntity() {}
+    public AccountJpaEntity() {}
 
     private AccountJpaEntity(
             final String id,
