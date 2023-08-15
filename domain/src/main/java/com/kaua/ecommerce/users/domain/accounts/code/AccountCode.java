@@ -70,41 +70,25 @@ public class AccountCode extends AggregateRoot<AccountCodeID> {
         return code;
     }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
     public String getCodeChallenge() {
         return codeChallenge;
     }
 
-    public void setCodeChallenge(String codeChallenge) {
-        this.codeChallenge = codeChallenge;
-    }
 
     public AccountID getAccountID() {
         return accountID;
     }
 
-    public void setAccountID(AccountID accountID) {
-        this.accountID = accountID;
-    }
 
     public Instant getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public Instant getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
 
     @Override
     public void validate(ValidationHandler handler) {
