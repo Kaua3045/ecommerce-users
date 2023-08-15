@@ -8,7 +8,6 @@ public class AccountCodeValidator extends Validator {
 
     private final AccountCode accountCode;
     private final int CODE_MAXIMUM_LENGTH = 36;
-    private final int CODE_CHALLENGE_MAXIMUM_LENGTH = 100;
 
     public AccountCodeValidator(final AccountCode accountCode, final ValidationHandler aHandler) {
         super(aHandler);
@@ -37,11 +36,6 @@ public class AccountCodeValidator extends Validator {
         if (this.accountCode.getCodeChallenge() == null || this.accountCode.getCodeChallenge().isBlank()) {
             this.validationHandler().append(new Error("'codeChallenge' should not be null or blank"));
             return;
-        }
-
-        if (this.accountCode.getCodeChallenge() != null &&
-                this.accountCode.getCodeChallenge().trim().length() > CODE_MAXIMUM_LENGTH) {
-            this.validationHandler().append(new Error("'codeChallenge' must be less than " + CODE_CHALLENGE_MAXIMUM_LENGTH + " characters"));
         }
     }
 }
