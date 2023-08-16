@@ -6,7 +6,6 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
-import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
@@ -55,7 +54,8 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenReturn(Either.right(CreateAccountOutput.from(AccountID.from(aId))));
+                .thenReturn(Either.right(CreateAccountOutput
+                        .from(aId, aEmail, aPassword)));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -65,7 +65,9 @@ public class AccountAPITest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", equalTo(aEmail)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.password", equalTo(aPassword)));
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
                         Objects.equals(aFirstName, cmd.firstName()) &&

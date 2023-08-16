@@ -436,7 +436,7 @@ public class CreateAccountUseCaseTest {
     public void givenAValidAccountId_whenCallFrom_shouldReturnId() {
         final var aAccountId = AccountID.unique();
 
-        final var aOutput = CreateAccountOutput.from(aAccountId);
+        final var aOutput = CreateAccountOutput.from(aAccountId.getValue(), null, null);
 
         Assertions.assertEquals(aAccountId.getValue(), aOutput.id());
     }

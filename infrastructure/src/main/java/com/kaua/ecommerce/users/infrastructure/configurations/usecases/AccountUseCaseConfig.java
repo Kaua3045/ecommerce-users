@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users.infrastructure.configurations;
+package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.create.DefaultCreateAccountUseCase;

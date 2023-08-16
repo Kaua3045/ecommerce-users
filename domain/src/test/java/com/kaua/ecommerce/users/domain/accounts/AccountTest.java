@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.domain.accounts;
 
-import com.kaua.ecommerce.users.domain.exceptions.DomainException;
+import com.kaua.ecommerce.users.domain.TestValidationHandler;
+import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -57,11 +58,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -81,27 +84,19 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
     public void givenAnInvalidFirstNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
-        final var aFirstName = """
-                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
-                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo 
-                qual a constante divulgação das informações talvez venha a ressaltar a relatividade 
-                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa 
-                atividade assume importantes posições no estabelecimento das condições inegavelmente 
-                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia 
-                a preparação e a composição das novas proposições. As experiências acumuladas 
-                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo 
-                de reformulação e modernização do processo de comunicação como um todo.
-                """;
+        final var aFirstName = RandomStringUtils.generateValue(256);
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
@@ -115,11 +110,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -139,11 +136,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -163,28 +162,20 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
     public void givenAnInvalidLastNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
-        final var aLastName = """
-                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
-                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo 
-                qual a constante divulgação das informações talvez venha a ressaltar a relatividade 
-                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa 
-                atividade assume importantes posições no estabelecimento das condições inegavelmente 
-                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia 
-                a preparação e a composição das novas proposições. As experiências acumuladas 
-                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo 
-                de reformulação e modernização do processo de comunicação como um todo.
-                """;
+        final var aLastName = RandomStringUtils.generateValue(256);
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
         final var expectedErrorMessage = "'lastName' must be between 3 and 255 characters";
@@ -197,11 +188,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -221,11 +214,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -245,11 +240,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -269,11 +266,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -282,17 +281,7 @@ public class AccountTest {
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
-        final var aPassword = """
-                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
-                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo
-                qual a constante divulgação das informações talvez venha a ressaltar a relatividade
-                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa
-                atividade assume importantes posições no estabelecimento das condições inegavelmente
-                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia
-                a preparação e a composição das novas proposições. As experiências acumuladas
-                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo
-                de reformulação e modernização do processo de comunicação como um todo.
-                """;
+        final var aPassword = RandomStringUtils.generateValue(256);
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -303,11 +292,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -327,11 +318,13 @@ public class AccountTest {
                 aPassword
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccount
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -398,11 +391,13 @@ public class AccountTest {
                 aAvatarUrl
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         //then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -430,11 +425,13 @@ public class AccountTest {
                 aAvatarUrl
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         //then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -443,17 +440,7 @@ public class AccountTest {
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
-        final var aPassword = """
-                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
-                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo
-                qual a constante divulgação das informações talvez venha a ressaltar a relatividade
-                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa
-                atividade assume importantes posições no estabelecimento das condições inegavelmente
-                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia
-                a preparação e a composição das novas proposições. As experiências acumuladas
-                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo
-                de reformulação e modernização do processo de comunicação como um todo.
-                """;
+        final var aPassword = RandomStringUtils.generateValue(256);
         final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
@@ -472,11 +459,13 @@ public class AccountTest {
                 aAvatarUrl
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         //then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test
@@ -504,11 +493,13 @@ public class AccountTest {
                 aAvatarUrl
         );
 
-        final var aException = Assertions.assertThrows(DomainException.class, () -> aAccountUpdated
-                .validate(new ThrowsValidationHandler()));
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
+
+        aAccountValidator.validate();
 
         //then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 
     @Test

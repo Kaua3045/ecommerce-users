@@ -4,7 +4,7 @@ import java.util.NoSuchElementException;
 
 public abstract class Either<L, R> {
 
-    private static class BaseMethods<L, R> extends Either<L, R> {
+    public static class BaseMethods<L, R> extends Either<L, R> {
 
         @Override
         public boolean isLeft() {
