@@ -1,13 +1,10 @@
 package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.AggregateRoot;
-import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class Account extends AggregateRoot<AccountID> {
@@ -18,7 +15,6 @@ public class Account extends AggregateRoot<AccountID> {
     private AccountMailStatus mailStatus;
     private String password;
     private String avatarUrl;
-    private List<AccountMail> accountMails;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -30,7 +26,6 @@ public class Account extends AggregateRoot<AccountID> {
             final AccountMailStatus aMailStatus,
             final String aPassword,
             final String aAvatarUrl,
-            final List<AccountMail> aAccountMails,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
     ) {
@@ -41,7 +36,6 @@ public class Account extends AggregateRoot<AccountID> {
         this.mailStatus = aMailStatus;
         this.password = aPassword;
         this.avatarUrl = aAvatarUrl;
-        this.accountMails = aAccountMails;
         this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' must not be null");
         this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' must not be null");
     }
@@ -62,7 +56,6 @@ public class Account extends AggregateRoot<AccountID> {
                 AccountMailStatus.WAITING_CONFIRMATION,
                 aPassword,
                 null,
-                new ArrayList<>(),
                 now,
                 now
         );
@@ -88,7 +81,6 @@ public class Account extends AggregateRoot<AccountID> {
             final AccountMailStatus aMailStatus,
             final String aPassword,
             final String aAvatarUrl,
-            final List<AccountMail> aAccountMails,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
     ) {
@@ -100,15 +92,9 @@ public class Account extends AggregateRoot<AccountID> {
                 aMailStatus,
                 aPassword,
                 aAvatarUrl,
-                aAccountMails,
                 aCreatedAt,
                 aUpdatedAt
         );
-    }
-
-    public void addMail(AccountMail aAccountMail) {
-        this.accountMails.add(aAccountMail);
-        aAccountMail.setAccount(this);
     }
 
     public String getFirstName() {
@@ -133,10 +119,6 @@ public class Account extends AggregateRoot<AccountID> {
 
     public String getAvatarUrl() {
         return avatarUrl;
-    }
-
-    public List<AccountMail> getAccountMails() {
-        return accountMails;
     }
 
     public Instant getCreatedAt() {

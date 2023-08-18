@@ -1,6 +1,5 @@
 package com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence;
 
-import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;

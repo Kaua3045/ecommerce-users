@@ -50,7 +50,6 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                         aAccount.getMailStatus(),
                         this.encrypterGateway.encrypt(aAccount.getPassword()),
                         aAccount.getAvatarUrl(),
-                        null,
                         aAccount.getCreatedAt(),
                         aAccount.getUpdatedAt())
         );
