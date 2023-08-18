@@ -526,6 +526,7 @@ public class AccountTest {
                 aAccount.getMailStatus(),
                 aAccount.getPassword(),
                 aAccount.getAvatarUrl(),
+                aAccount.getAccountMails(),
                 aAccount.getCreatedAt(),
                 aAccount.getUpdatedAt()
         );
