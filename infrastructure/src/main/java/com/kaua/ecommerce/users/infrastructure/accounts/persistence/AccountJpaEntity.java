@@ -2,9 +2,11 @@ package com.kaua.ecommerce.users.infrastructure.accounts.persistence;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.List;
 
 @Entity
 @Table(name = "accounts")
@@ -32,6 +34,9 @@ public class AccountJpaEntity {
     @Enumerated(EnumType.STRING)
     private AccountMailStatus mailStatus;
 
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<AccountMailJpaEntity> accountMails;
+
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
@@ -48,6 +53,7 @@ public class AccountJpaEntity {
             final String password,
             final String avatarUrl,
             final AccountMailStatus mailStatus,
+            final List<AccountMailJpaEntity> accountMails,
             final Instant createdAt,
             final Instant updatedAt
     ) {
@@ -58,6 +64,7 @@ public class AccountJpaEntity {
         this.password = password;
         this.avatarUrl = avatarUrl;
         this.mailStatus = mailStatus;
+        this.accountMails = accountMails;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -71,6 +78,7 @@ public class AccountJpaEntity {
                 aAccount.getPassword(),
                 aAccount.getAvatarUrl(),
                 aAccount.getMailStatus(),
+                aAccount.getAccountMails().stream().map(AccountMailJpaEntity::toEntity).toList(),
                 aAccount.getCreatedAt(),
                 aAccount.getUpdatedAt()
         );
@@ -85,6 +93,7 @@ public class AccountJpaEntity {
                 getMailStatus(),
                 getPassword(),
                 getAvatarUrl(),
+                getAccountMails().stream().map(AccountMailJpaEntity::toDomain).toList(),
                 getCreatedAt(),
                 getUpdatedAt()
         );
@@ -116,6 +125,10 @@ public class AccountJpaEntity {
 
     public AccountMailStatus getMailStatus() {
         return mailStatus;
+    }
+
+    public List<AccountMailJpaEntity> getAccountMails() {
+        return accountMails;
     }
 
     public Instant getCreatedAt() {
@@ -152,6 +165,10 @@ public class AccountJpaEntity {
 
     public void setMailStatus(AccountMailStatus mailStatus) {
         this.mailStatus = mailStatus;
+    }
+
+    public void setAccountMails(List<AccountMailJpaEntity> accountMails) {
+        this.accountMails = accountMails;
     }
 
     public void setCreatedAt(Instant createdAt) {
