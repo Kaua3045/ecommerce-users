@@ -59,6 +59,26 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
         );
     }
 
+    public static AccountMail with(
+            final String aId,
+            final String aToken,
+            final AccountMailType aType,
+            final Account aAccount,
+            final Instant aExpiresAt,
+            final Instant aCreatedAt,
+            final Instant aUpdatedAt
+    ) {
+        return new AccountMail(
+                AccountMailID.from(aId),
+                aToken,
+                aType,
+                aAccount,
+                aExpiresAt,
+                aCreatedAt,
+                aUpdatedAt
+        );
+    }
+
     public String getToken() {
         return token;
     }
