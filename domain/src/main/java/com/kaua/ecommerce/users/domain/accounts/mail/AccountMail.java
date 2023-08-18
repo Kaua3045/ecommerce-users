@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.domain.accounts.mail;
 
 import com.kaua.ecommerce.users.domain.AggregateRoot;
-import com.kaua.ecommerce.users.domain.accounts.AccountID;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
@@ -12,7 +12,7 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
 
     private String token;
     private AccountMailType type;
-    private AccountID accountId;
+    private Account account;
     private Instant expiresAt;
     private Instant createdAt;
     private Instant updatedAt;
@@ -21,7 +21,7 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
             final AccountMailID aId,
             final String aToken,
             final AccountMailType aType,
-            final AccountID aAccountId,
+            final Account aAccount,
             final Instant aExpiresAt,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
@@ -29,7 +29,7 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
         super(aId);
         this.token = aToken;
         this.type = aType;
-        this.accountId = aAccountId;
+        this.account = aAccount;
         this.expiresAt = aExpiresAt;
         this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' must not be null");
         this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' must not be null");
@@ -43,7 +43,7 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
     public static AccountMail newAccountMail(
             final String aToken,
             final AccountMailType aType,
-            final AccountID aAccountId,
+            final Account aAccount,
             final Instant aExpiresAt
     ) {
         final var aId = AccountMailID.unique();
@@ -52,7 +52,7 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
                 aId,
                 aToken,
                 aType,
-                aAccountId,
+                aAccount,
                 aExpiresAt,
                 now,
                 now
@@ -67,8 +67,12 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
         return type;
     }
 
-    public AccountID getAccountId() {
-        return accountId;
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account aAccount) {
+        this.account = aAccount;
     }
 
     public Instant getExpiresAt() {

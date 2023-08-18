@@ -19,7 +19,7 @@ public class AccountMailValidator extends Validator {
     public void validate() {
         this.checkTokenConstraints();
         this.checkTypeConstraints();
-        this.checkAccountIdConstraints();
+        this.checkAccountConstraints();
         this.checkExpiresAtConstraints();
     }
 
@@ -43,9 +43,9 @@ public class AccountMailValidator extends Validator {
         }
     }
 
-    private void checkAccountIdConstraints() {
-        if (this.accountMail.getAccountId() == null) {
-            this.validationHandler().append(new Error("'accountId' should not be null"));
+    private void checkAccountConstraints() {
+        if (this.accountMail.getAccount() == null) {
+            this.validationHandler().append(new Error("'account' should not be null"));
             return;
         }
     }
