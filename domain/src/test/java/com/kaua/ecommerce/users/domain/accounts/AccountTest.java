@@ -1,10 +1,15 @@
 package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.TestValidationHandler;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
+import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.time.temporal.ChronoUnit;
 
 public class AccountTest {
 
@@ -541,5 +546,44 @@ public class AccountTest {
         Assertions.assertEquals(aAccount.getAvatarUrl(), aAccountCloned.getAvatarUrl());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountCloned.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), aAccountCloned.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAValidValues_whenCallsAddMail_thenAnAccountShouldBeCreatedAndWithMailList() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "123456Ab";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aAccountMail = AccountMail.newAccountMail(
+                RandomStringUtils.generateValue(36),
+                AccountMailType.ACCOUNT_CONFIRMATION,
+                aAccount,
+                InstantUtils.now().plus(10, ChronoUnit.MINUTES)
+        );
+
+        aAccount.addMail(aAccountMail);
+
+        // then
+        Assertions.assertNotNull(aAccount.getId());
+        Assertions.assertEquals(aFirstName, aAccount.getFirstName());
+        Assertions.assertEquals(aLastName, aAccount.getLastName());
+        Assertions.assertEquals(aEmail, aAccount.getEmail());
+        Assertions.assertEquals(aPassword, aAccount.getPassword());
+        Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccount.getMailStatus());
+        Assertions.assertNull(aAccount.getAvatarUrl());
+        Assertions.assertEquals(1, aAccount.getAccountMails().size());
+        Assertions.assertEquals(aAccountMail, aAccount.getAccountMails().get(0));
+        Assertions.assertNotNull(aAccount.getCreatedAt());
+        Assertions.assertNotNull(aAccount.getUpdatedAt());
     }
 }
