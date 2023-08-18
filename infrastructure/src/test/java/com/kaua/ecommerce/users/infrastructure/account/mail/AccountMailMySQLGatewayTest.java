@@ -120,7 +120,7 @@ public class AccountMailMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidPrePersistedAccountMail_whenCallFindAllByAccountId_shouldDoesNotThrowException() {
+    public void givenAValidPrePersistedAccountMail_whenCallDeleteById_shouldDoesNotThrowException() {
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
