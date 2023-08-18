@@ -1,8 +1,11 @@
 package com.kaua.ecommerce.users.application.account.mail.create;
 
 import com.kaua.ecommerce.users.application.either.Either;
+import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
@@ -11,19 +14,23 @@ import java.util.Objects;
 public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
 
     private final AccountMailGateway accountMailGateway;
+    private final AccountGateway accountGateway;
 
-    public DefaultCreateAccountMailUseCase(final AccountMailGateway accountMailGateway) {
+    public DefaultCreateAccountMailUseCase(final AccountMailGateway accountMailGateway, final AccountGateway accountGateway) {
         this.accountMailGateway = Objects.requireNonNull(accountMailGateway);
+        this.accountGateway = Objects.requireNonNull(accountGateway);
     }
 
     @Override
     public Either<NotificationHandler, AccountMail> execute(CreateAccountMailCommand aCommand) {
-        if (aCommand.account() == null) {
-            return Either.left(NotificationHandler.create(new Error("'account' should not be null")));
+        if (aCommand.accountId() == null) {
+            return Either.left(NotificationHandler.create(new Error("'accountId' should not be null")));
         }
 
-        final var aAccountId = aCommand.account().getId().getValue();
-        final var aAccountMails = this.accountMailGateway.findAllByAccountId(aAccountId);
+        final var aAccount = this.accountGateway.findById(aCommand.accountId())
+                .orElseThrow(() -> NotFoundException.with(Account.class, aCommand.accountId()));
+
+        final var aAccountMails = this.accountMailGateway.findAllByAccountId(aAccount.getId().getValue());
 
         aAccountMails.stream()
                 .filter(mail -> mail.getType() == aCommand.type())
@@ -32,7 +39,7 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
         final var aAccountMail = AccountMail.newAccountMail(
                 aCommand.token(),
                 aCommand.type(),
-                aCommand.account(),
+                aAccount,
                 aCommand.expirestAt()
         );
         final var notification = NotificationHandler.create();

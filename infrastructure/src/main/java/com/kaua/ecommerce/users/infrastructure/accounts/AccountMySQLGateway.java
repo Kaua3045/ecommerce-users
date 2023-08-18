@@ -7,6 +7,7 @@ import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRe
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class AccountMySQLGateway implements AccountGateway {
@@ -27,5 +28,10 @@ public class AccountMySQLGateway implements AccountGateway {
     @Override
     public boolean existsByEmail(String aEmail) {
         return this.accountJpaRepository.existsByEmail(aEmail);
+    }
+
+    @Override
+    public Optional<Account> findById(String aId) {
+        return this.accountJpaRepository.findById(aId).map(AccountJpaEntity::toDomain);
     }
 }

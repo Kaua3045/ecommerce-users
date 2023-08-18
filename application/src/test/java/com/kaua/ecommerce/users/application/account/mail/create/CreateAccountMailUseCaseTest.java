@@ -1,9 +1,11 @@
 package com.kaua.ecommerce.users.application.account.mail.create;
 
+import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +20,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
@@ -26,6 +29,9 @@ public class CreateAccountMailUseCaseTest {
 
     @Mock
     private AccountMailGateway accountMailGateway;
+
+    @Mock
+    private AccountGateway accountGateway;
 
     @InjectMocks
     private DefaultCreateAccountMailUseCase useCase;
@@ -45,7 +51,7 @@ public class CreateAccountMailUseCaseTest {
         final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -53,6 +59,8 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
         Mockito.when(accountMailGateway.findAllByAccountId(Mockito.any()))
                 .thenReturn(List.of());
         Mockito.when(accountMailGateway.create(Mockito.any()))
@@ -63,12 +71,14 @@ public class CreateAccountMailUseCaseTest {
         // then
         Assertions.assertNotNull(aOutput);
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .create(Mockito.argThat(aAccountMail ->
                         Objects.equals(aToken, aAccountMail.getToken()) &&
-                        Objects.equals(aAccount, aAccountMail.getAccount()) &&
+                        Objects.equals(aAccount.getId(), aAccountMail.getAccount().getId()) &&
                         Objects.equals(aType, aAccountMail.getType()) &&
                         Objects.equals(aExpirestAt, aAccountMail.getExpiresAt()) &&
                         Objects.nonNull(aAccountMail.getId()) &&
@@ -94,7 +104,7 @@ public class CreateAccountMailUseCaseTest {
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -102,12 +112,17 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.never())
@@ -131,7 +146,7 @@ public class CreateAccountMailUseCaseTest {
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -139,12 +154,17 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.never())
@@ -152,14 +172,14 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidAccount_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    public void givenAnInvalidAccountIdIsNull_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
-        final var aToken = "";
-        final Account aAccount = null;
+        final var aToken = RandomStringUtils.generateValue(36);
+        final String aAccount = null;
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aSubject = "Account confirmation";
         final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
-        final var expectedErrorMessage = "'account' should not be null";
+        final var expectedErrorMessage = "'accountId' should not be null";
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateAccountMailCommand.with(
@@ -177,6 +197,44 @@ public class CreateAccountMailUseCaseTest {
         Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
 
+        Mockito.verify(accountGateway, Mockito.times(0))
+                .findById(Mockito.any());
+        Mockito.verify(accountMailGateway, Mockito.times(0))
+                .findAllByAccountId(Mockito.any());
+        Mockito.verify(accountMailGateway, Mockito.never())
+                .create(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidAccount_whenCallCreateAccountMail_thenShouldReturnAnError() {
+        // given
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aAccount = "84045cfc-705f-4418-bf4b-155d5d11f69f";
+        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aSubject = "Account confirmation";
+        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var expectedErrorMessage = "Account with id 84045cfc-705f-4418-bf4b-155d5d11f69f was not found";
+
+        final var aCommand = CreateAccountMailCommand.with(
+                aAccount,
+                aToken,
+                aType,
+                aSubject,
+                aExpirestAt
+        );
+
+        // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.empty());
+
+        final var aNotFound = Assertions.assertThrows(NotFoundException.class,
+                () -> useCase.execute(aCommand));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aNotFound.getMessage());
+
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(0))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.never())
@@ -200,7 +258,7 @@ public class CreateAccountMailUseCaseTest {
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -208,12 +266,17 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.never())
@@ -237,7 +300,7 @@ public class CreateAccountMailUseCaseTest {
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -245,12 +308,17 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.never())
@@ -274,7 +342,7 @@ public class CreateAccountMailUseCaseTest {
         final var expectedErrorCount = 1;
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -282,12 +350,17 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
         Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.never())
@@ -309,7 +382,7 @@ public class CreateAccountMailUseCaseTest {
         final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aCommand = CreateAccountMailCommand.with(
-                aAccount,
+                aAccount.getId().getValue(),
                 aToken,
                 aType,
                 aSubject,
@@ -317,6 +390,8 @@ public class CreateAccountMailUseCaseTest {
         );
 
         // when
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
         Mockito.when(accountMailGateway.findAllByAccountId(Mockito.any()))
                 .thenReturn(List.of(
                         AccountMail.newAccountMail(
@@ -338,6 +413,8 @@ public class CreateAccountMailUseCaseTest {
         // then
         Assertions.assertNotNull(aOutput);
 
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .findById(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findAllByAccountId(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(1))
