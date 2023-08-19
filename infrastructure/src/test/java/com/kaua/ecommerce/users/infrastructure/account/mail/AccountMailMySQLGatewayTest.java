@@ -3,6 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.account.mail;
 import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailID;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
@@ -143,6 +144,15 @@ public class AccountMailMySQLGatewayTest {
         Assertions.assertEquals(1, accountMailRepository.count());
 
         Assertions.assertDoesNotThrow(() -> accountMailGateway.deleteById(aAccountMail.getId()));
+
+        Assertions.assertEquals(0, accountMailRepository.count());
+    }
+
+    @Test
+    public void givenInvalidAccountMailId_whenCallDeleteById_shouldDeleteAccountMail() {
+        Assertions.assertEquals(0, accountMailRepository.count());
+
+        accountMailGateway.deleteById(AccountMailID.from("empty").getValue());
 
         Assertions.assertEquals(0, accountMailRepository.count());
     }
