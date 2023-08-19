@@ -117,4 +117,47 @@ public class AccountMySQLGatewayTest {
 
         Assertions.assertTrue(actualAccount.isEmpty());
     }
+
+    @Test
+    public void givenAValidAccount_whenCallUpdate_shouldReturnAUpdatedAccount() {
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silva";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var aAvatarUrl = "http://local/teste.png";
+
+        Account aAccount = Account.newAccount(aFirstName, aLastName, aEmail, "1234567Ab*");
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        accountRepository.save(AccountJpaEntity.toEntity(aAccount));
+
+        Assertions.assertEquals(1, accountRepository.count());
+
+        final var aAccountUpdated = aAccount.update(aPassword, aAvatarUrl);
+
+        final var actualAccount = this.accountGateway.update(aAccountUpdated);
+
+        Assertions.assertEquals(aAccount.getId(), actualAccount.getId());
+        Assertions.assertEquals(aFirstName, actualAccount.getFirstName());
+        Assertions.assertEquals(aLastName, actualAccount.getLastName());
+        Assertions.assertEquals(aEmail, actualAccount.getEmail());
+        Assertions.assertEquals(aPassword, actualAccount.getPassword());
+        Assertions.assertEquals(aAvatarUrl, actualAccount.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getMailStatus(), actualAccount.getMailStatus());
+        Assertions.assertEquals(aAccount.getCreatedAt(), actualAccount.getCreatedAt());
+        Assertions.assertEquals(aAccount.getUpdatedAt(), actualAccount.getUpdatedAt());
+
+        final var actualEntity = accountRepository.findById(actualAccount.getId().getValue()).get();
+
+        Assertions.assertEquals(aAccount.getId().getValue(), actualEntity.getId());
+        Assertions.assertEquals(aFirstName, actualEntity.getFirstName());
+        Assertions.assertEquals(aLastName, actualEntity.getLastName());
+        Assertions.assertEquals(aEmail, actualEntity.getEmail());
+        Assertions.assertEquals(aPassword, actualEntity.getPassword());
+        Assertions.assertEquals(aAvatarUrl, actualEntity.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getMailStatus(), actualEntity.getMailStatus());
+        Assertions.assertEquals(aAccount.getCreatedAt(), actualEntity.getCreatedAt());
+        Assertions.assertEquals(aAccount.getUpdatedAt(), actualEntity.getUpdatedAt());
+    }
 }
