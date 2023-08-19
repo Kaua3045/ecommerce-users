@@ -79,6 +79,10 @@ public class AccountMail extends AggregateRoot<AccountMailID> {
         );
     }
 
+    public boolean isExpired() {
+        return this.expiresAt.isBefore(InstantUtils.now());
+    }
+
     public String getToken() {
         return token;
     }
