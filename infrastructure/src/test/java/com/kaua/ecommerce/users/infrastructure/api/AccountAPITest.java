@@ -5,6 +5,8 @@ import com.kaua.ecommerce.users.ControllerTest;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailCommand;
+import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailCommand;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
@@ -49,6 +51,9 @@ public class AccountAPITest {
 
     @MockBean
     private CreateAccountMailUseCase createAccountMailUseCase;
+
+    @MockBean
+    private ConfirmAccountMailUseCase confirmAccountMailUseCase;
 
     @MockBean
     private BCryptPasswordEncoder passwordEncoder;
@@ -171,5 +176,42 @@ public class AccountAPITest {
                         Objects.equals(aEmail, cmd.email()) &&
                         Objects.equals(aPassword, cmd.password())
         ));
+    }
+
+    @Test
+    public void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneNoContent() throws Exception {
+        // given
+        final var aInput = RandomStringUtils.generateValue(36);
+
+        Mockito.when(confirmAccountMailUseCase.execute(Mockito.any(ConfirmAccountMailCommand.class)))
+                .thenReturn(Either.right(true));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/confirm")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    public void givenAnInvalidTokenExpired_whenCallConfirmAccount_thenShouldReturneAnError() throws Exception {
+        // given
+        final var expectedErrorMessage = "Token expired";
+        final var aInput = RandomStringUtils.generateValue(36);
+
+        Mockito.when(confirmAccountMailUseCase.execute(Mockito.any(ConfirmAccountMailCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/confirm")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
     }
 }
