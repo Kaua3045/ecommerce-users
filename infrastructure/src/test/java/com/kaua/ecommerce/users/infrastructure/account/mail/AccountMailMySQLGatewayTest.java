@@ -156,4 +156,40 @@ public class AccountMailMySQLGatewayTest {
 
         Assertions.assertEquals(0, accountMailRepository.count());
     }
+
+    @Test
+    public void givenAValidPrePersistedAccountMail_whenCallFindByToken_shouldReturnAccountMail() {
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silva",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aExpiresAt = InstantUtils.now().plus(1, ChronoUnit.HOURS);
+
+        final var aAccountMail = AccountMail.newAccountMail(
+                aToken,
+                aType,
+                aAccount,
+                aExpiresAt
+        );
+
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
+
+        accountMailRepository.save(AccountMailJpaEntity.toEntity(aAccountMail));
+
+        Assertions.assertEquals(1, accountMailRepository.count());
+
+        final var actualAccountMail = accountMailGateway.findByToken(aToken).get();
+
+        Assertions.assertEquals(aAccountMail.getId(), actualAccountMail.getId());
+        Assertions.assertEquals(aToken, actualAccountMail.getToken());
+        Assertions.assertEquals(aType, actualAccountMail.getType());
+        Assertions.assertEquals(aAccount, actualAccountMail.getAccount());
+        Assertions.assertEquals(aExpiresAt, actualAccountMail.getExpiresAt());
+        Assertions.assertEquals(aAccountMail.getCreatedAt(), actualAccountMail.getCreatedAt());
+        Assertions.assertEquals(aAccountMail.getUpdatedAt(), actualAccountMail.getUpdatedAt());
+    }
 }
