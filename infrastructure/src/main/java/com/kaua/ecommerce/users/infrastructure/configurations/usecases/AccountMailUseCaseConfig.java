@@ -5,7 +5,7 @@ import com.kaua.ecommerce.users.application.account.mail.create.DefaultCreateAcc
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.QueueGateway;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.kaua.ecommerce.users.infrastructure.configurations.annotations.EmailQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -21,7 +21,7 @@ public class AccountMailUseCaseConfig {
     public AccountMailUseCaseConfig(
             final AccountMailGateway accountMailGateway,
             final AccountGateway accountGateway,
-            @Qualifier("mail") final QueueGateway queueGateway
+            @EmailQueue final QueueGateway queueGateway
     ) {
         this.accountMailGateway = Objects.requireNonNull(accountMailGateway);
         this.accountGateway = Objects.requireNonNull(accountGateway);
