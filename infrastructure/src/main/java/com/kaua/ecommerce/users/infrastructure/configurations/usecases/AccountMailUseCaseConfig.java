@@ -1,5 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
+import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.account.mail.confirm.DefaultConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.DefaultCreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
@@ -31,5 +33,10 @@ public class AccountMailUseCaseConfig {
     @Bean
     public CreateAccountMailUseCase createAccountMailUseCase() {
         return new DefaultCreateAccountMailUseCase(accountMailGateway, accountGateway, queueGateway);
+    }
+
+    @Bean
+    public ConfirmAccountMailUseCase confirmAccountMailUseCase() {
+        return new DefaultConfirmAccountMailUseCase(accountMailGateway, accountGateway);
     }
 }
