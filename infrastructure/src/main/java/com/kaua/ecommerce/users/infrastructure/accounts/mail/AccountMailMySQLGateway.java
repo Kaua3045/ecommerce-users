@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class AccountMailMySQLGateway implements AccountMailGateway {
@@ -32,6 +33,11 @@ public class AccountMailMySQLGateway implements AccountMailGateway {
                 .stream()
                 .map(AccountMailJpaEntity::toDomain)
                 .toList();
+    }
+
+    @Override
+    public Optional<AccountMail> findByToken(String token) {
+        return this.accountMailRepository.findByToken(token).map(AccountMailJpaEntity::toDomain);
     }
 
     @Override
