@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.account.mail.create;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.application.gateways.QueueGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
@@ -32,6 +33,9 @@ public class CreateAccountMailUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
+
+    @Mock
+    private QueueGateway queueGateway;
 
     @InjectMocks
     private DefaultCreateAccountMailUseCase useCase;
