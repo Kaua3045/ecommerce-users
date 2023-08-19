@@ -24,7 +24,7 @@ public class AccountMailJpaEntity {
     @Column(name = "expires_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant expiresAt;
 
-    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @ManyToOne(optional = false, fetch = FetchType.EAGER)
     @JoinColumn(name = "account_id")
     private AccountJpaEntity account;
 
