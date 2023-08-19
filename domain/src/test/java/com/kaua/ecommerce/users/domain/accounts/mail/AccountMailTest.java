@@ -125,7 +125,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidAccountIdNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    public void givenAnInvalidAccountNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final Account aAccount = null;
@@ -133,6 +133,30 @@ public class AccountMailTest {
         final var expectedErrorMessage = "'account' should not be null";
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountMailValidator = new AccountMailValidator(aAccountMail, aTestValidationHandler);
+
+        aAccountMailValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    public void givenAValidAccountButAfterSetNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aAccount = Account.newAccount(
+                "Test",
+                "Testando",
+                "teste@teste.com",
+                "123456Ab"
+        );
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var expectedErrorMessage = "'account' should not be null";
+
+        final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
+        aAccountMail.setAccount(null);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aAccountMailValidator = new AccountMailValidator(aAccountMail, aTestValidationHandler);
@@ -223,5 +247,38 @@ public class AccountMailTest {
         Assertions.assertFalse(aAccountMail.getId().equals(AccountMailID.unique()));
         Assertions.assertFalse(aAccountMail.getId().equals(null));
         Assertions.assertFalse(aAccountMail.getId().equals(new Object()));
+    }
+
+    @Test
+    public void givenValidValues_whenCalledWithInAccountMail_shouldReturnAnAccountMailObjectWithDataEqualToWhatWasPassed() {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aAccount = Account.newAccount(
+                "Test",
+                "Testando",
+                "teste@teste.com",
+                "123456Ab");
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+
+        final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
+
+        final var aAccountMailCloned = AccountMail.with(
+                aAccountMail.getId().getValue(),
+                aAccountMail.getToken(),
+                aAccountMail.getType(),
+                aAccountMail.getAccount(),
+                aAccountMail.getExpiresAt(),
+                aAccountMail.getCreatedAt(),
+                aAccountMail.getUpdatedAt()
+        );
+
+        // then
+        Assertions.assertEquals(aAccountMail.getId().getValue(), aAccountMailCloned.getId().getValue());
+        Assertions.assertEquals(aAccountMail.getToken(), aAccountMailCloned.getToken());
+        Assertions.assertEquals(aAccountMail.getType(), aAccountMailCloned.getType());
+        Assertions.assertEquals(aAccountMail.getAccount(), aAccountMailCloned.getAccount());
+        Assertions.assertEquals(aAccountMail.getExpiresAt(), aAccountMailCloned.getExpiresAt());
+        Assertions.assertEquals(aAccountMail.getCreatedAt(), aAccountMailCloned.getCreatedAt());
+        Assertions.assertEquals(aAccountMail.getUpdatedAt(), aAccountMailCloned.getUpdatedAt());
     }
 }
