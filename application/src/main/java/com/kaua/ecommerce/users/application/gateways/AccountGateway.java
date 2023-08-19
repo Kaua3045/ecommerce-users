@@ -11,4 +11,6 @@ public interface AccountGateway {
     boolean existsByEmail(String aEmail);
 
     Optional<Account> findById(String aId);
+
+    Account update(Account aAccount);
 }
