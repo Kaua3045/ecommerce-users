@@ -281,4 +281,38 @@ public class AccountMailTest {
         Assertions.assertEquals(aAccountMail.getCreatedAt(), aAccountMailCloned.getCreatedAt());
         Assertions.assertEquals(aAccountMail.getUpdatedAt(), aAccountMailCloned.getUpdatedAt());
     }
+
+    @Test
+    public void givenAValidValues_whenCallIsExpired_shouldReturnFalse() {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aAccount = Account.newAccount(
+                "Test",
+                "Testando",
+                "teste@teste.com",
+                "123456Ab");
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+
+        final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
+
+        // then
+        Assertions.assertFalse(aAccountMail.isExpired());
+    }
+
+    @Test
+    public void givenAInvalidValues_whenCallIsExpired_shouldReturnTrue() {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aAccount = Account.newAccount(
+                "Test",
+                "Testando",
+                "teste@teste.com",
+                "123456Ab");
+        final var aExpiresAt = InstantUtils.now().minus(10, ChronoUnit.MINUTES);
+
+        final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
+
+        // then
+        Assertions.assertTrue(aAccountMail.isExpired());
+    }
 }
