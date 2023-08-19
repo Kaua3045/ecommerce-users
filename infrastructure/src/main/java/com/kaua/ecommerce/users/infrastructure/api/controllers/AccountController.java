@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.infrastructure.api.controllers;
 
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailCommand;
+import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailCommand;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
@@ -20,10 +22,16 @@ public class AccountController implements AccountAPI {
 
     private final CreateAccountUseCase createAccountUseCase;
     private final CreateAccountMailUseCase createAccountMailUseCase;
+    private final ConfirmAccountMailUseCase confirmAccountMailUseCase;
 
-    public AccountController(final CreateAccountUseCase createAccountUseCase, final CreateAccountMailUseCase createAccountMailUseCase) {
+    public AccountController(
+            final CreateAccountUseCase createAccountUseCase,
+            final CreateAccountMailUseCase createAccountMailUseCase,
+            final ConfirmAccountMailUseCase confirmAccountMailUseCase
+    ) {
         this.createAccountUseCase = createAccountUseCase;
         this.createAccountMailUseCase = createAccountMailUseCase;
+        this.confirmAccountMailUseCase = confirmAccountMailUseCase;
     }
 
     @Override
@@ -53,5 +61,16 @@ public class AccountController implements AccountAPI {
         return aResult.isLeft()
                 ? ResponseEntity.unprocessableEntity().body(aResult.getLeft())
                 : ResponseEntity.status(HttpStatus.CREATED).body(aResult.getRight());
+    }
+
+    @Override
+    public ResponseEntity<?> confirmAccount(String token) {
+        final var aCommand = ConfirmAccountMailCommand.with(token);
+
+        final var aResult = this.confirmAccountMailUseCase.execute(aCommand);
+
+        return aResult.isLeft()
+                ? ResponseEntity.unprocessableEntity().body(aResult.getLeft())
+                : ResponseEntity.noContent().build();
     }
 }
