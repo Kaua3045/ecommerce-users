@@ -334,7 +334,6 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
-        final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
 
         // when
@@ -348,7 +347,6 @@ public class AccountTest {
         final var aAccountUpdatedAt = aAccount.getUpdatedAt();
 
         final var aAccountUpdated = aAccount.update(
-                aMailStatus,
                 aPassword,
                 aAvatarUrl
         );
@@ -359,7 +357,7 @@ public class AccountTest {
         Assertions.assertEquals(aAccount.getFirstName(), aAccountUpdated.getFirstName());
         Assertions.assertEquals(aAccount.getLastName(), aAccountUpdated.getLastName());
         Assertions.assertEquals(aAccount.getEmail(), aAccountUpdated.getEmail());
-        Assertions.assertEquals(aMailStatus, aAccountUpdated.getMailStatus());
+        Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccountUpdated.getMailStatus());
         Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
         Assertions.assertEquals(aAvatarUrl, aAccountUpdated.getAvatarUrl());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
@@ -373,7 +371,6 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final String aPassword = null;
-        final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' should not be null or blank";
 
@@ -386,7 +383,6 @@ public class AccountTest {
         );
 
         final var aAccountUpdated = aAccount.update(
-                aMailStatus,
                 aPassword,
                 aAvatarUrl
         );
@@ -407,7 +403,6 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345";
-        final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
@@ -420,7 +415,6 @@ public class AccountTest {
         );
 
         final var aAccountUpdated = aAccount.update(
-                aMailStatus,
                 aPassword,
                 aAvatarUrl
         );
@@ -441,7 +435,6 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = RandomStringUtils.generateValue(256);
-        final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
@@ -454,7 +447,6 @@ public class AccountTest {
         );
 
         final var aAccountUpdated = aAccount.update(
-                aMailStatus,
                 aPassword,
                 aAvatarUrl
         );
@@ -475,7 +467,6 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678";
-        final var aMailStatus = AccountMailStatus.CONFIRMED;
         final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
 
@@ -488,7 +479,6 @@ public class AccountTest {
         );
 
         final var aAccountUpdated = aAccount.update(
-                aMailStatus,
                 aPassword,
                 aAvatarUrl
         );
@@ -540,5 +530,37 @@ public class AccountTest {
         Assertions.assertEquals(aAccount.getAvatarUrl(), aAccountCloned.getAvatarUrl());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountCloned.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), aAccountCloned.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAValidAccountWatingConfirmation_whenCallsConfirm_thenAnAccountShouldBeConfirmed() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aAccountUpdatedAt = aAccount.getUpdatedAt();
+        final var aAccountUpdated = aAccount.confirm();
+
+        //then
+        Assertions.assertDoesNotThrow(() -> aAccountUpdated.validate(new ThrowsValidationHandler()));
+        Assertions.assertEquals(aAccount.getId().getValue(), aAccountUpdated.getId().getValue());
+        Assertions.assertEquals(aAccount.getFirstName(), aAccountUpdated.getFirstName());
+        Assertions.assertEquals(aAccount.getLastName(), aAccountUpdated.getLastName());
+        Assertions.assertEquals(aAccount.getEmail(), aAccountUpdated.getEmail());
+        Assertions.assertEquals(AccountMailStatus.CONFIRMED, aAccountUpdated.getMailStatus());
+        Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
+        Assertions.assertNull(aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
+        Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
     }
 }
