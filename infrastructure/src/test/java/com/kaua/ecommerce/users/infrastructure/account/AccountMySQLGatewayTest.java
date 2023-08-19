@@ -1,7 +1,8 @@
 package com.kaua.ecommerce.users.infrastructure.account;
 
-import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.MySQLGatewayTest;
+import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.infrastructure.accounts.AccountMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
@@ -78,5 +79,42 @@ public class AccountMySQLGatewayTest {
         Assertions.assertEquals(1, accountRepository.count());
 
         Assertions.assertTrue(accountGateway.existsByEmail(aEmail));
+    }
+
+    @Test
+    public void givenAPrePersistedAccountAndValidAccountId_whenCallFindById_shouldReturnAccount() {
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silva";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+
+        Account aAccount = Account.newAccount(aFirstName, aLastName, aEmail, aPassword);
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        accountRepository.save(AccountJpaEntity.toEntity(aAccount));
+
+        Assertions.assertEquals(1, accountRepository.count());
+
+        final var actualAccount = accountGateway.findById(aAccount.getId().getValue()).get();
+
+        Assertions.assertEquals(aAccount.getId(), actualAccount.getId());
+        Assertions.assertEquals(aFirstName, actualAccount.getFirstName());
+        Assertions.assertEquals(aLastName, actualAccount.getLastName());
+        Assertions.assertEquals(aEmail, actualAccount.getEmail());
+        Assertions.assertEquals(aPassword, actualAccount.getPassword());
+        Assertions.assertNull(actualAccount.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getMailStatus(), actualAccount.getMailStatus());
+        Assertions.assertEquals(aAccount.getCreatedAt(), actualAccount.getCreatedAt());
+        Assertions.assertEquals(aAccount.getUpdatedAt(), actualAccount.getUpdatedAt());
+    }
+
+    @Test
+    public void givenAValidAccountIdNotStored_whenCallFindById_shouldReturnEmpty() {
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var actualAccount = accountGateway.findById(AccountID.from("empty").getValue());
+
+        Assertions.assertTrue(actualAccount.isEmpty());
     }
 }
