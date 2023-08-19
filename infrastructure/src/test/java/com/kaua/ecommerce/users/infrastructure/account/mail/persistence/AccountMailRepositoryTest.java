@@ -9,6 +9,7 @@ import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import org.hibernate.PropertyValueException;
 import org.hibernate.id.IdentifierGenerationException;
 import org.junit.jupiter.api.Assertions;
@@ -24,6 +25,9 @@ public class AccountMailRepositoryTest {
 
     @Autowired
     private AccountMailJpaRepository accountMailRepository;
+
+    @Autowired
+    private AccountJpaRepository accountJpaRepository;
 
     @Test
     public void givenAnInvalidNullToken_whenCallSave_shouldReturnAnException() {
@@ -42,6 +46,8 @@ public class AccountMailRepositoryTest {
                 aAccount,
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
+
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
 
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setToken(null);
@@ -74,6 +80,8 @@ public class AccountMailRepositoryTest {
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
 
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
+
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setType(null);
 
@@ -104,6 +112,8 @@ public class AccountMailRepositoryTest {
                 aAccount,
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
+
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
 
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setExpiresAt(null);
@@ -136,6 +146,8 @@ public class AccountMailRepositoryTest {
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
 
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
+
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setAccount(null);
 
@@ -166,6 +178,8 @@ public class AccountMailRepositoryTest {
                 aAccount,
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
+
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
 
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setCreatedAt(null);
@@ -198,6 +212,8 @@ public class AccountMailRepositoryTest {
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
 
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
+
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setUpdatedAt(null);
 
@@ -227,6 +243,8 @@ public class AccountMailRepositoryTest {
                 aAccount,
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
+
+        accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
 
         final var aEntity = AccountMailJpaEntity.toEntity(aAccountMail);
         aEntity.setId(null);
