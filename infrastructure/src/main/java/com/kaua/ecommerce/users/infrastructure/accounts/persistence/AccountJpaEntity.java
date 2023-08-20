@@ -86,7 +86,8 @@ public class AccountJpaEntity {
                 getPassword(),
                 getAvatarUrl(),
                 getCreatedAt(),
-                getUpdatedAt()
+                getUpdatedAt(),
+                null
         );
     }
 
