@@ -62,11 +62,9 @@ public class Account extends AggregateRoot<AccountID> {
     }
 
     public Account update(
-            final AccountMailStatus aMailStatus,
             final String aPassword,
             final String aAvatarUrl
     ) {
-        this.mailStatus = aMailStatus;
         this.password = aPassword;
         this.avatarUrl = aAvatarUrl;
         this.updatedAt = InstantUtils.now();
@@ -95,6 +93,12 @@ public class Account extends AggregateRoot<AccountID> {
                 aCreatedAt,
                 aUpdatedAt
         );
+    }
+
+    public Account confirm() {
+        this.mailStatus = AccountMailStatus.CONFIRMED;
+        this.updatedAt = InstantUtils.now();
+        return this;
     }
 
     public String getFirstName() {

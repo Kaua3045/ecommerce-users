@@ -1,3 +1,7 @@
+logging:
+  level:
+    com.kaua.ecommerce.users.infrastructure.services: DEBUG
+
 server:
   undertow:
     threads:
