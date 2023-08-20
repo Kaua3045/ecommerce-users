@@ -29,7 +29,7 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
     }
 
     @Override
-    public Either<NotificationHandler, AccountMail> execute(CreateAccountMailCommand aCommand) {
+    public Either<NotificationHandler, CreateAccountMailOutput> execute(CreateAccountMailCommand aCommand) {
         if (aCommand.accountId() == null) {
             return Either.left(NotificationHandler.create(new Error("'accountId' should not be null")));
         }
@@ -57,15 +57,16 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
                 : Either.right(this.createAccountMail(aAccountMail, aCommand));
     }
 
-    private AccountMail createAccountMail(AccountMail aAccountMail, CreateAccountMailCommand aCommand) {
-
+    private CreateAccountMailOutput createAccountMail(AccountMail aAccountMail, CreateAccountMailCommand aCommand) {
         this.queueGateway.send(CreateMailQueueCommand.with(
                 aAccountMail.getToken(),
                 aCommand.subject(),
                 aAccountMail.getAccount().getFirstName(),
                 aAccountMail.getAccount().getEmail()
         ));
-        return this.accountMailGateway.create(aAccountMail);
+        this.accountMailGateway.create(aAccountMail);
+
+        return CreateAccountMailOutput.from(aAccountMail.getId().getValue());
     }
 
     private record CreateMailQueueCommand(
