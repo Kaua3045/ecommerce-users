@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.UUID;
 
 public class EntityTest {
@@ -51,7 +52,7 @@ public class EntityTest {
     }
 
     private Entity<SampleIdentifier> createEntity(SampleIdentifier id) {
-        return new Entity<>(id) {
+        return new Entity<>(id, Collections.emptyList()) {
             @Override
             public void validate(ValidationHandler handler) {
                 // Lógica de validação simulada
