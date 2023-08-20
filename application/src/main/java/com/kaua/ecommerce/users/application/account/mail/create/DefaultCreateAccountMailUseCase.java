@@ -54,11 +54,34 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
 
         return notification.hasError()
                 ? Either.left(notification)
-                : Either.right(this.createAccountMail(aAccountMail));
+                : Either.right(this.createAccountMail(aAccountMail, aCommand));
     }
 
-    private AccountMail createAccountMail(AccountMail aAccountMail) {
-        this.queueGateway.send(aAccountMail);
+    private AccountMail createAccountMail(AccountMail aAccountMail, CreateAccountMailCommand aCommand) {
+
+        this.queueGateway.send(CreateMailQueueCommand.with(
+                aAccountMail.getToken(),
+                aCommand.subject(),
+                aAccountMail.getAccount().getFirstName(),
+                aAccountMail.getAccount().getEmail()
+        ));
         return this.accountMailGateway.create(aAccountMail);
+    }
+
+    private record CreateMailQueueCommand(
+            String token,
+            String subject,
+            String firstName,
+            String email
+    ) {
+
+        public static CreateMailQueueCommand with(
+                final String token,
+                final String subject,
+                final String firstName,
+                final String email
+        ) {
+            return new CreateMailQueueCommand(token, subject, firstName, email);
+        }
     }
 }
