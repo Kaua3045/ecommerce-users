@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.account.mail;
 
+import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
@@ -20,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-@MySQLGatewayTest
+@IntegrationTest
 public class AccountMailMySQLGatewayTest {
 
     @Autowired
