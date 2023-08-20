@@ -7,8 +7,10 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailCommand;
 import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailOutput;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -88,38 +90,6 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnNotification() throws Exception {
-        final String aFirstName = null;
-        final var aLastName = "Silveira";
-        final var aEmail = "teste@teste.com";
-        final var aPassword = "1234567Ab";
-        final var expectedErrorMessage = "'firstName' should not be null or blank";
-
-        final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
-
-        Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
-
-        final var request = MockMvcRequestBuilders.post("/accounts")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(aInput));
-
-        this.mvc.perform(request)
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
-
-        Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
-                Objects.equals(aFirstName, cmd.firstName()) &&
-                        Objects.equals(aLastName, cmd.lastName()) &&
-                        Objects.equals(aEmail, cmd.email()) &&
-                        Objects.equals(aPassword, cmd.password())
-        ));
-    }
-
-    @Test
     public void givenAnInvalidCommand_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final String aFirstName = null;
         final var aLastName = "Silveira";
@@ -186,5 +156,59 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+    }
+
+    @Test
+    public void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMailId() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var aId = "123";
+
+        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+                .thenReturn(Either.right(CreateAccountMailOutput.from(aId)));
+
+        final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
+
+        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidCommand_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var expectedErrorMessage = "'token' should not be null or blank";
+
+        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+
+        final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 }
