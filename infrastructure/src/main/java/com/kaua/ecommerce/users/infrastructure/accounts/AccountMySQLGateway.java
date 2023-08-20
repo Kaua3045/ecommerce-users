@@ -4,6 +4,8 @@ import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountCreatedEvent;
+import com.kaua.ecommerce.users.infrastructure.services.EventService;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -13,16 +15,25 @@ import java.util.Optional;
 public class AccountMySQLGateway implements AccountGateway {
 
     private final AccountJpaRepository accountJpaRepository;
+    private final EventService eventService;
 
-    public AccountMySQLGateway(final AccountJpaRepository accountJpaRepository) {
+    public AccountMySQLGateway(
+            final AccountJpaRepository accountJpaRepository,
+            @AccountCreatedEvent final EventService eventService
+    ) {
         this.accountJpaRepository = Objects.requireNonNull(accountJpaRepository);
+        this.eventService = Objects.requireNonNull(eventService);
     }
 
     @Override
     public Account create(Account aAccount) {
-        return this.accountJpaRepository
+        final var aResult = this.accountJpaRepository
                 .save(AccountJpaEntity.toEntity(aAccount))
                 .toDomain();
+
+        aAccount.publishDomainEvent(this.eventService::send);
+
+        return aResult;
     }
 
     @Override
