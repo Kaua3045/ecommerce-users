@@ -186,9 +186,9 @@ public class AccountAPITest {
         Mockito.when(confirmAccountMailUseCase.execute(Mockito.any(ConfirmAccountMailCommand.class)))
                 .thenReturn(Either.right(true));
 
-        final var request = MockMvcRequestBuilders.patch("/accounts/confirm")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(aInput));
+        final var request = MockMvcRequestBuilders.patch("/accounts/confirm/{token}", aInput)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -204,9 +204,9 @@ public class AccountAPITest {
         Mockito.when(confirmAccountMailUseCase.execute(Mockito.any(ConfirmAccountMailCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
-        final var request = MockMvcRequestBuilders.patch("/accounts/confirm")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(this.mapper.writeValueAsString(aInput));
+        final var request = MockMvcRequestBuilders.patch("/accounts/confirm/{token}", aInput)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
