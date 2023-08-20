@@ -65,16 +65,13 @@ public class CreateAccountMailUseCaseIT {
 
         // then
         Assertions.assertNotNull(aOutput);
-        Assertions.assertEquals(aAccountId, aOutput.getAccount().getId().getValue());
-        Assertions.assertEquals(aToken, aOutput.getToken());
-        Assertions.assertEquals(aType, aOutput.getType());
-        Assertions.assertEquals(aExpiresAt, aOutput.getExpiresAt());
+        Assertions.assertNotNull(aOutput.id());
 
         Assertions.assertEquals(1, accountMailRepository.count());
 
-        final var actualAccountMail = accountMailRepository.findById(aOutput.getId().getValue()).get();
+        final var actualAccountMail = accountMailRepository.findById(aOutput.id()).get();
 
-        Assertions.assertEquals(aOutput.getId().getValue(), actualAccountMail.getId());
+        Assertions.assertEquals(aOutput.id(), actualAccountMail.getId());
         Assertions.assertEquals(aToken, actualAccountMail.getToken());
         Assertions.assertEquals(aAccountId, actualAccountMail.getAccount().getId());
         Assertions.assertEquals(aType, actualAccountMail.getType());
