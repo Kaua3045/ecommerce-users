@@ -52,10 +52,6 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
         final var notification = NotificationHandler.create();
         aAccountMail.validate(notification);
 
-        // TODO: Send message to mail queue
-        // FILA, SUBJECT, EMAIL e TOKEN
-        // this.messageGateway.send("mail-queue", aCommand.subject(), aCommand.email(), aCommand.token());
-
         return notification.hasError()
                 ? Either.left(notification)
                 : Either.right(this.createAccountMail(aAccountMail));
