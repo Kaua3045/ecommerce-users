@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(DomainException.class)
-    public ResponseEntity<?> handleDomainException(final DomainException exception) {
+    public ResponseEntity<ApiError> handleDomainException(final DomainException exception) {
         return ResponseEntity.unprocessableEntity().body(ApiError.from(exception));
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<?> handleDomainException(final NotFoundException exception) {
+    public ResponseEntity<ApiError> handleDomainException(final NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiError.from(exception));
     }
 }
