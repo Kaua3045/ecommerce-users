@@ -192,7 +192,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "'accountId' should not be null";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
                 .contentType(MediaType.APPLICATION_JSON)
