@@ -116,7 +116,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "'token' should not be null or blank";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -143,7 +143,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "'type' should not be null";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -170,7 +170,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "'expiresAt' should not be null";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -192,7 +192,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "'accountId' should not be null";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +219,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "'expiresAt' should not be before now";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
                 .contentType(MediaType.APPLICATION_JSON)
