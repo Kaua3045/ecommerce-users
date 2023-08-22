@@ -9,6 +9,7 @@ import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
+import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -88,7 +89,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -120,7 +121,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -152,7 +153,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -184,7 +185,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -216,7 +217,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -248,7 +249,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -280,7 +281,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -312,7 +313,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -344,7 +345,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -376,7 +377,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -408,7 +409,7 @@ public class AccountAPITest {
         final var aInput = new CreateAccountApiInput(aFirstName, aLastName, aEmail, aPassword);
 
         Mockito.when(createAccountUseCase.execute(Mockito.any(CreateAccountCommand.class)))
-                .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
                 .contentType(MediaType.APPLICATION_JSON)
