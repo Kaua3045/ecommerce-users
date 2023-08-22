@@ -12,7 +12,7 @@ public class QueueConfig {
 
     @Bean
     @EmailQueue
-    @Profile({"development", "test"})
+    @Profile({"development", "test", "test-service-integration"})
     public QueueGateway localQueueGateway() {
         return new InMemoryQueueService();
     }
