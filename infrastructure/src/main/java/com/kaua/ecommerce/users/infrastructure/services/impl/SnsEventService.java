@@ -14,7 +14,6 @@ import java.util.HashMap;
 public class SnsEventService implements EventService {
 
     private static final Logger log = LoggerFactory.getLogger(SnsEventService.class);
-    private static final String TOPIC_ARN = "arn:aws:sns:sa-east-1:727910200489:account.fifo";
     private final String filterType;
 
     public SnsEventService(final String aFilterType) {
@@ -34,7 +33,7 @@ public class SnsEventService implements EventService {
                     .messageAttributes(aAttirbutes)
                     .messageGroupId("account")
                     .message(Json.writeValueAsString(event))
-                    .topicArn(TOPIC_ARN)
+                    .topicArn(SecretsManagerService.getValue("ACCOUNT_TOPIC_ARN"))
             );
 
             if (!aResponse.sdkHttpResponse().isSuccessful()) {
