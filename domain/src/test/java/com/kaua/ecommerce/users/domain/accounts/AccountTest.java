@@ -24,6 +24,16 @@ public class AccountTest {
                 aPassword
         );
 
+        final var aEvent = new AccountCreatedEvent(
+                aAccount.getId().getValue(),
+                aAccount.getFirstName(),
+                aAccount.getLastName(),
+                aAccount.getEmail()
+        );
+        final var expectedEventCount = 1;
+
+        aAccount.registerEvent(aEvent);
+
         // then
         Assertions.assertNotNull(aAccount.getId());
         Assertions.assertEquals(aFirstName, aAccount.getFirstName());
@@ -34,6 +44,9 @@ public class AccountTest {
         Assertions.assertNull(aAccount.getAvatarUrl());
         Assertions.assertNotNull(aAccount.getCreatedAt());
         Assertions.assertNotNull(aAccount.getUpdatedAt());
+
+        Assertions.assertEquals(aEvent, aAccount.getDomainEvents().get(0));
+        Assertions.assertEquals(expectedEventCount, aAccount.getDomainEvents().size());
 
         Assertions.assertTrue(aAccount.getId().equals(aAccount.getId()));
         Assertions.assertFalse(aAccount.getId().equals(AccountID.unique()));
@@ -508,6 +521,16 @@ public class AccountTest {
                 aPassword
         );
 
+        final var aEvent = new AccountCreatedEvent(
+                aAccount.getId().getValue(),
+                aAccount.getFirstName(),
+                aAccount.getLastName(),
+                aAccount.getEmail()
+        );
+        final var expectedEventCount = 1;
+
+        aAccount.registerEvent(aEvent);
+
         final var aAccountCloned = Account.with(
                 aAccount.getId().getValue(),
                 aAccount.getFirstName(),
@@ -517,7 +540,8 @@ public class AccountTest {
                 aAccount.getPassword(),
                 aAccount.getAvatarUrl(),
                 aAccount.getCreatedAt(),
-                aAccount.getUpdatedAt()
+                aAccount.getUpdatedAt(),
+                aAccount.getDomainEvents()
         );
 
         // then
@@ -530,6 +554,9 @@ public class AccountTest {
         Assertions.assertEquals(aAccount.getAvatarUrl(), aAccountCloned.getAvatarUrl());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountCloned.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), aAccountCloned.getUpdatedAt());
+
+        Assertions.assertEquals(aEvent, aAccountCloned.getDomainEvents().get(0));
+        Assertions.assertEquals(expectedEventCount, aAccountCloned.getDomainEvents().size());
     }
 
     @Test

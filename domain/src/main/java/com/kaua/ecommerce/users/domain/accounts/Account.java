@@ -1,10 +1,12 @@
 package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.AggregateRoot;
+import com.kaua.ecommerce.users.domain.event.DomainEvent;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.Objects;
 
 public class Account extends AggregateRoot<AccountID> {
@@ -27,9 +29,10 @@ public class Account extends AggregateRoot<AccountID> {
             final String aPassword,
             final String aAvatarUrl,
             final Instant aCreatedAt,
-            final Instant aUpdatedAt
+            final Instant aUpdatedAt,
+            final List<DomainEvent> aDomainEvents
     ) {
-        super(aAccountID);
+        super(aAccountID, aDomainEvents);
         this.firstName = aFirstName;
         this.lastName = aLastName;
         this.email = aEmail;
@@ -57,7 +60,8 @@ public class Account extends AggregateRoot<AccountID> {
                 aPassword,
                 null,
                 now,
-                now
+                now,
+                null
         );
     }
 
@@ -80,7 +84,8 @@ public class Account extends AggregateRoot<AccountID> {
             final String aPassword,
             final String aAvatarUrl,
             final Instant aCreatedAt,
-            final Instant aUpdatedAt
+            final Instant aUpdatedAt,
+            final List<DomainEvent> aDomainEvents
     ) {
         return new Account(
                 AccountID.from(aId),
@@ -91,7 +96,8 @@ public class Account extends AggregateRoot<AccountID> {
                 aPassword,
                 aAvatarUrl,
                 aCreatedAt,
-                aUpdatedAt
+                aUpdatedAt,
+                aDomainEvents
         );
     }
 

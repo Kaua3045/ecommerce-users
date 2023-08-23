@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.application.account.create;
 
+import com.kaua.ecommerce.users.AmqpTest;
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 @IntegrationTest
+@AmqpTest
 public class CreateAccountUseCaseIT {
 
     @Autowired

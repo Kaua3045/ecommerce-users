@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users.infrastructure.services;
+package com.kaua.ecommerce.users.infrastructure.services.impl;
 
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

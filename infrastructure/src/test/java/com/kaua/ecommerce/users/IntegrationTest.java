@@ -11,7 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("test")
-@SpringBootTest(classes = Main.class)
+@SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class })
 @ExtendWith(CleanUpExtension.class)
 public @interface IntegrationTest {
 }

@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.account.mail.persistence;
 
+import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
@@ -20,7 +21,7 @@ import org.springframework.orm.jpa.JpaSystemException;
 
 import java.time.temporal.ChronoUnit;
 
-@MySQLGatewayTest
+@IntegrationTest
 public class AccountMailRepositoryTest {
 
     @Autowired

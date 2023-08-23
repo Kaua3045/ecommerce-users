@@ -51,15 +51,13 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -84,7 +82,7 @@ public class CreateAccountMailUseCaseTest {
                         Objects.equals(aToken, aAccountMail.getToken()) &&
                         Objects.equals(aAccount.getId(), aAccountMail.getAccount().getId()) &&
                         Objects.equals(aType, aAccountMail.getType()) &&
-                        Objects.equals(aExpirestAt, aAccountMail.getExpiresAt()) &&
+                        Objects.equals(aExpiresAt, aAccountMail.getExpiresAt()) &&
                         Objects.nonNull(aAccountMail.getId()) &&
                         Objects.nonNull(aAccountMail.getCreatedAt()) &&
                         Objects.nonNull(aAccountMail.getUpdatedAt())
@@ -102,8 +100,7 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'token' should not be null or blank";
         final var expectedErrorCount = 1;
 
@@ -111,8 +108,7 @@ public class CreateAccountMailUseCaseTest {
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -144,8 +140,7 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'token' should not be greater than 36";
         final var expectedErrorCount = 1;
 
@@ -153,8 +148,7 @@ public class CreateAccountMailUseCaseTest {
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -181,8 +175,7 @@ public class CreateAccountMailUseCaseTest {
         final var aToken = RandomStringUtils.generateValue(36);
         final String aAccount = null;
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'accountId' should not be null";
         final var expectedErrorCount = 1;
 
@@ -190,8 +183,7 @@ public class CreateAccountMailUseCaseTest {
                 aAccount,
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -215,16 +207,14 @@ public class CreateAccountMailUseCaseTest {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = "84045cfc-705f-4418-bf4b-155d5d11f69f";
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "Account with id 84045cfc-705f-4418-bf4b-155d5d11f69f was not found";
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount,
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -256,8 +246,7 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final AccountMailType aType = null;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'type' should not be null";
         final var expectedErrorCount = 1;
 
@@ -265,8 +254,7 @@ public class CreateAccountMailUseCaseTest {
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -298,8 +286,7 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final Instant aExpirestAt = null;
+        final Instant aExpiresAt = null;
         final var expectedErrorMessage = "'expiresAt' should not be null";
         final var expectedErrorCount = 1;
 
@@ -307,8 +294,7 @@ public class CreateAccountMailUseCaseTest {
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -340,8 +326,7 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().minus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().minus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'expiresAt' should not be before now";
         final var expectedErrorCount = 1;
 
@@ -349,8 +334,7 @@ public class CreateAccountMailUseCaseTest {
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -382,15 +366,13 @@ public class CreateAccountMailUseCaseTest {
                 "1234567Ab"
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account confirmation";
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount.getId().getValue(),
                 aToken,
                 aType,
-                aSubject,
-                aExpirestAt
+                aExpiresAt
         );
 
         // when
@@ -426,7 +408,7 @@ public class CreateAccountMailUseCaseTest {
                         Objects.equals(aToken, aAccountMail.getToken()) &&
                                 Objects.equals(aAccount, aAccountMail.getAccount()) &&
                                 Objects.equals(aType, aAccountMail.getType()) &&
-                                Objects.equals(aExpirestAt, aAccountMail.getExpiresAt()) &&
+                                Objects.equals(aExpiresAt, aAccountMail.getExpiresAt()) &&
                                 Objects.nonNull(aAccountMail.getId()) &&
                                 Objects.nonNull(aAccountMail.getCreatedAt()) &&
                                 Objects.nonNull(aAccountMail.getUpdatedAt())

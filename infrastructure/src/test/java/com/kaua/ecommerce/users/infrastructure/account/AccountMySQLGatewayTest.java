@@ -1,6 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.account;
 
-import com.kaua.ecommerce.users.MySQLGatewayTest;
+import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.infrastructure.accounts.AccountMySQLGateway;
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@MySQLGatewayTest
+@IntegrationTest
 public class AccountMySQLGatewayTest {
 
     @Autowired

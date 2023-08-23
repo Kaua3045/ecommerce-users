@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.service;
 
 import com.kaua.ecommerce.users.IntegrationTest;
-import com.kaua.ecommerce.users.infrastructure.services.BcryptService;
+import com.kaua.ecommerce.users.infrastructure.services.impl.BcryptService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

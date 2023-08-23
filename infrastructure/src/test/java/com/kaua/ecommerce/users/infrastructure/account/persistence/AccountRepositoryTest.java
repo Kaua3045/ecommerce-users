@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.account.persistence;
 
+import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
@@ -12,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.orm.jpa.JpaSystemException;
 
-@MySQLGatewayTest
+@IntegrationTest
 public class AccountRepositoryTest {
 
     @Autowired

@@ -5,10 +5,12 @@ import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import com.kaua.ecommerce.users.domain.validation.Validator;
 
+import static com.kaua.ecommerce.users.domain.utils.CommonErrorsMessages.commonNullOrBlankErrorMessage;
+
 public class AccountMailValidator extends Validator {
 
-    private AccountMail accountMail;
-    private final int TOKEN_MAXIMUM_LENGTH = 36;
+    private final AccountMail accountMail;
+    private static final int TOKEN_MAXIMUM_LENGTH = 36;
 
     public AccountMailValidator(final AccountMail aAccountMail, final ValidationHandler aHandler) {
         super(aHandler);
@@ -25,28 +27,25 @@ public class AccountMailValidator extends Validator {
 
     private void checkTokenConstraints() {
         if (this.accountMail.getToken() == null || this.accountMail.getToken().isBlank()) {
-            this.validationHandler().append(new Error("'token' should not be null or blank"));
+            this.validationHandler().append(new Error(commonNullOrBlankErrorMessage("token")));
             return;
         }
 
         if (this.accountMail.getToken() != null &&
                 this.accountMail.getToken().trim().length() > TOKEN_MAXIMUM_LENGTH) {
             this.validationHandler().append(new Error("'token' should not be greater than " + TOKEN_MAXIMUM_LENGTH));
-            return;
         }
     }
 
     private void checkTypeConstraints() {
         if (this.accountMail.getType() == null) {
             this.validationHandler().append(new Error("'type' should not be null"));
-            return;
         }
     }
 
     private void checkAccountConstraints() {
         if (this.accountMail.getAccount() == null) {
             this.validationHandler().append(new Error("'account' should not be null"));
-            return;
         }
     }
 
@@ -59,7 +58,6 @@ public class AccountMailValidator extends Validator {
         if (this.accountMail.getExpiresAt() != null &&
                 this.accountMail.getExpiresAt().isBefore(InstantUtils.now())) {
             this.validationHandler().append(new Error("'expiresAt' should not be before now"));
-            return;
         }
     }
 }

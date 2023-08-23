@@ -29,7 +29,7 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
     }
 
     @Override
-    public Either<NotificationHandler, AccountMail> execute(CreateAccountMailCommand aCommand) {
+    public Either<NotificationHandler, CreateAccountMailOutput> execute(CreateAccountMailCommand aCommand) {
         if (aCommand.accountId() == null) {
             return Either.left(NotificationHandler.create(new Error("'accountId' should not be null")));
         }
@@ -47,7 +47,7 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
                 aCommand.token(),
                 aCommand.type(),
                 aAccount,
-                aCommand.expirestAt()
+                aCommand.expiresAt()
         );
         final var notification = NotificationHandler.create();
         aAccountMail.validate(notification);
@@ -57,31 +57,15 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
                 : Either.right(this.createAccountMail(aAccountMail, aCommand));
     }
 
-    private AccountMail createAccountMail(AccountMail aAccountMail, CreateAccountMailCommand aCommand) {
-
+    private CreateAccountMailOutput createAccountMail(AccountMail aAccountMail, CreateAccountMailCommand aCommand) {
         this.queueGateway.send(CreateMailQueueCommand.with(
                 aAccountMail.getToken(),
-                aCommand.subject(),
                 aAccountMail.getAccount().getFirstName(),
-                aAccountMail.getAccount().getEmail()
+                aAccountMail.getAccount().getEmail(),
+                aCommand.type().name()
         ));
-        return this.accountMailGateway.create(aAccountMail);
-    }
+        this.accountMailGateway.create(aAccountMail);
 
-    private record CreateMailQueueCommand(
-            String token,
-            String subject,
-            String firstName,
-            String email
-    ) {
-
-        public static CreateMailQueueCommand with(
-                final String token,
-                final String subject,
-                final String firstName,
-                final String email
-        ) {
-            return new CreateMailQueueCommand(token, subject, firstName, email);
-        }
+        return CreateAccountMailOutput.from(aAccountMail.getId().getValue());
     }
 }

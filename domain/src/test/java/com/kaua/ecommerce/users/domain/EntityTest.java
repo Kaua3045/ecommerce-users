@@ -1,9 +1,14 @@
 package com.kaua.ecommerce.users.domain;
 
+import com.kaua.ecommerce.users.domain.event.DomainEvent;
+import com.kaua.ecommerce.users.domain.event.DomainEventPublisher;
+import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.Instant;
+import java.util.Collections;
 import java.util.UUID;
 
 public class EntityTest {
@@ -50,15 +55,6 @@ public class EntityTest {
         Assertions.assertNotEquals(entity1.hashCode(), entity3.hashCode());
     }
 
-    private Entity<SampleIdentifier> createEntity(SampleIdentifier id) {
-        return new Entity<>(id) {
-            @Override
-            public void validate(ValidationHandler handler) {
-                // Lógica de validação simulada
-            }
-        };
-    }
-
     @Test
     void testInvalidEntityCreation() {
         SampleIdentifier sampleId = new SampleIdentifier(UUID.randomUUID().toString());
@@ -68,5 +64,61 @@ public class EntityTest {
         Assertions.assertEquals(sampleId, entity.getId());
         Assertions.assertNotEquals(entity, null);
         Assertions.assertNotEquals(entity, new Object());
+    }
+
+    @Test
+    void testEntityRegisterEventAndPublishDomainEvent() {
+        final var uuid1 = UUID.randomUUID().toString();
+        SampleIdentifier id1 = new SampleIdentifier(uuid1);
+
+        Entity<SampleIdentifier> entity1 = createEntity(id1);
+
+        entity1.registerEvent(new SampleEntityEvent(uuid1));
+
+        Assertions.assertEquals(1, entity1.getDomainEvents().size());
+
+        entity1.publishDomainEvent(new SampleEntityPublisherEvent());
+
+        Assertions.assertEquals(0, entity1.getDomainEvents().size());
+    }
+
+    @Test
+    void testEntityInvalidRegisterEventAndInvalidPublishDomainEvent() {
+        final var uuid1 = UUID.randomUUID().toString();
+        SampleIdentifier id1 = new SampleIdentifier(uuid1);
+
+        Entity<SampleIdentifier> entity1 = createEntity(id1);
+
+        entity1.registerEvent(null);
+
+        Assertions.assertEquals(0, entity1.getDomainEvents().size());
+
+        entity1.publishDomainEvent(null);
+
+        Assertions.assertEquals(0, entity1.getDomainEvents().size());
+    }
+
+    private Entity<SampleIdentifier> createEntity(SampleIdentifier id) {
+        return new Entity<>(id, Collections.emptyList()) {
+            @Override
+            public void validate(ValidationHandler handler) {
+                // Lógica de validação simulada
+            }
+        };
+    }
+
+    private record SampleEntityEvent(String id, Instant occurredOn) implements DomainEvent {
+
+        public SampleEntityEvent(final String id) {
+            this(id, InstantUtils.now());
+        }
+    }
+
+    private class SampleEntityPublisherEvent implements DomainEventPublisher {
+
+        @Override
+        public <T extends DomainEvent> void publish(T event) {
+            // Lógica de publicação de evento simulada
+        }
     }
 }

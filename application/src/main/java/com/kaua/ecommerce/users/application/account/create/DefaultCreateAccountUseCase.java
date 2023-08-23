@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
@@ -41,6 +42,13 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
     }
 
     private Account accountWithPasswordEncodded(final Account aAccount) {
+        aAccount.registerEvent(new AccountCreatedEvent(
+                aAccount.getId().getValue(),
+                aAccount.getFirstName(),
+                aAccount.getLastName(),
+                aAccount.getEmail()
+        ));
+
         this.accountGateway.create(
                 Account.with(
                         aAccount.getId().getValue(),
@@ -51,8 +59,10 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                         this.encrypterGateway.encrypt(aAccount.getPassword()),
                         aAccount.getAvatarUrl(),
                         aAccount.getCreatedAt(),
-                        aAccount.getUpdatedAt())
+                        aAccount.getUpdatedAt(),
+                        aAccount.getDomainEvents())
         );
+
         return aAccount;
     }
 }
