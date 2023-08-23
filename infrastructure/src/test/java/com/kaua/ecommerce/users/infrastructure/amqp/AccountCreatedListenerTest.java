@@ -7,6 +7,7 @@ import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMai
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountCreatedGenerateMailCodeEvent;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import com.kaua.ecommerce.users.infrastructure.configurations.properties.amqp.QueueProperties;
@@ -64,7 +65,6 @@ public class AccountCreatedListenerTest {
                         AccountMailGenerateCodeListener.ACCOUNT_MAIL_GENERATE_CODE_LISTENER,
                         1, TimeUnit.SECONDS);
 
-        System.out.println(invocationData);
         Assertions.assertNotNull(invocationData);
         Assertions.assertNotNull(invocationData.getArguments());
 
@@ -75,6 +75,7 @@ public class AccountCreatedListenerTest {
         Mockito.verify(useCase, Mockito.times(1)).execute(cmdCaptor.capture());
 
         final var actualCommand = cmdCaptor.getValue();
-        System.out.println(actualCommand);
+        Assertions.assertEquals(aAccount.getId().getValue(), actualCommand.accountId());
+        Assertions.assertEquals(AccountMailType.ACCOUNT_CONFIRMATION, actualCommand.type());
     }
 }
