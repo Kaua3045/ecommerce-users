@@ -1,3 +1,11 @@
+amqp:
+  admin:
+    auto-create: true
+  host: localhost
+  port: 5672
+  username: ecommerce_users_admin
+  password: ecommerce_users_admin123456
+
 logging:
   level:
     com.kaua.ecommerce.users.infrastructure.services: DEBUG
