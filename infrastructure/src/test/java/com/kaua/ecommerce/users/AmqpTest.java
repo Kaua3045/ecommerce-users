@@ -10,6 +10,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("test")
-@SpringBootTest(classes = Main.class)
+@SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class })
 public @interface AmqpTest {
 }
