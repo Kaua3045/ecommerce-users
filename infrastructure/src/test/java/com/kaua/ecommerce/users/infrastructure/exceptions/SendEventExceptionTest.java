@@ -8,7 +8,7 @@ public class SendEventExceptionTest {
     @Test
     public void givenAValidErrorMessage_whenSendEventExceptionIsCalled_thenASendEventExceptionShouldBeThrown() {
         // Arrange
-        final var aErrorMessage = "Error sending event to SNS";
+        final var aErrorMessage = "Error sending event to QUEUE";
 
         // Act
         final var aSendEventException = new SendEventException(aErrorMessage);

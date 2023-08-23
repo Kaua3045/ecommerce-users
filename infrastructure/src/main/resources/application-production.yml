@@ -1,4 +1,0 @@
-aws:
-  sns:
-    topic:
-      arn: ${AWS_SNS_TOPIC_ARN}
