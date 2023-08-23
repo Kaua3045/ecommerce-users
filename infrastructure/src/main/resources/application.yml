@@ -1,3 +1,16 @@
+amqp:
+  admin:
+    auto-create: false
+  queues:
+    account-created:
+      exchange: account.events
+      routing-key: account.created
+      queue: account.created.queue
+    account-generate-confirmation-code-mail:
+      exchange: account.events
+      routing-key: account.created
+      queue: account.generate.confirmation.code.mail.queue
+
 server:
   port: 8080
   compression:
@@ -29,3 +42,8 @@ spring:
       "[hibernate.dialect]": org.hibernate.dialect.MySQLDialect
       "[hibernate.generate_statistics]": false
       "[hibernate.connection.provider_disables_autocommit]": true
+  rabbitmq:
+    host: ${amqp.host}
+    port: ${amqp.port}
+    username: ${amqp.username}
+    password: ${amqp.password}
