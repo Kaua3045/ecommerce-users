@@ -45,7 +45,6 @@ public class CreateAccountMailUseCaseIT {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountId = aAccount.getId().getValue();
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account Confirmation";
         final var aExpiresAt = InstantUtils.now().plus(1, ChronoUnit.HOURS);
 
         this.accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
@@ -56,7 +55,6 @@ public class CreateAccountMailUseCaseIT {
                 aAccountId,
                 aToken,
                 aType,
-                aSubject,
                 aExpiresAt
         );
 
@@ -92,7 +90,6 @@ public class CreateAccountMailUseCaseIT {
         final var aToken = "";
         final var aAccountId = aAccount.getId().getValue();
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account Confirmation";
         final var aExpiresAt = InstantUtils.now().plus(1, ChronoUnit.HOURS);
         final var expectedErrorMessage = "'token' should not be null or blank";
 
@@ -104,7 +101,6 @@ public class CreateAccountMailUseCaseIT {
                 aAccountId,
                 aToken,
                 aType,
-                aSubject,
                 aExpiresAt
         );
 
@@ -128,7 +124,6 @@ public class CreateAccountMailUseCaseIT {
         final var aToken = RandomStringUtils.generateValue(37);
         final var aAccountId = aAccount.getId().getValue();
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account Confirmation";
         final var aExpiresAt = InstantUtils.now().plus(1, ChronoUnit.HOURS);
         final var expectedErrorMessage = "'token' should not be greater than 36";
 
@@ -140,7 +135,6 @@ public class CreateAccountMailUseCaseIT {
                 aAccountId,
                 aToken,
                 aType,
-                aSubject,
                 aExpiresAt
         );
 
@@ -164,7 +158,6 @@ public class CreateAccountMailUseCaseIT {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountId = aAccount.getId().getValue();
         final AccountMailType aType = null;
-        final var aSubject = "Account Confirmation";
         final var aExpiresAt = InstantUtils.now().plus(1, ChronoUnit.HOURS);
         final var expectedErrorMessage = "'type' should not be null";
 
@@ -176,7 +169,6 @@ public class CreateAccountMailUseCaseIT {
                 aAccountId,
                 aToken,
                 aType,
-                aSubject,
                 aExpiresAt
         );
 
@@ -200,7 +192,6 @@ public class CreateAccountMailUseCaseIT {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountId = aAccount.getId().getValue();
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account Confirmation";
         final Instant aExpiresAt = null;
         final var expectedErrorMessage = "'expiresAt' should not be null";
 
@@ -212,7 +203,6 @@ public class CreateAccountMailUseCaseIT {
                 aAccountId,
                 aToken,
                 aType,
-                aSubject,
                 aExpiresAt
         );
 
@@ -236,7 +226,6 @@ public class CreateAccountMailUseCaseIT {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountId = aAccount.getId().getValue();
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aSubject = "Account Confirmation";
         final var aExpiresAt = InstantUtils.now().minus(1, ChronoUnit.HOURS);
         final var expectedErrorMessage = "'expiresAt' should not be before now";
 
@@ -248,7 +237,6 @@ public class CreateAccountMailUseCaseIT {
                 aAccountId,
                 aToken,
                 aType,
-                aSubject,
                 aExpiresAt
         );
 

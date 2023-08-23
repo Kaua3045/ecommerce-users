@@ -3,12 +3,10 @@ package com.kaua.ecommerce.users.infrastructure.service;
 import com.kaua.ecommerce.users.AmqpTest;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateMailQueueCommand;
 import com.kaua.ecommerce.users.application.gateways.QueueGateway;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
-import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountCreatedEvent;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.EmailQueue;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
-import com.kaua.ecommerce.users.infrastructure.services.EventService;
-import com.kaua.ecommerce.users.infrastructure.services.impl.RabbitQueueService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -35,9 +33,9 @@ public class RabbitQueueServiceTest {
     public void shouldSendMessage() throws InterruptedException {
         final var aMail = CreateMailQueueCommand.with(
                 RandomStringUtils.generateValue(36),
-                "Confirmação de conta",
                 "Teste",
-                "teste@teste.com"
+                "teste@teste.com",
+                AccountMailType.ACCOUNT_CONFIRMATION.name()
         );
 
         final var expectedMessage = Json.writeValueAsString(aMail);

@@ -8,17 +8,15 @@ public record CreateAccountMailCommand(
         String accountId,
         String token,
         AccountMailType type,
-        String subject,
-        Instant expirestAt
+        Instant expiresAt
 ) {
 
     public static CreateAccountMailCommand with(
             final String accountId,
             final String token,
             final AccountMailType type,
-            final String subject,
-            final Instant expirestAt
+            final Instant expiresAt
     ) {
-        return new CreateAccountMailCommand(accountId, token, type, subject, expirestAt);
+        return new CreateAccountMailCommand(accountId, token, type, expiresAt);
     }
 }

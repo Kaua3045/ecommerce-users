@@ -45,7 +45,6 @@ public class AccountMailController implements AccountMailAPI {
                 accountId,
                 IdUtils.generate().replace("-", ""),
                 AccountMailType.ACCOUNT_CONFIRMATION,
-                "Account Confirmation",
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
 

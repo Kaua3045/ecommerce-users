@@ -34,7 +34,6 @@ public class AccountMailGenerateCodeListener {
                 aResult.id(),
                 IdUtils.generate().replace("-", ""),
                 AccountMailType.ACCOUNT_CONFIRMATION,
-                "Confirmar sua conta",
                 InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
 

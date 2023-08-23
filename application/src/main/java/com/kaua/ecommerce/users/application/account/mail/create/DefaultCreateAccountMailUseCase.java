@@ -47,7 +47,7 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
                 aCommand.token(),
                 aCommand.type(),
                 aAccount,
-                aCommand.expirestAt()
+                aCommand.expiresAt()
         );
         final var notification = NotificationHandler.create();
         aAccountMail.validate(notification);
@@ -60,9 +60,9 @@ public class DefaultCreateAccountMailUseCase extends CreateAccountMailUseCase {
     private CreateAccountMailOutput createAccountMail(AccountMail aAccountMail, CreateAccountMailCommand aCommand) {
         this.queueGateway.send(CreateMailQueueCommand.with(
                 aAccountMail.getToken(),
-                aCommand.subject(),
                 aAccountMail.getAccount().getFirstName(),
-                aAccountMail.getAccount().getEmail()
+                aAccountMail.getAccount().getEmail(),
+                aCommand.type().name()
         ));
         this.accountMailGateway.create(aAccountMail);
 
