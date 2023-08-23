@@ -6,7 +6,7 @@ amqp:
       exchange: account.events
       routing-key: account.created
       queue: account.created.queue
-    account-generate-confirmation-code-mail:
+    account-created-generate-confirmation-code-mail:
       exchange: account.events
       routing-key: account.created
       queue: account.generate.confirmation.code.mail.queue
@@ -43,6 +43,7 @@ spring:
       "[hibernate.generate_statistics]": false
       "[hibernate.connection.provider_disables_autocommit]": true
   rabbitmq:
+    dynamic: ${amqp.admin.auto-create}
     host: ${amqp.host}
     port: ${amqp.port}
     username: ${amqp.username}
