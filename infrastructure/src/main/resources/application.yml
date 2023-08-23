@@ -1,3 +1,8 @@
+aws:
+  sns:
+    topic:
+      arn: ${AWS_SNS_TOPIC_ARN:arn:aws:sns:region:accountId:topicName}
+
 server:
   port: 8080
   compression:
