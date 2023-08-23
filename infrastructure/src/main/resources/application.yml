@@ -10,6 +10,10 @@ amqp:
       exchange: account.events
       routing-key: account.created
       queue: account.generate.confirmation.code.mail.queue
+    email-queue:
+      exchange: email.events
+      routing-key: email.send
+      queue: email.queue
 
 server:
   port: 8080

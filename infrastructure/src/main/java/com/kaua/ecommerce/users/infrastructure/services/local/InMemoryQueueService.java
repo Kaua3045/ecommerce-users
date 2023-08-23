@@ -11,7 +11,7 @@ public class InMemoryQueueService implements QueueGateway {
     private static final Logger log = LoggerFactory.getLogger(InMemoryQueueService.class);
 
     @Override
-    public void send(Object aPayload) {
-        log.debug("Sending message to queue: {}", Json.writeValueAsString(aPayload));
+    public void send(Object event) {
+        log.debug("Queue message was observed: {}", Json.writeValueAsString(event));
     }
 }
