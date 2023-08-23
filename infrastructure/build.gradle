@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-undertow:3.1.2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.1'
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.0.1'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp:3.1.2'
 
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
@@ -38,6 +39,7 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.20.25')
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
+    testImplementation 'org.springframework.amqp:spring-rabbit-test:2.4.14'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testRuntimeOnly 'com.h2database:h2'
