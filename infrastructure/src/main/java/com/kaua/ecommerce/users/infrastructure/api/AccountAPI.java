@@ -2,11 +2,10 @@ package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.RequestResetPasswordApiInput;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.ResetPasswordApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = "accounts")
 public interface AccountAPI {
@@ -19,4 +18,7 @@ public interface AccountAPI {
 
     @PostMapping("/request-reset-password")
     ResponseEntity<?> requestResetPassword(@RequestBody RequestResetPasswordApiInput input);
+
+    @PatchMapping("/reset-password/{token}")
+    ResponseEntity<?> resetPassword(@RequestBody ResetPasswordApiInput input, @PathVariable String token);
 }
