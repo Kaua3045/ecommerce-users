@@ -40,7 +40,7 @@ public class AccountMailMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidAccountMail_whenCallCreate_shouldReturnANewAccountMail() {
+    void givenAValidAccountMail_whenCallCreate_shouldReturnANewAccountMail() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -86,7 +86,7 @@ public class AccountMailMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidPrePersistedAccountMails_whenCallFindAllByAccountId_shouldReturnAListOfAccountMail() {
+    void givenAValidPrePersistedAccountMails_whenCallFindAllByAccountId_shouldReturnAListOfAccountMail() {
         final var expectedMailsCount = 2;
 
         final var aAccount = Account.newAccount(
@@ -122,7 +122,7 @@ public class AccountMailMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidPrePersistedAccountMail_whenCallDeleteById_shouldDoesNotThrowException() {
+    void givenAValidPrePersistedAccountMail_whenCallDeleteById_shouldDoesNotThrowException() {
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
@@ -150,7 +150,7 @@ public class AccountMailMySQLGatewayTest {
     }
 
     @Test
-    public void givenInvalidAccountMailId_whenCallDeleteById_shouldDeleteAccountMail() {
+    void givenInvalidAccountMailId_whenCallDeleteById_shouldDeleteAccountMail() {
         Assertions.assertEquals(0, accountMailRepository.count());
 
         accountMailGateway.deleteById(AccountMailID.from("empty").getValue());
@@ -159,7 +159,7 @@ public class AccountMailMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidPrePersistedAccountMail_whenCallFindByToken_shouldReturnAccountMail() {
+    void givenAValidPrePersistedAccountMail_whenCallFindByToken_shouldReturnAccountMail() {
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",

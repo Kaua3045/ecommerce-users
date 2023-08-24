@@ -39,7 +39,7 @@ public class AccountCreatedListenerTest {
     private QueueProperties queueProperties;
 
     @Test
-    public void givenAccount_whenCallsListener_shouldCallUseCase() throws InterruptedException {
+    void givenAccount_whenCallsListener_shouldCallUseCase() throws InterruptedException {
         final var aAccount = Account.newAccount(
                 "teste",
                 "testes",

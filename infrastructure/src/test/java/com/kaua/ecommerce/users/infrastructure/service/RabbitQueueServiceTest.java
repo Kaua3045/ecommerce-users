@@ -9,11 +9,8 @@ import com.kaua.ecommerce.users.infrastructure.configurations.annotations.EmailQ
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.test.RabbitListenerTestHarness;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
 
@@ -30,7 +27,7 @@ public class RabbitQueueServiceTest {
     private RabbitListenerTestHarness harness;
 
     @Test
-    public void shouldSendMessage() throws InterruptedException {
+    void shouldSendMessage() throws InterruptedException {
         final var aMail = CreateMailQueueCommand.with(
                 RandomStringUtils.generateValue(36),
                 "Teste",
@@ -51,14 +48,5 @@ public class RabbitQueueServiceTest {
         final var actualMessage = invocationData.getArguments()[0].toString();
 
         Assertions.assertEquals(expectedMessage, actualMessage);
-    }
-}
-
-@Component
-class EmailSendListener {
-
-    @RabbitListener(id = RabbitQueueServiceTest.LISTENER, queues = "${amqp.queues.email-queue.routing-key}")
-    public void onEmailConfirmationSend(@Payload final String message) {
-        System.out.println(message);
     }
 }

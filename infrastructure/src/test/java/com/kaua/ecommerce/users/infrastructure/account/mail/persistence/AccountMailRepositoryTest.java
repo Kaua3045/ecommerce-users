@@ -31,7 +31,7 @@ public class AccountMailRepositoryTest {
     private AccountJpaRepository accountJpaRepository;
 
     @Test
-    public void givenAnInvalidNullToken_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullToken_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "token";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity.token";
 
@@ -64,7 +64,7 @@ public class AccountMailRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullType_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullType_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "type";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity.type";
 
@@ -97,7 +97,7 @@ public class AccountMailRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullExpiresAt_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullExpiresAt_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "expiresAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity.expiresAt";
 
@@ -130,7 +130,7 @@ public class AccountMailRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullAccount_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullAccount_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "account";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity.account";
 
@@ -163,7 +163,7 @@ public class AccountMailRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullCreatedAt_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullCreatedAt_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "createdAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity.createdAt";
 
@@ -196,7 +196,7 @@ public class AccountMailRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullUpdatedAt_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullUpdatedAt_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "updatedAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity.updatedAt";
 
@@ -229,7 +229,7 @@ public class AccountMailRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullId_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullId_whenCallSave_shouldReturnAnException() {
         final var expectedErrorMessage = "ids for this class must be manually assigned before calling save(): com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaEntity";
 
         final var aAccount = Account.newAccount(
