@@ -430,4 +430,28 @@ public class AccountMailAPITest {
                         Objects.equals(aPassword, cmd.newPassword())
         ));
     }
+
+    @Test
+    void givenAnInvalidCommandExpiresAtBeforeNow_whenCallRequestResetPassword_thenShouldReturnDomainException() throws Exception {
+        final var aEmail = "teste@teste.com";
+        final var expectedErrorMessage = "'expiresAt' should not be before now";
+
+        final var aInput = new RequestResetPasswordApiInput(aEmail);
+
+        Mockito.when(requestResetPasswordUseCase.execute(Mockito.any()))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(requestResetPasswordUseCase, Mockito.times(1)).execute(Mockito.any());
+    }
 }
