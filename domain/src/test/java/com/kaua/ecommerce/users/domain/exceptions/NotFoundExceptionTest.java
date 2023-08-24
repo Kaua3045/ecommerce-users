@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 public class NotFoundExceptionTest {
 
     @Test
-    public void givenAValidAggregate_whenCallNotFoundExceptionWith_ThenReturnNotFoundException() {
+    void givenAValidAggregate_whenCallNotFoundExceptionWith_ThenReturnNotFoundException() {
         // given
         final var aggregate = Account.class;
         final var aId = "123";

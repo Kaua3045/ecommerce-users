@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 public class ThrowsValidationHandlerTest {
 
     @Test
-    public void givenAValidError_whenCallAppend_shouldThrowsDomainException() {
+    void givenAValidError_whenCallAppend_shouldThrowsDomainException() {
         Error error = new Error("Sample error");
         ThrowsValidationHandler handler = new ThrowsValidationHandler();
 
@@ -18,7 +18,7 @@ public class ThrowsValidationHandlerTest {
     }
 
     @Test
-    public void givenAValidHandler_whenCallAppend_shouldThrowsDomainException() {
+    void givenAValidHandler_whenCallAppend_shouldThrowsDomainException() {
         ThrowsValidationHandler handler = new ThrowsValidationHandler();
         ValidationHandler anotherHandler = new ThrowsValidationHandler();
 
@@ -26,7 +26,7 @@ public class ThrowsValidationHandlerTest {
     }
 
     @Test
-    public void givenAValidValidation_whenCallValidate_shouldDoesNotThrowException() {
+    void givenAValidValidation_whenCallValidate_shouldDoesNotThrowException() {
         Validation validation = () -> {};
         ThrowsValidationHandler handler = new ThrowsValidationHandler();
 
@@ -34,14 +34,14 @@ public class ThrowsValidationHandlerTest {
     }
 
     @Test
-    public void givenAnInvalidValidation_whenCallValidate_shouldThrowDomainException() {
+    void givenAnInvalidValidation_whenCallValidate_shouldThrowDomainException() {
         ThrowsValidationHandler handler = new ThrowsValidationHandler();
 
         Assertions.assertThrows(DomainException.class, () -> handler.validate(null));
     }
 
     @Test
-    public void testGetErrors() {
+    void testGetErrors() {
         ThrowsValidationHandler handler = new ThrowsValidationHandler();
 
         Assertions.assertEquals(0, handler.getErrors().size());
