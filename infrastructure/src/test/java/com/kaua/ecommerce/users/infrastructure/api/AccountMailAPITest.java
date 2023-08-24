@@ -19,6 +19,8 @@ import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.RequestResetPasswordApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.ResetPasswordApiInput;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -56,7 +58,7 @@ public class AccountMailAPITest {
     private ResetPasswordUseCase resetPasswordUseCase;
 
     @Test
-    public void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneNoContent() throws Exception {
+    void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneNoContent() throws Exception {
         // given
         final var aInput = RandomStringUtils.generateValue(36);
 
@@ -73,7 +75,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidTokenExpired_whenCallConfirmAccount_thenShouldReturneAnError() throws Exception {
+    void givenAnInvalidTokenExpired_whenCallConfirmAccount_thenShouldReturneAnError() throws Exception {
         // given
         final var expectedErrorMessage = "Token expired";
         final var aInput = RandomStringUtils.generateValue(36);
@@ -93,7 +95,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMailId() throws Exception {
+    void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMailId() throws Exception {
         // given
         final var aAccount = Account.newAccount(
                 "teste",
@@ -119,22 +121,30 @@ public class AccountMailAPITest {
         Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 
-    @Test
-    public void givenAnInvalidCommandToken_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
+    @ParameterizedTest
+    @CsvSource({
+            "token, 'token' should not be null or blank",
+            "type, 'type' should not be null",
+            "expiresAt, 'expiresAt' should not be null"
+    })
+    void givenAnInvalidCommand_whenCallCreateAccountMail_thenShouldReturnDomainException(
+            final String field,
+            final String expectedErrorMessage
+    ) throws Exception {
         final var aAccount = Account.newAccount(
                 "teste",
                 "testes",
                 "teste@teste.com",
                 "1234567Ab"
         );
-        final var expectedErrorMessage = "'token' should not be null or blank";
 
         Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
+                .accept(MediaType.APPLICATION_JSON)
+                .content(String.format("{\"%s\": null}", field));
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -142,66 +152,10 @@ public class AccountMailAPITest {
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
-
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 
     @Test
-    public void givenAnInvalidCommandAccountMailType_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
-        final var aAccount = Account.newAccount(
-                "teste",
-                "testes",
-                "teste@teste.com",
-                "1234567Ab"
-        );
-        final var expectedErrorMessage = "'type' should not be null";
-
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
-
-        final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
-
-        this.mvc.perform(request)
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
-
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
-    }
-
-    @Test
-    public void givenAnInvalidCommandExpiresAt_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
-        final var aAccount = Account.newAccount(
-                "teste",
-                "testes",
-                "teste@teste.com",
-                "1234567Ab"
-        );
-        final var expectedErrorMessage = "'expiresAt' should not be null";
-
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
-                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
-
-        final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON);
-
-        this.mvc.perform(request)
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
-                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
-
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
-    }
-
-    @Test
-    public void givenAnInvalidCommandAccountId_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandAccountId_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
         final var aAccount = "invalid";
         final var expectedErrorMessage = "'accountId' should not be null";
 
@@ -223,7 +177,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
         final var aAccount = Account.newAccount(
                 "teste",
                 "testes",
@@ -250,7 +204,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandAccountNotExists_whenCallCreateAccountMail_thenShouldReturnNotFound() throws Exception {
+    void givenAnInvalidCommandAccountNotExists_whenCallCreateAccountMail_thenShouldReturnNotFound() throws Exception {
         final var aAccount = "8d24aaa1-c759-4b2a-82d1-51e592f14585";
         final var expectedErrorMessage = "Account with id 8d24aaa1-c759-4b2a-82d1-51e592f14585 was not found";
 
@@ -271,7 +225,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAValidCommand_whenCallRequestResetPassword_thenShouldReturnNotContent() throws Exception {
+    void givenAValidCommand_whenCallRequestResetPassword_thenShouldReturnNotContent() throws Exception {
         // given
         final var aEmail = "teste@teste.com";
 
@@ -291,7 +245,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAInvalidCommandEmailNotFound_whenCallRequestResetPassword_thenShouldThrowNotFoundException() throws Exception {
+    void givenAInvalidCommandEmailNotFound_whenCallRequestResetPassword_thenShouldThrowNotFoundException() throws Exception {
         // given
         final var aEmail = "teste@teste.com";
 
@@ -314,7 +268,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAValidCommand_whenCallResetPassword_thenShouldReturneNoContent() throws Exception {
+    void givenAValidCommand_whenCallResetPassword_thenShouldReturneNoContent() throws Exception {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aPassword = "1234567Ab*";
@@ -335,7 +289,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidTokenExpired_whenCallResetPassword_thenShouldReturneAnError() throws Exception {
+    void givenAnInvalidTokenExpired_whenCallResetPassword_thenShouldReturneAnError() throws Exception {
         // given
         final var expectedErrorMessage = "Token expired";
         final var aToken = RandomStringUtils.generateValue(36);
@@ -359,7 +313,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPassword_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPassword_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aToken = RandomStringUtils.generateValue(36);
         final String aPassword = null;
         final var expectedErrorMessage = "'password' should not be null or blank";
@@ -387,7 +341,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aPassword = "123";
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
@@ -415,7 +369,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aPassword = RandomStringUtils.generateValue(256).toLowerCase();
         final var expectedErrorMessage = "'password' must be between 3 and 255 characters";
@@ -443,7 +397,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPasswordNotContainsOneUppercaseAndLowercaseLetter_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPasswordNotContainsOneUppercaseAndLowercaseLetter_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aPassword = "12345678";
         final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
