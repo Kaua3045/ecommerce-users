@@ -5,6 +5,7 @@ import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMai
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailOutput;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
+import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
@@ -20,6 +21,7 @@ import org.springframework.amqp.rabbit.test.TestRabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @AmqpTest
@@ -33,6 +35,9 @@ public class AccountCreatedListenerTest {
 
     @MockBean
     private CreateAccountMailUseCase useCase;
+
+    @MockBean
+    private AccountGateway accountGateway;
 
     @Autowired
     @AccountCreatedGenerateMailCodeEvent
@@ -55,6 +60,8 @@ public class AccountCreatedListenerTest {
 
         final var expectedMessage = Json.writeValueAsString(aAccountCreatedEvent);
 
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
         Mockito.when(useCase.execute(Mockito.any()))
                 .thenReturn(Either.right(CreateAccountMailOutput.from("123456")));
 
@@ -75,7 +82,7 @@ public class AccountCreatedListenerTest {
         Mockito.verify(useCase, Mockito.times(1)).execute(cmdCaptor.capture());
 
         final var actualCommand = cmdCaptor.getValue();
-        Assertions.assertEquals(aAccount.getId().getValue(), actualCommand.accountId());
+        Assertions.assertEquals(aAccount.getId().getValue(), actualCommand.account().getId().getValue());
         Assertions.assertEquals(AccountMailType.ACCOUNT_CONFIRMATION, actualCommand.type());
     }
 }

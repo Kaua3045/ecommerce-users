@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
 import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.mail.confirm.DefaultConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.account.mail.confirm.request.DefaultRequestAccountConfirmUseCase;
+import com.kaua.ecommerce.users.application.account.mail.confirm.request.RequestAccountConfirmUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.DefaultCreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.update.password.DefaultRequestResetPasswordUseCase;
@@ -40,7 +42,12 @@ public class AccountMailUseCaseConfig {
 
     @Bean
     public CreateAccountMailUseCase createAccountMailUseCase() {
-        return new DefaultCreateAccountMailUseCase(accountMailGateway, accountGateway, queueGateway);
+        return new DefaultCreateAccountMailUseCase(accountMailGateway, queueGateway);
+    }
+
+    @Bean
+    public RequestAccountConfirmUseCase requestAccountConfirmUseCase() {
+        return new DefaultRequestAccountConfirmUseCase(accountGateway, createAccountMailUseCase());
     }
 
     @Bean

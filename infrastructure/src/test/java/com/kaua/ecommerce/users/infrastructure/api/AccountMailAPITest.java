@@ -4,8 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaua.ecommerce.users.ControllerTest;
 import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailCommand;
 import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.account.mail.confirm.request.RequestAccountConfirmUseCase;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailOutput;
-import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordCommand;
 import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordUseCase;
@@ -46,7 +46,7 @@ public class AccountMailAPITest {
     private ObjectMapper mapper;
 
     @MockBean
-    private CreateAccountMailUseCase createAccountMailUseCase;
+    private RequestAccountConfirmUseCase requestAccountConfirmUseCase;
 
     @MockBean
     private ConfirmAccountMailUseCase confirmAccountMailUseCase;
@@ -95,7 +95,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMailId() throws Exception {
+    void givenAValidCommand_whenCallCreateConfirmationCode_thenShouldReturneAnAccountMailId() throws Exception {
         // given
         final var aAccount = Account.newAccount(
                 "teste",
@@ -105,7 +105,7 @@ public class AccountMailAPITest {
         );
         final var aId = "123";
 
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+        Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
                 .thenReturn(Either.right(CreateAccountMailOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
@@ -118,7 +118,7 @@ public class AccountMailAPITest {
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
 
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
+        Mockito.verify(requestAccountConfirmUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 
     @ParameterizedTest
@@ -127,7 +127,7 @@ public class AccountMailAPITest {
             "type, 'type' should not be null",
             "expiresAt, 'expiresAt' should not be null"
     })
-    void givenAnInvalidCommand_whenCallCreateAccountMail_thenShouldReturnDomainException(
+    void givenAnInvalidCommand_whenCallCreateConfirmationCode_thenShouldReturnDomainException(
             final String field,
             final String expectedErrorMessage
     ) throws Exception {
@@ -138,7 +138,7 @@ public class AccountMailAPITest {
                 "1234567Ab"
         );
 
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+        Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
@@ -155,11 +155,11 @@ public class AccountMailAPITest {
     }
 
     @Test
-    void givenAnInvalidCommandAccountId_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandAccountId_whenCallCreateConfirmationCode_thenShouldReturnDomainException() throws Exception {
         final var aAccount = "invalid";
         final var expectedErrorMessage = "'accountId' should not be null";
 
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+        Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
                 .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
@@ -173,11 +173,11 @@ public class AccountMailAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
 
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
+        Mockito.verify(requestAccountConfirmUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 
     @Test
-    void givenAnInvalidCommandExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandExpiresAtBeforeNow_whenCallCreateConfirmationCode_thenShouldReturnDomainException() throws Exception {
         final var aAccount = Account.newAccount(
                 "teste",
                 "testes",
@@ -186,7 +186,7 @@ public class AccountMailAPITest {
         );
         final var expectedErrorMessage = "'expiresAt' should not be before now";
 
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+        Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
@@ -200,15 +200,15 @@ public class AccountMailAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
 
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
+        Mockito.verify(requestAccountConfirmUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 
     @Test
-    void givenAnInvalidCommandAccountNotExists_whenCallCreateAccountMail_thenShouldReturnNotFound() throws Exception {
+    void givenAnInvalidCommandAccountNotExists_whenCallCreateConfirmationCode_thenShouldReturnNotFound() throws Exception {
         final var aAccount = "8d24aaa1-c759-4b2a-82d1-51e592f14585";
         final var expectedErrorMessage = "Account with id 8d24aaa1-c759-4b2a-82d1-51e592f14585 was not found";
 
-        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+        Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
                 .thenThrow(NotFoundException.with(Account.class, aAccount));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
@@ -221,15 +221,19 @@ public class AccountMailAPITest {
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
-        Mockito.verify(createAccountMailUseCase, Mockito.times(1)).execute(Mockito.any());
+        Mockito.verify(requestAccountConfirmUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 
     @Test
-    void givenAValidCommand_whenCallRequestResetPassword_thenShouldReturnNotContent() throws Exception {
+    void givenAValidCommand_whenCallRequestResetPassword_thenShouldReturnCreated() throws Exception {
         // given
         final var aEmail = "teste@teste.com";
+        final var aId = "123";
 
         final var aInput = new RequestResetPasswordApiInput(aEmail);
+
+        Mockito.when(requestResetPasswordUseCase.execute(Mockito.any()))
+                .thenReturn(Either.right(CreateAccountMailOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -237,7 +241,8 @@ public class AccountMailAPITest {
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
 
         Mockito.verify(requestResetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aEmail, cmd.email())
@@ -248,11 +253,12 @@ public class AccountMailAPITest {
     void givenAInvalidCommandEmailNotFound_whenCallRequestResetPassword_thenShouldThrowNotFoundException() throws Exception {
         // given
         final var aEmail = "teste@teste.com";
+        final var expectedErrorMessage = "Account with id teste@teste.com was not found";
 
         final var aInput = new RequestResetPasswordApiInput(aEmail);
 
-        Mockito.doThrow(NotFoundException.class)
-                .when(requestResetPasswordUseCase).execute(Mockito.any());
+        Mockito.when(requestResetPasswordUseCase.execute(Mockito.any()))
+                .thenThrow(NotFoundException.with(Account.class, aEmail));
 
         final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -260,7 +266,8 @@ public class AccountMailAPITest {
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
         Mockito.verify(requestResetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aEmail, cmd.email())

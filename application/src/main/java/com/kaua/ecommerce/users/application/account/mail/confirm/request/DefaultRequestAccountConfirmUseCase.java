@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users.application.account.update.password;
+package com.kaua.ecommerce.users.application.account.mail.confirm.request;
 
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailCommand;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailOutput;
@@ -15,12 +15,12 @@ import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-public class DefaultRequestResetPasswordUseCase extends RequestResetPasswordUseCase {
+public class DefaultRequestAccountConfirmUseCase extends RequestAccountConfirmUseCase {
 
     private final AccountGateway accountGateway;
     private final CreateAccountMailUseCase createAccountMailUseCase;
 
-    public DefaultRequestResetPasswordUseCase(
+    public DefaultRequestAccountConfirmUseCase(
             final AccountGateway accountGateway,
             final CreateAccountMailUseCase createAccountMailUseCase
     ) {
@@ -29,15 +29,15 @@ public class DefaultRequestResetPasswordUseCase extends RequestResetPasswordUseC
     }
 
     @Override
-    public Either<NotificationHandler, CreateAccountMailOutput> execute(RequestResetPasswordCommand input) {
-        final var aAccount = accountGateway.findByEmail(input.email())
-                .orElseThrow(() -> NotFoundException.with(Account.class, input.email()));
+    public Either<NotificationHandler, CreateAccountMailOutput> execute(RequestAccountConfirmCommand input) {
+        final var aAccount = accountGateway.findById(input.id())
+                .orElseThrow(() -> NotFoundException.with(Account.class, input.id()));
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount,
                 IdUtils.generate().replace("-", ""),
-                AccountMailType.PASSWORD_RESET,
-                InstantUtils.now().plus(30, ChronoUnit.MINUTES)
+                AccountMailType.ACCOUNT_CONFIRMATION,
+                InstantUtils.now().plus(1, ChronoUnit.HOURS)
         );
 
         return this.createAccountMailUseCase.execute(aCommand);
