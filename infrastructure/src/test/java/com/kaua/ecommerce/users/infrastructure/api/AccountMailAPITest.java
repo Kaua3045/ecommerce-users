@@ -357,4 +357,116 @@ public class AccountMailAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
     }
+
+    @Test
+    public void givenAnInvalidCommandPassword_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final String aPassword = null;
+        final var expectedErrorMessage = "'password' should not be null or blank";
+
+        final var aInput = new ResetPasswordApiInput(aPassword);
+
+        Mockito.when(resetPasswordUseCase.execute(Mockito.any(ResetPasswordCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(resetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aToken, cmd.token()) &&
+                        Objects.isNull(cmd.newPassword())
+        ));
+    }
+
+    @Test
+    public void givenAnInvalidCommandPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aPassword = "123";
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
+
+        final var aInput = new ResetPasswordApiInput(aPassword);
+
+        Mockito.when(resetPasswordUseCase.execute(Mockito.any(ResetPasswordCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(resetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aToken, cmd.token()) &&
+                        Objects.equals(aPassword, cmd.newPassword())
+        ));
+    }
+
+    @Test
+    public void givenAnInvalidCommandPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aPassword = RandomStringUtils.generateValue(256).toLowerCase();
+        final var expectedErrorMessage = "'password' must be between 3 and 255 characters";
+
+        final var aInput = new ResetPasswordApiInput(aPassword);
+
+        Mockito.when(resetPasswordUseCase.execute(Mockito.any(ResetPasswordCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(resetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aToken, cmd.token()) &&
+                        Objects.equals(aPassword, cmd.newPassword())
+        ));
+    }
+
+    @Test
+    public void givenAnInvalidCommandPasswordNotContainsOneUppercaseAndLowercaseLetter_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aPassword = "12345678";
+        final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
+
+        final var aInput = new ResetPasswordApiInput(aPassword);
+
+        Mockito.when(resetPasswordUseCase.execute(Mockito.any(ResetPasswordCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(resetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aToken, cmd.token()) &&
+                        Objects.equals(aPassword, cmd.newPassword())
+        ));
+    }
 }
