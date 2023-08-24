@@ -17,6 +17,6 @@ public interface AccountAPI {
     )
     ResponseEntity<?> createAccount(@RequestBody CreateAccountApiInput input);
 
-    @PostMapping("/reset-password")
-    ResponseEntity<?> resetPassword(@RequestBody RequestResetPasswordApiInput input);
+    @PostMapping("/request-reset-password")
+    ResponseEntity<?> requestResetPassword(@RequestBody RequestResetPasswordApiInput input);
 }

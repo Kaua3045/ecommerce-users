@@ -42,7 +42,7 @@ public class AccountController implements AccountAPI {
     }
 
     @Override
-    public ResponseEntity<?> resetPassword(RequestResetPasswordApiInput input) {
+    public ResponseEntity<?> requestResetPassword(RequestResetPasswordApiInput input) {
         this.requestResetPasswordUseCase.execute(RequestResetPasswordCommand.with(input.email()));
         return ResponseEntity.noContent().build();
     }
