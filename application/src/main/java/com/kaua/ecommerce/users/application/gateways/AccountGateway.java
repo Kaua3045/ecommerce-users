@@ -12,5 +12,7 @@ public interface AccountGateway {
 
     Optional<Account> findById(String aId);
 
+    Optional<Account> findByEmail(String aEmail);
+
     Account update(Account aAccount);
 }
