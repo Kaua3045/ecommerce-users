@@ -5,12 +5,14 @@ import com.kaua.ecommerce.users.ControllerTest;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
-import com.kaua.ecommerce.users.domain.exceptions.DomainException;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.RequestResetPasswordApiInput;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +41,9 @@ public class AccountAPITest {
 
     @MockBean
     private CreateAccountUseCase createAccountUseCase;
+
+    @MockBean
+    private RequestResetPasswordUseCase requestResetPasswordUseCase;
 
     @MockBean
     private BCryptPasswordEncoder passwordEncoder;
@@ -427,6 +432,49 @@ public class AccountAPITest {
                         Objects.equals(aLastName, cmd.lastName()) &&
                         Objects.equals(aEmail, cmd.email()) &&
                         Objects.equals(aPassword, cmd.password())
+        ));
+    }
+
+    @Test
+    public void givenAValidCommand_whenCallRequestResetPassword_thenShouldReturnNotContent() throws Exception {
+        // given
+        final var aEmail = "teste@teste.com";
+
+        final var aInput = new RequestResetPasswordApiInput(aEmail);
+
+        final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+
+        Mockito.verify(requestResetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aEmail, cmd.email())
+        ));
+    }
+
+    @Test
+    public void givenAInvalidCommandEmailNotFound_whenCallRequestResetPassword_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var aEmail = "teste@teste.com";
+
+        final var aInput = new RequestResetPasswordApiInput(aEmail);
+
+        Mockito.doThrow(NotFoundException.class)
+                .when(requestResetPasswordUseCase).execute(Mockito.any());
+
+        final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+
+        Mockito.verify(requestResetPasswordUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aEmail, cmd.email())
         ));
     }
 }
