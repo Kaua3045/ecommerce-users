@@ -131,6 +131,8 @@ public class ResetPasswordUseCaseTest {
 
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findByToken(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.times(0))
+                .encrypt(Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(0))
                 .update(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(0))
@@ -156,6 +158,189 @@ public class ResetPasswordUseCaseTest {
 
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .findByToken(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.times(0))
+                .encrypt(Mockito.any());
+        Mockito.verify(accountGateway, Mockito.times(0))
+                .update(Mockito.any());
+        Mockito.verify(accountMailGateway, Mockito.times(0))
+                .deleteById(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidPassword_whenCallResetPAssword_thenShouldReturnAnError() {
+        // given
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silveira",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aAccountMail = AccountMail.newAccountMail(
+                aToken,
+                AccountMailType.PASSWORD_RESET,
+                aAccount,
+                InstantUtils.now().plus(30, ChronoUnit.MINUTES)
+        );
+        final var aPassword = "";
+
+        final var expectedErrorMessage = "'password' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = ResetPasswordCommand.with(aToken, aPassword);
+
+        // when
+        Mockito.when(accountMailGateway.findByToken(Mockito.any()))
+                .thenReturn(Optional.of(aAccountMail));
+
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+
+        Mockito.verify(accountMailGateway, Mockito.times(1))
+                .findByToken(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.times(0))
+                .encrypt(Mockito.any());
+        Mockito.verify(accountGateway, Mockito.times(0))
+                .update(Mockito.any());
+        Mockito.verify(accountMailGateway, Mockito.times(0))
+                .deleteById(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silveira",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aAccountMail = AccountMail.newAccountMail(
+                aToken,
+                AccountMailType.PASSWORD_RESET,
+                aAccount,
+                InstantUtils.now().plus(30, ChronoUnit.MINUTES)
+        );
+        final var aPassword = "123";
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = ResetPasswordCommand.with(aToken, aPassword);
+
+        // when
+        Mockito.when(accountMailGateway.findByToken(Mockito.any()))
+                .thenReturn(Optional.of(aAccountMail));
+
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+
+        Mockito.verify(accountMailGateway, Mockito.times(1))
+                .findByToken(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.times(0))
+                .encrypt(Mockito.any());
+        Mockito.verify(accountGateway, Mockito.times(0))
+                .update(Mockito.any());
+        Mockito.verify(accountMailGateway, Mockito.times(0))
+                .deleteById(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silveira",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aAccountMail = AccountMail.newAccountMail(
+                aToken,
+                AccountMailType.PASSWORD_RESET,
+                aAccount,
+                InstantUtils.now().plus(30, ChronoUnit.MINUTES)
+        );
+        final var aPassword = """
+                O empenho em analisar a execução dos pontos do programa causa impacto indireto na
+                reavaliação dos modos de operação convencionais. Podemos já vislumbrar o modo pelo 
+                qual a constante divulgação das informações talvez venha a ressaltar a relatividade 
+                de alternativas às soluções ortodoxas. Assim mesmo, a contínua expansão de nossa 
+                atividade assume importantes posições no estabelecimento das condições inegavelmente 
+                apropriadas. No entanto, não podemos esquecer que a revolução dos costumes auxilia 
+                a preparação e a composição das novas proposições. As experiências acumuladas 
+                demonstram que o novo modelo estrutural aqui preconizado acarreta um processo 
+                de reformulação e modernização do processo de comunicação como um todo.
+                """;
+
+        final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = ResetPasswordCommand.with(aToken, aPassword);
+
+        // when
+        Mockito.when(accountMailGateway.findByToken(Mockito.any()))
+                .thenReturn(Optional.of(aAccountMail));
+
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+
+        Mockito.verify(accountMailGateway, Mockito.times(1))
+                .findByToken(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.times(0))
+                .encrypt(Mockito.any());
+        Mockito.verify(accountGateway, Mockito.times(0))
+                .update(Mockito.any());
+        Mockito.verify(accountMailGateway, Mockito.times(0))
+                .deleteById(Mockito.any());
+    }
+
+    @Test
+    public void givenAnInvalidPasswordWithoutUpperLetterAndLowerLetter_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aAccount = Account.newAccount(
+                "Fulano",
+                "Silveira",
+                "teste@teste.com",
+                "1234567Ab"
+        );
+        final var aToken = RandomStringUtils.generateValue(36);
+        final var aAccountMail = AccountMail.newAccountMail(
+                aToken,
+                AccountMailType.PASSWORD_RESET,
+                aAccount,
+                InstantUtils.now().plus(30, ChronoUnit.MINUTES)
+        );
+
+        final var aPassword = "12345678";
+        final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = ResetPasswordCommand.with(aToken, aPassword);
+
+        // when
+        Mockito.when(accountMailGateway.findByToken(Mockito.any()))
+                .thenReturn(Optional.of(aAccountMail));
+
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+
+        Mockito.verify(accountMailGateway, Mockito.times(1))
+                .findByToken(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.times(0))
+                .encrypt(Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(0))
                 .update(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(0))
