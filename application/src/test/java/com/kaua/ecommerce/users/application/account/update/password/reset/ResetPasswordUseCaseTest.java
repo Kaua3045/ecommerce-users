@@ -1,7 +1,8 @@
-package com.kaua.ecommerce.users.application.account.mail.confirm;
+package com.kaua.ecommerce.users.application.account.update.password.reset;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
@@ -24,7 +25,7 @@ import java.util.Optional;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
 @ExtendWith(MockitoExtension.class)
-public class ConfirmAccountMailUseCaseTest {
+public class ResetPasswordUseCaseTest {
 
     @Mock
     private AccountMailGateway accountMailGateway;
@@ -32,11 +33,14 @@ public class ConfirmAccountMailUseCaseTest {
     @Mock
     private AccountGateway accountGateway;
 
+    @Mock
+    private EncrypterGateway encrypterGateway;
+
     @InjectMocks
-    private DefaultConfirmAccountMailUseCase useCase;
+    private DefaultResetPasswordUseCase useCase;
 
     @Test
-    public void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneTrue() {
+    public void givenAValidCommand_whenCallResetPassword_thenShouldReturneTrue() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -45,20 +49,23 @@ public class ConfirmAccountMailUseCaseTest {
                 "teste@teste.com",
                 "1234567Ab"
         );
-        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
-        final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
+        final var aType = AccountMailType.PASSWORD_RESET;
+        final var aExpiresAt = InstantUtils.now().plus(30, ChronoUnit.MINUTES);
         final var aAccountMail = AccountMail.newAccountMail(
                 aToken,
                 aType,
                 aAccount,
-                aExpirestAt
+                aExpiresAt
         );
+        final var newPassword = "1234567Ab*1";
 
-        final var aCommand = ConfirmAccountMailCommand.with(aToken);
+        final var aCommand = ResetPasswordCommand.with(aToken, newPassword);
 
         // when
         Mockito.when(accountMailGateway.findByToken(Mockito.any()))
                 .thenReturn(Optional.of(aAccountMail));
+        Mockito.when(encrypterGateway.encrypt(Mockito.any()))
+                .thenReturn(newPassword);
         Mockito.when(accountGateway.update(Mockito.any()))
                 .thenAnswer(returnsFirstArg());
 
@@ -68,17 +75,19 @@ public class ConfirmAccountMailUseCaseTest {
         Assertions.assertTrue(aOutput);
 
         Mockito.verify(accountMailGateway, Mockito.times(1))
-                .findByToken(Mockito.any());
+                .findByToken(aToken);
+        Mockito.verify(encrypterGateway, Mockito.times(1))
+                .encrypt(Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(1))
                 .update(Mockito.argThat(account ->
                         Objects.nonNull(account.getId()) &&
-                                Objects.equals(AccountMailStatus.CONFIRMED, account.getMailStatus()) &&
+                                Objects.equals(AccountMailStatus.WAITING_CONFIRMATION, account.getMailStatus()) &&
                                 Objects.equals(aAccount.getFirstName(), account.getFirstName()) &&
                                 Objects.equals(aAccount.getLastName(), account.getLastName()) &&
                                 Objects.equals(aAccount.getEmail(), account.getEmail()) &&
-                                Objects.equals(aAccount.getPassword(), account.getPassword()) &&
+                                Objects.equals(newPassword, account.getPassword()) &&
                                 Objects.isNull(account.getAvatarUrl()) &&
-                                Objects.nonNull(account.getCreatedAt()) &&
+                                Objects.equals(aAccount.getCreatedAt(), account.getCreatedAt()) &&
                                 Objects.nonNull(account.getUpdatedAt())
                 ));
         Mockito.verify(accountMailGateway, Mockito.times(1))
@@ -86,7 +95,7 @@ public class ConfirmAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidCommand_whenCallConfirmAccount_thenShouldThrowsDomainException() {
+    public void givenAnInvalidCommand_whenCallResetPassword_thenShouldThrowsDomainException() {
         // given
         final var expectedErrorMessage = "Token expired";
         final var expectedErrorCount = 1;
@@ -98,7 +107,7 @@ public class ConfirmAccountMailUseCaseTest {
                 "teste@teste.com",
                 "1234567Ab"
         );
-        final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
+        final var aType = AccountMailType.PASSWORD_RESET;
         final var aExpirestAt = InstantUtils.now().minus(1, ChronoUnit.HOURS);
         final var aAccountMail = AccountMail.newAccountMail(
                 aToken,
@@ -106,8 +115,9 @@ public class ConfirmAccountMailUseCaseTest {
                 aAccount,
                 aExpirestAt
         );
+        final var newPassword = "1234567Ab*1";
 
-        final var aCommand = ConfirmAccountMailCommand.with(aToken);
+        final var aCommand = ResetPasswordCommand.with(aToken, newPassword);
 
         // when
         Mockito.when(accountMailGateway.findByToken(Mockito.any()))
@@ -128,11 +138,11 @@ public class ConfirmAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAValidCommandWithAccountMailNotPersisted_whenCallConfirmAccount_thenShouldReturnNotFoundException() {
+    public void givenAnInvalidToken_whenCallResetPassword_thenShouldReturnNotFoundException() {
         // given
         final var expectedErrorMessage = "AccountMail with id empty was not found";
 
-        final var aCommand = ConfirmAccountMailCommand.with("empty");
+        final var aCommand = ResetPasswordCommand.with("empty", "1234567Ab*1");
 
         // when
         Mockito.when(accountMailGateway.findByToken(Mockito.any()))
