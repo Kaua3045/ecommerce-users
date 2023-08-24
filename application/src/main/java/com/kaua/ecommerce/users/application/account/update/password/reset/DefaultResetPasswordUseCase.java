@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -39,15 +40,30 @@ public class DefaultResetPasswordUseCase extends ResetPasswordUseCase {
         }
 
         final var aAccount = aAccountMail.getAccount().update(
-                this.encrypterGateway.encrypt(input.newPassword()),
+                input.newPassword(),
                 aAccountMail.getAccount().getAvatarUrl()
         );
-
-        this.accountGateway.update(aAccount);
-        this.accountMailGateway.deleteById(aAccountMail.getId().getValue());
+        aAccount.validate(notification);
 
         return notification.hasError()
                 ? Either.left(notification)
-                : Either.right(true);
+                : Either.right(updatePassowrd(aAccount, aAccountMail.getId().getValue()));
+    }
+
+    private Boolean updatePassowrd(final Account aAccount, String aAccountMailId) {
+        this.accountGateway.update(Account.with(
+                aAccount.getId().getValue(),
+                aAccount.getFirstName(),
+                aAccount.getLastName(),
+                aAccount.getEmail(),
+                aAccount.getMailStatus(),
+                this.encrypterGateway.encrypt(aAccount.getPassword()),
+                aAccount.getAvatarUrl(),
+                aAccount.getCreatedAt(),
+                aAccount.getUpdatedAt(),
+                aAccount.getDomainEvents()
+        ));
+        this.accountMailGateway.deleteById(aAccountMailId);
+        return true;
     }
 }
