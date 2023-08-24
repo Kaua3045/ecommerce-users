@@ -6,8 +6,11 @@ import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMai
 import com.kaua.ecommerce.users.application.account.mail.create.DefaultCreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.account.update.password.DefaultRequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.account.update.password.reset.DefaultResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.application.gateways.QueueGateway;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.EmailQueue;
 import org.springframework.context.annotation.Bean;
@@ -21,15 +24,18 @@ public class AccountMailUseCaseConfig {
     private final AccountMailGateway accountMailGateway;
     private final AccountGateway accountGateway;
     private final QueueGateway queueGateway;
+    private final EncrypterGateway encrypterGateway;
 
     public AccountMailUseCaseConfig(
             final AccountMailGateway accountMailGateway,
             final AccountGateway accountGateway,
-            @EmailQueue final QueueGateway queueGateway
+            @EmailQueue final QueueGateway queueGateway,
+            final EncrypterGateway encrypterGateway
     ) {
         this.accountMailGateway = Objects.requireNonNull(accountMailGateway);
         this.accountGateway = Objects.requireNonNull(accountGateway);
         this.queueGateway = Objects.requireNonNull(queueGateway);
+        this.encrypterGateway = Objects.requireNonNull(encrypterGateway);
     }
 
     @Bean
@@ -45,5 +51,10 @@ public class AccountMailUseCaseConfig {
     @Bean
     public RequestResetPasswordUseCase requestResetPasswordUseCase() {
         return new DefaultRequestResetPasswordUseCase(accountGateway, createAccountMailUseCase());
+    }
+
+    @Bean
+    public ResetPasswordUseCase resetPasswordUseCase() {
+        return new DefaultResetPasswordUseCase(accountGateway, encrypterGateway, accountMailGateway);
     }
 }
