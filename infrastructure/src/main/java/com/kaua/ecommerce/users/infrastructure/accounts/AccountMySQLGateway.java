@@ -47,6 +47,11 @@ public class AccountMySQLGateway implements AccountGateway {
     }
 
     @Override
+    public Optional<Account> findByEmail(String aEmail) {
+        return this.accountJpaRepository.findByEmail(aEmail).map(AccountJpaEntity::toDomain);
+    }
+
+    @Override
     public Account update(Account aAccount) {
         return this.accountJpaRepository
                 .save(AccountJpaEntity.toEntity(aAccount))
