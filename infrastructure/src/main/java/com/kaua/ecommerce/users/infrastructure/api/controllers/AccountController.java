@@ -2,7 +2,10 @@ package com.kaua.ecommerce.users.infrastructure.api.controllers;
 
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordCommand;
+import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.RequestResetPasswordApiInput;
 import com.kaua.ecommerce.users.infrastructure.api.AccountAPI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,9 +15,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController implements AccountAPI {
 
     private final CreateAccountUseCase createAccountUseCase;
+    private final RequestResetPasswordUseCase requestResetPasswordUseCase;
 
-    public AccountController(final CreateAccountUseCase createAccountUseCase) {
+    public AccountController(
+            final CreateAccountUseCase createAccountUseCase,
+            final RequestResetPasswordUseCase requestResetPasswordUseCase
+    ) {
         this.createAccountUseCase = createAccountUseCase;
+        this.requestResetPasswordUseCase = requestResetPasswordUseCase;
     }
 
     @Override
@@ -31,5 +39,11 @@ public class AccountController implements AccountAPI {
         return aResult.isLeft()
                 ? ResponseEntity.unprocessableEntity().body(aResult.getLeft())
                 : ResponseEntity.status(HttpStatus.CREATED).body(aResult.getRight());
+    }
+
+    @Override
+    public ResponseEntity<?> resetPassword(RequestResetPasswordApiInput input) {
+        this.requestResetPasswordUseCase.execute(RequestResetPasswordCommand.with(input.email()));
+        return ResponseEntity.noContent().build();
     }
 }
