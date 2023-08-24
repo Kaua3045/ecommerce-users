@@ -5,8 +5,9 @@ import com.kaua.ecommerce.users.ControllerTest;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
-import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
@@ -16,7 +17,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -41,10 +41,13 @@ public class AccountAPITest {
     private CreateAccountUseCase createAccountUseCase;
 
     @MockBean
-    private BCryptPasswordEncoder passwordEncoder;
+    private RequestResetPasswordUseCase requestResetPasswordUseCase;
+
+    @MockBean
+    private ResetPasswordUseCase resetPasswordUseCase;
 
     @Test
-    public void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
+    void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -79,7 +82,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandFirstName_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandFirstName_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final String aFirstName = null;
         final var aLastName = "Silveira";
         final var aEmail = "teste@teste.com";
@@ -111,7 +114,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandFirstNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandFirstNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "te";
         final var aLastName = "Silveira";
         final var aEmail = "teste@teste.com";
@@ -143,7 +146,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandFirstNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandFirstNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = RandomStringUtils.generateValue(256);
         final var aLastName = "Silveira";
         final var aEmail = "teste@teste.com";
@@ -175,7 +178,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandLastName_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandLastName_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "Teste";
         final var aLastName = "";
         final var aEmail = "teste@teste.com";
@@ -207,7 +210,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandLastNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandLastNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "teste";
         final var aLastName = "Te";
         final var aEmail = "teste@teste.com";
@@ -239,7 +242,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandLastNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandLastNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "teste";
         final var aLastName = RandomStringUtils.generateValue(256);
         final var aEmail = "teste@teste.com";
@@ -271,7 +274,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandEmail_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandEmail_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "Teste";
         final var aLastName = "testes";
         final var aEmail = "";
@@ -303,7 +306,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPassword_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPassword_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "Teste";
         final var aLastName = "testes";
         final var aEmail = "teste@teste.com";
@@ -335,7 +338,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "teste";
         final var aLastName = "Testes";
         final var aEmail = "teste@teste.com";
@@ -367,7 +370,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "teste";
         final var aLastName = "testes";
         final var aEmail = "teste@teste.com";
@@ -399,7 +402,7 @@ public class AccountAPITest {
     }
 
     @Test
-    public void givenAnInvalidCommandPasswordNotContainsOneUppercaseAndLowercaseLetter_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
+    void givenAnInvalidCommandPasswordNotContainsOneUppercaseAndLowercaseLetter_whenCallCreateAccount_thenShouldReturnDomainException() throws Exception {
         final var aFirstName = "teste";
         final var aLastName = "testes";
         final var aEmail = "teste@teste.com";

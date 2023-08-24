@@ -20,7 +20,7 @@ public class AccountRepositoryTest {
     private AccountJpaRepository accountRepository;
 
     @Test
-    public void givenAnInvalidNullFirstName_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullFirstName_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "firstName";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.firstName";
 
@@ -44,7 +44,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullLastName_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullLastName_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "lastName";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.lastName";
 
@@ -68,7 +68,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullEmail_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullEmail_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "email";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.email";
 
@@ -92,7 +92,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullPassword_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullPassword_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "password";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.password";
 
@@ -116,7 +116,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullMailStatus_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullMailStatus_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "mailStatus";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.mailStatus";
 
@@ -140,7 +140,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullCreatedAt_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullCreatedAt_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "createdAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.createdAt";
 
@@ -164,7 +164,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullUpdatedAt_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullUpdatedAt_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "updatedAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.updatedAt";
 
@@ -188,7 +188,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAnInvalidNullId_whenCallSave_shouldReturnAnException() {
+    void givenAnInvalidNullId_whenCallSave_shouldReturnAnException() {
         final var expectedErrorMessage = "ids for this class must be manually assigned before calling save(): com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity";
 
         final var aAccount = Account.newAccount(
@@ -210,7 +210,7 @@ public class AccountRepositoryTest {
     }
 
     @Test
-    public void givenAValidAvatarUrl_whenCallSave_shouldDoesNotThrowException() {
+    void givenAValidAvatarUrl_whenCallSave_shouldDoesNotThrowException() {
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",

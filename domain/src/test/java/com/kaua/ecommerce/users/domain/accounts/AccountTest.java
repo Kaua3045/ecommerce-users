@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class AccountTest {
 
     @Test
-    public void givenAValidValues_whenCallsNewAccount_thenAnAccountShouldBeCreated() {
+    void givenAValidValues_whenCallsNewAccount_thenAnAccountShouldBeCreated() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -48,14 +48,16 @@ public class AccountTest {
         Assertions.assertEquals(aEvent, aAccount.getDomainEvents().get(0));
         Assertions.assertEquals(expectedEventCount, aAccount.getDomainEvents().size());
 
-        Assertions.assertTrue(aAccount.getId().equals(aAccount.getId()));
-        Assertions.assertFalse(aAccount.getId().equals(AccountID.unique()));
+        Assertions.assertEquals(aAccount.getId(), aAccount.getId());
+        Assertions.assertNotEquals(AccountID.unique(), aAccount.getId());
+        Assertions.assertNotNull(aAccount.getId());
         Assertions.assertFalse(aAccount.getId().equals(null));
-        Assertions.assertNotNull(aAccount.getId().hashCode());
+        Assertions.assertFalse(aAccount.getId().equals(new Object()));
+        Assertions.assertNotEquals(1201212, aAccount.getId().hashCode());
     }
 
     @Test
-    public void givenAnInvalidFirstName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidFirstName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "";
         final var aLastName = "Pereira";
@@ -81,7 +83,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidFirstNameLengthLessThan3_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidFirstNameLengthLessThan3_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Ka ";
         final var aLastName = "Pereira";
@@ -107,7 +109,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidFirstNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidFirstNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = RandomStringUtils.generateValue(256);
         final var aLastName = "Pereira";
@@ -133,7 +135,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidLastName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidLastName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final String aLastName = null;
@@ -159,7 +161,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidLastNameLengthLessThan3_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidLastNameLengthLessThan3_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pe ";
@@ -185,7 +187,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidLastNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidLastNameLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = RandomStringUtils.generateValue(256);
@@ -211,7 +213,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidEmail_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidEmail_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -237,7 +239,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPassword_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPassword_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -263,7 +265,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthLessThan8_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordLengthLessThan8_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -289,7 +291,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordLengthMoreThan255_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -315,7 +317,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -341,7 +343,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAValidValues_whenCallsUpdateAccount_thenAnAccountShouldBeUpdated() {
+    void givenAValidValues_whenCallsUpdateAccount_thenAnAccountShouldBeUpdated() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -378,7 +380,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPassword_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPassword_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -410,7 +412,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthLessThan8_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordLengthLessThan8_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -442,7 +444,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthMoreThan255_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordLengthMoreThan255_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -474,7 +476,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
@@ -506,7 +508,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenValidValues_whenCalledWithInAccount_shouldReturnAnAccountObjectWithDataEqualToWhatWasPassed() {
+    void givenValidValues_whenCalledWithInAccount_shouldReturnAnAccountObjectWithDataEqualToWhatWasPassed() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Teste";
@@ -560,7 +562,7 @@ public class AccountTest {
     }
 
     @Test
-    public void givenAValidAccountWatingConfirmation_whenCallsConfirm_thenAnAccountShouldBeConfirmed() {
+    void givenAValidAccountWatingConfirmation_whenCallsConfirm_thenAnAccountShouldBeConfirmed() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";

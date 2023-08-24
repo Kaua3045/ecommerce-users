@@ -14,7 +14,7 @@ import java.time.temporal.ChronoUnit;
 public class AccountMailTest {
 
     @Test
-    public void givenAValidValues_whenCallNewAccountMail_thenAnAccountShouldBeCreated() {
+    void givenAValidValues_whenCallNewAccountMail_thenAnAccountShouldBeCreated() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -37,7 +37,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidTokenNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidTokenNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final String aToken = null;
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -59,7 +59,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidTokenBlank_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidTokenBlank_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = "";
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -81,7 +81,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidTokenLenghtMoreThan36_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidTokenLenghtMoreThan36_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(37);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -103,7 +103,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidTypeNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidTypeNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(36);
         final AccountMailType aType = null;
         final var aAccount = Account.newAccount(
@@ -125,7 +125,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidAccountNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidAccountNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final Account aAccount = null;
@@ -143,7 +143,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAValidAccountButAfterSetNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAValidAccountButAfterSetNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -167,7 +167,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidExpirestAtNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidExpirestAtNull_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -189,7 +189,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAnInvalidExpirestAtBeforeNow_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidExpirestAtBeforeNow_whenCallNewAccountMail_thenAnExceptionShouldBeThrown() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -211,7 +211,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAValidValues_whenCallHashCodeAndEqualsAndFrom_thenShouldBeTrue() {
+    void givenAValidValues_whenCallHashCodeAndEqualsAndFrom_thenShouldBeTrue() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -224,15 +224,15 @@ public class AccountMailTest {
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
 
-        Assertions.assertTrue(aAccountMail.getId().equals(aAccountMail.getId()));
-        Assertions.assertNotNull(aAccountMail.getId().hashCode());
+        Assertions.assertEquals(aAccountMail.getId(), aAccountMail.getId());
+        Assertions.assertNotEquals(1287983127, aAccountMail.getId().hashCode());
 
         Assertions.assertNotNull(aAccountMailIdFrom);
         Assertions.assertInstanceOf(AccountMailID.class, aAccountMailIdFrom);
     }
 
     @Test
-    public void givenAInvalidValues_whenCallHashCodeAndEqualsAndFrom_thenShouldBeFalse() {
+    void givenAInvalidValues_whenCallHashCodeAndEqualsAndFrom_thenShouldBeFalse() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -244,13 +244,13 @@ public class AccountMailTest {
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
 
-        Assertions.assertFalse(aAccountMail.getId().equals(AccountMailID.unique()));
+        Assertions.assertNotEquals(AccountMailID.unique(), aAccountMail.getId());
         Assertions.assertFalse(aAccountMail.getId().equals(null));
         Assertions.assertFalse(aAccountMail.getId().equals(new Object()));
     }
 
     @Test
-    public void givenValidValues_whenCalledWithInAccountMail_shouldReturnAnAccountMailObjectWithDataEqualToWhatWasPassed() {
+    void givenValidValues_whenCalledWithInAccountMail_shouldReturnAnAccountMailObjectWithDataEqualToWhatWasPassed() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -283,7 +283,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAValidValues_whenCallIsExpired_shouldReturnFalse() {
+    void givenAValidValues_whenCallIsExpired_shouldReturnFalse() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(
@@ -300,7 +300,7 @@ public class AccountMailTest {
     }
 
     @Test
-    public void givenAInvalidValues_whenCallIsExpired_shouldReturnTrue() {
+    void givenAInvalidValues_whenCallIsExpired_shouldReturnTrue() {
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aAccount = Account.newAccount(

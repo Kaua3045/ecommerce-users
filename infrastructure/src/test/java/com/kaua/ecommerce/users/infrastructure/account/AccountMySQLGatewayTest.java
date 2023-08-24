@@ -20,7 +20,7 @@ public class AccountMySQLGatewayTest {
     private AccountJpaRepository accountRepository;
 
     @Test
-    public void givenAValidAccount_whenCallCreate_shouldReturnANewAccount() {
+    void givenAValidAccount_whenCallCreate_shouldReturnANewAccount() {
         final var aFirstName = "Fulano";
         final var aLastName = "Silva";
         final var aEmail = "teste@teste.com";
@@ -58,7 +58,7 @@ public class AccountMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidEmailButNotExistis_whenCallExistsByEmail_shouldReturnFalse() {
+    void givenAValidEmailButNotExistis_whenCallExistsByEmail_shouldReturnFalse() {
         final var aEmail = "teste@teste.com";
 
         Assertions.assertEquals(0, accountRepository.count());
@@ -66,7 +66,7 @@ public class AccountMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidExistingEmail_whenCallExistsByEmail_shouldReturnTrue() {
+    void givenAValidExistingEmail_whenCallExistsByEmail_shouldReturnTrue() {
         final var aFirstName = "Fulano";
         final var aLastName = "Silva";
         final var aEmail = "teste@teste.com";
@@ -82,7 +82,7 @@ public class AccountMySQLGatewayTest {
     }
 
     @Test
-    public void givenAPrePersistedAccountAndValidAccountId_whenCallFindById_shouldReturnAccount() {
+    void givenAPrePersistedAccountAndValidAccountId_whenCallFindById_shouldReturnAccount() {
         final var aFirstName = "Fulano";
         final var aLastName = "Silva";
         final var aEmail = "teste@teste.com";
@@ -110,7 +110,7 @@ public class AccountMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidAccountIdNotStored_whenCallFindById_shouldReturnEmpty() {
+    void givenAValidAccountIdButNotStored_whenCallFindById_shouldReturnEmpty() {
         Assertions.assertEquals(0, accountRepository.count());
 
         final var actualAccount = accountGateway.findById(AccountID.from("empty").getValue());
@@ -119,7 +119,7 @@ public class AccountMySQLGatewayTest {
     }
 
     @Test
-    public void givenAValidAccount_whenCallUpdate_shouldReturnAUpdatedAccount() {
+    void givenAValidAccount_whenCallUpdate_shouldReturnAUpdatedAccount() {
         final var aFirstName = "Fulano";
         final var aLastName = "Silva";
         final var aEmail = "teste@teste.com";
@@ -159,5 +159,42 @@ public class AccountMySQLGatewayTest {
         Assertions.assertEquals(aAccount.getMailStatus(), actualEntity.getMailStatus());
         Assertions.assertEquals(aAccount.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), actualEntity.getUpdatedAt());
+    }
+
+    @Test
+    void givenAPrePersistedAccountAndValidEmail_whenCallFindByEmail_shouldReturnAccount() {
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silva";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+
+        Account aAccount = Account.newAccount(aFirstName, aLastName, aEmail, aPassword);
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        accountRepository.save(AccountJpaEntity.toEntity(aAccount));
+
+        Assertions.assertEquals(1, accountRepository.count());
+
+        final var actualAccount = accountGateway.findByEmail(aEmail).get();
+
+        Assertions.assertEquals(aAccount.getId(), actualAccount.getId());
+        Assertions.assertEquals(aFirstName, actualAccount.getFirstName());
+        Assertions.assertEquals(aLastName, actualAccount.getLastName());
+        Assertions.assertEquals(aEmail, actualAccount.getEmail());
+        Assertions.assertEquals(aPassword, actualAccount.getPassword());
+        Assertions.assertNull(actualAccount.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getMailStatus(), actualAccount.getMailStatus());
+        Assertions.assertEquals(aAccount.getCreatedAt(), actualAccount.getCreatedAt());
+        Assertions.assertEquals(aAccount.getUpdatedAt(), actualAccount.getUpdatedAt());
+    }
+
+    @Test
+    void givenAnInvalidEmailNotStored_whenCallFindByEmail_shouldReturnEmpty() {
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var actualAccount = accountGateway.findByEmail("empty");
+
+        Assertions.assertTrue(actualAccount.isEmpty());
     }
 }

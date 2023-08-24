@@ -36,7 +36,7 @@ public class ConfirmAccountMailUseCaseIT {
     private AccountMailGateway accountMailGateway;
 
     @Test
-    public void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneTrue() {
+    void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneTrue() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -66,7 +66,7 @@ public class ConfirmAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidToken_whenCallCreateAccountMail_thenShouldReturneAnError() {
+    void givenAnInvalidToken_whenCallCreateAccountMail_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -84,7 +84,7 @@ public class ConfirmAccountMailUseCaseIT {
 
         // when
         final var aOutput = Assertions.assertThrows(NotFoundException.class,
-                () -> useCase.execute(aCommand).getLeft());
+                () -> useCase.execute(aCommand));
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aOutput.getMessage());
@@ -92,7 +92,7 @@ public class ConfirmAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAValidCommandButExpiredToken_whenCallConfirmAccount_thenShouldReturneAnError() {
+    void givenAValidCommandButExpiredToken_whenCallConfirmAccount_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",

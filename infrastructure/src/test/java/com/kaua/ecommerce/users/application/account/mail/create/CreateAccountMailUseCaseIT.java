@@ -34,7 +34,7 @@ public class CreateAccountMailUseCaseIT {
     private AccountMailGateway accountMailGateway;
 
     @Test
-    public void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMail() {
+    void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMail() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -79,7 +79,7 @@ public class CreateAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidToken_whenCallCreateAccountMail_thenShouldReturneAnError() {
+    void givenAnInvalidToken_whenCallCreateAccountMail_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -113,7 +113,7 @@ public class CreateAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidTokenLengthMoreThan36_whenCallCreateAccountMail_thenShouldReturneAnError() {
+    void givenAnInvalidTokenLengthMoreThan36_whenCallCreateAccountMail_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -147,7 +147,7 @@ public class CreateAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidType_whenCallCreateAccountMail_thenShouldReturneAnError() {
+    void givenAnInvalidType_whenCallCreateAccountMail_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -181,7 +181,7 @@ public class CreateAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidExpiresAt_whenCallCreateAccountMail_thenShouldReturneAnError() {
+    void givenAnInvalidExpiresAt_whenCallCreateAccountMail_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -215,7 +215,7 @@ public class CreateAccountMailUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturneAnError() {
+    void givenAnInvalidExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturneAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",

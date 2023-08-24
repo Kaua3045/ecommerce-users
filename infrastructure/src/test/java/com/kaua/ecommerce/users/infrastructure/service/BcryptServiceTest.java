@@ -17,7 +17,7 @@ public class BcryptServiceTest {
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Test
-    public void givenAValidRawPasswordAndEncodedPassword_whenCallMatches_shouldReturnTrue() {
+    void givenAValidRawPasswordAndEncodedPassword_whenCallMatches_shouldReturnTrue() {
         final var rawPassword = "1234567Ab";
         final var encodedPassword = bCryptPasswordEncoder.encode(rawPassword);
 
@@ -27,7 +27,7 @@ public class BcryptServiceTest {
     }
 
     @Test
-    public void givenAValidRawPassword_whenCallEncrypt_shouldReturnPasswordEncrypted() {
+    void givenAValidRawPassword_whenCallEncrypt_shouldReturnPasswordEncrypted() {
         final var rawPassword = "1234567Ab";
 
         final var actual = bcryptService.encrypt(rawPassword);
@@ -36,7 +36,7 @@ public class BcryptServiceTest {
     }
 
     @Test
-    public void givenAnInvalidRawPasswordAndValidEncodedPassword_whenCallMatches_shouldReturnFalse() {
+    void givenAnInvalidRawPasswordAndValidEncodedPassword_whenCallMatches_shouldReturnFalse() {
         final var rawPassword = "1234567Ab";
         final var encodedPassword = bCryptPasswordEncoder.encode("1234567Abc");
 

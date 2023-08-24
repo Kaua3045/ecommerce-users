@@ -9,7 +9,7 @@ import java.util.List;
 public class DomainExceptionTest {
 
     @Test
-    public void givenAValidListOfError_whenCallDomainExceptionWith_ThenReturnDomainException() {
+    void givenAValidListOfError_whenCallDomainExceptionWith_ThenReturnDomainException() {
         // given
         var errors = List.of(new Error("Common Error"));
         // when

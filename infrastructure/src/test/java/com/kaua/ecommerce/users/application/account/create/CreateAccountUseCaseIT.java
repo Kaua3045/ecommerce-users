@@ -27,7 +27,7 @@ public class CreateAccountUseCaseIT {
     private AccountGateway accountGateway;
 
     @Test
-    public void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
+    void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -60,7 +60,7 @@ public class CreateAccountUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "";
         final var aLastName = "Silveira";
@@ -85,7 +85,7 @@ public class CreateAccountUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidLastName_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidLastName_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final String aLastName = null;
@@ -110,7 +110,7 @@ public class CreateAccountUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidEmail_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidEmail_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -135,7 +135,7 @@ public class CreateAccountUseCaseIT {
     }
 
     @Test
-    public void givenAnInvalidPassword_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPassword_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -160,7 +160,7 @@ public class CreateAccountUseCaseIT {
     }
 
     @Test
-    public void givenAnExistingEmail_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnExistingEmail_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";

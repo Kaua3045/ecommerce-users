@@ -62,7 +62,7 @@ public class EntityTest {
 
         Assertions.assertNotNull(entity);
         Assertions.assertEquals(sampleId, entity.getId());
-        Assertions.assertNotEquals(entity, null);
+        Assertions.assertNotEquals(null, entity);
         Assertions.assertNotEquals(entity, new Object());
     }
 

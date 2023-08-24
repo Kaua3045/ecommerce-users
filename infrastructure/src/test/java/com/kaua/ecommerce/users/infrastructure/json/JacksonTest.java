@@ -14,7 +14,7 @@ import org.springframework.test.context.ActiveProfiles;
 public class JacksonTest {
 
     @Test
-    public void testMarshall() {
+    void testMarshall() {
         final var aFirstName = "teste";
         final var aLastName = "testes";
         final var aEmail = "teste@teste.com";
@@ -28,7 +28,7 @@ public class JacksonTest {
     }
 
     @Test
-    public void testUnarshall() {
+    void testUnarshall() {
         final var aFirstName = "teste";
         final var aLastName = "testes";
         final var aEmail = "teste@teste.com";
@@ -52,7 +52,7 @@ public class JacksonTest {
     }
 
     @Test
-    public void testUnarshallThrowsException() {
+    void testUnarshallThrowsException() {
         Assertions.assertThrows(RuntimeException.class,
                 () -> Json.readValue(null, CreateAccountApiInput.class));
     }

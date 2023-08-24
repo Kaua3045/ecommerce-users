@@ -36,7 +36,7 @@ public class ConfirmAccountMailUseCaseTest {
     private DefaultConfirmAccountMailUseCase useCase;
 
     @Test
-    public void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneTrue() {
+    void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneTrue() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -86,7 +86,7 @@ public class ConfirmAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidCommand_whenCallConfirmAccount_thenShouldThrowsNotFoundException() {
+    void givenAnInvalidCommand_whenCallConfirmAccount_thenShouldThrowsDomainException() {
         // given
         final var expectedErrorMessage = "Token expired";
         final var expectedErrorCount = 1;
@@ -128,7 +128,7 @@ public class ConfirmAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAValidCommandAndTokenExpired_whenCallConfirmAccount_thenShouldReturnDomainException() {
+    void givenAValidCommandWithAccountMailNotPersisted_whenCallConfirmAccount_thenShouldReturnNotFoundException() {
         // given
         final var expectedErrorMessage = "AccountMail with id empty was not found";
 
@@ -139,7 +139,7 @@ public class ConfirmAccountMailUseCaseTest {
                 .thenReturn(Optional.empty());
 
         final var aOutput = Assertions.assertThrows(NotFoundException.class,
-                () -> useCase.execute(aCommand).getLeft());
+                () -> useCase.execute(aCommand));
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aOutput.getMessage());

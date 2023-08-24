@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class NotificationTest {
 
     @Test
-    public void givenAValidError_whenCallCreateNotification_thenShouldReturnTrueHasError() {
+    void givenAValidError_whenCallCreateNotification_thenShouldReturnTrueHasError() {
         // given
         final var error = new Error("Common Error");
 
@@ -25,7 +25,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void givenAValidErrors_whenCallAppendNotification_thenShouldReturnANotificationWithError() {
+    void givenAValidErrors_whenCallAppendNotification_thenShouldReturnANotificationWithError() {
         // given
         final var error = new Error("Common Error");
 
@@ -39,7 +39,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void givenAValidEmptyError_whenCallAppendNotification_thenShouldReturnANotificationWithoutError() {
+    void givenAValidEmptyError_whenCallAppendNotification_thenShouldReturnANotificationWithoutError() {
         final var notification = NotificationHandler.create();
 
         // then
@@ -48,7 +48,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void givenAValidValidation_whenCallValidate_thenShouldReturnNotificationEmpty() {
+    void givenAValidValidation_whenCallValidate_thenShouldReturnNotificationEmpty() {
         final String aName = null;
 
         final var aNotification = NotificationHandler.create();
@@ -59,7 +59,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void givenAValidValidation_whenCallValidate_thenShouldDoesNotThrow() {
+    void givenAValidValidation_whenCallValidate_thenShouldDoesNotThrow() {
         Validation validation = () -> {};
         NotificationHandler handler = NotificationHandler.create();
 
@@ -67,7 +67,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void givenAValidValidation_whenCallValidate_thenShouldThrowsException() {
+    void givenAValidValidation_whenCallValidate_thenShouldThrowsException() {
         final var expectedErrorMessage = "Cannot invoke \"com.kaua.ecommerce.users.domain.validation.Validation.validate()\" because \"aValidation\" is null";
         NotificationHandler handler = NotificationHandler.create();
 
@@ -76,7 +76,7 @@ public class NotificationTest {
     }
 
     @Test
-    public void givenAValidHandler_whenCallAppend_thenShouldReturnNotification() {
+    void givenAValidHandler_whenCallAppend_thenShouldReturnNotification() {
         final var handler = NotificationHandler.create();
         ValidationHandler anotherHandler = new ThrowsValidationHandler();
 
