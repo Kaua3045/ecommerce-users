@@ -40,7 +40,7 @@ public class ResetPasswordUseCaseTest {
     private DefaultResetPasswordUseCase useCase;
 
     @Test
-    public void givenAValidCommand_whenCallResetPassword_thenShouldReturneTrue() {
+    void givenAValidCommand_whenCallResetPassword_thenShouldReturneTrue() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -95,7 +95,7 @@ public class ResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidCommand_whenCallResetPassword_thenShouldThrowsDomainException() {
+    void givenAnInvalidCommand_whenCallResetPassword_thenShouldThrowsDomainException() {
         // given
         final var expectedErrorMessage = "Token expired";
         final var expectedErrorCount = 1;
@@ -140,7 +140,7 @@ public class ResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidToken_whenCallResetPassword_thenShouldReturnNotFoundException() {
+    void givenAnInvalidToken_whenCallResetPassword_thenShouldReturnNotFoundException() {
         // given
         final var expectedErrorMessage = "AccountMail with id empty was not found";
 
@@ -151,7 +151,7 @@ public class ResetPasswordUseCaseTest {
                 .thenReturn(Optional.empty());
 
         final var aOutput = Assertions.assertThrows(NotFoundException.class,
-                () -> useCase.execute(aCommand).getLeft());
+                () -> useCase.execute(aCommand));
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aOutput.getMessage());
@@ -167,7 +167,7 @@ public class ResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPassword_whenCallResetPAssword_thenShouldReturnAnError() {
+    void givenAnInvalidPassword_whenCallResetPAssword_thenShouldReturnAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -210,7 +210,7 @@ public class ResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -252,7 +252,7 @@ public class ResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",
@@ -305,7 +305,7 @@ public class ResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordWithoutUpperLetterAndLowerLetter_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPasswordWithoutUpperLetterAndLowerLetter_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",

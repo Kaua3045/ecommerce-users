@@ -41,7 +41,7 @@ public class CreateAccountMailUseCaseTest {
     private DefaultCreateAccountMailUseCase useCase;
 
     @Test
-    public void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMail() {
+    void givenAValidCommand_whenCallCreateAccountMail_thenShouldReturneAnAccountMail() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -90,7 +90,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidToken_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidToken_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = "";
         final var aAccount = Account.newAccount(
@@ -130,7 +130,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidTokenLenghtMoreThan36_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidTokenLenghtMoreThan36_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = RandomStringUtils.generateValue(37);
         final var aAccount = Account.newAccount(
@@ -170,7 +170,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidAccountIdIsNull_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidAccountIdIsNull_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final String aAccount = null;
@@ -202,7 +202,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidAccount_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidAccount_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = "84045cfc-705f-4418-bf4b-155d5d11f69f";
@@ -236,7 +236,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidAccountMailType_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidAccountMailType_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -276,7 +276,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidExpiresAt_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidExpiresAt_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -316,7 +316,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturnAnError() {
+    void givenAnInvalidExpiresAtBeforeNow_whenCallCreateAccountMail_thenShouldReturnAnError() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
@@ -356,7 +356,7 @@ public class CreateAccountMailUseCaseTest {
     }
 
     @Test
-    public void givenAValidCommandButExistingMailWithType_whenCallCreateAccountMail_thenShouldDeleteExistMailAndReturneAnAccountMail() {
+    void givenAValidCommandButExistingMailWithType_whenCallCreateAccountMail_thenShouldDeleteExistMailAndReturneAnAccountMail() {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(

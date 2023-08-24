@@ -34,7 +34,7 @@ public class CreateAccountUseCaseTest {
     private EncrypterGateway encrypterGateway;
 
     @Test
-    public void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
+    void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -76,7 +76,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidFirstName_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "";
         final var aLastName = "Silveira";
@@ -103,7 +103,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidFirstNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidFirstNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "F ";
         final var aLastName = "Silveira";
@@ -130,7 +130,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidFirstNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidFirstNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = """
                 O empenho em analisar a execução dos pontos do programa causa impacto indireto na
@@ -167,7 +167,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidLastName_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidLastName_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final String aLastName = null;
@@ -194,7 +194,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidLastNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidLastNameLengthLessThan3_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "S ";
@@ -221,7 +221,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidLastNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidLastNameLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = """
@@ -258,7 +258,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidEmail_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidEmail_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -285,7 +285,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnExistingEmail_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnExistingEmail_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -315,7 +315,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPassword_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPassword_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -342,7 +342,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPasswordLengthLessThan8_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -369,7 +369,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPasswordLengthMoreThan255_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -406,7 +406,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidPasswordWithoutUpperLetterAndLowerLetter_whenCallCreateAccount_thenShouldReturnAnError() {
+    void givenAnInvalidPasswordWithoutUpperLetterAndLowerLetter_whenCallCreateAccount_thenShouldReturnAnError() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -433,7 +433,7 @@ public class CreateAccountUseCaseTest {
     }
 
     @Test
-    public void givenAValidAccountId_whenCallFrom_shouldReturnId() {
+    void givenAValidAccountId_whenCallFrom_shouldReturnId() {
         final var aAccountId = AccountID.unique();
 
         final var aOutput = CreateAccountOutput.from(aAccountId.getValue(), null, null);

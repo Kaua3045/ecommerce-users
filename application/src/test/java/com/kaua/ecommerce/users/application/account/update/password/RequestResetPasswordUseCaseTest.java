@@ -29,7 +29,7 @@ public class RequestResetPasswordUseCaseTest {
     private DefaultRequestResetPasswordUseCase useCase;
 
     @Test
-    public void givenAValidCommand_whenCallRequestResetPassowrd_thenShouldDoesNotThrow() {
+    void givenAValidCommand_whenCallRequestResetPassowrd_thenShouldDoesNotThrow() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -60,7 +60,7 @@ public class RequestResetPasswordUseCaseTest {
     }
 
     @Test
-    public void givenAnInvalidCommand_whenCallRequestResetPassowrd_thenShouldThrowException() {
+    void givenAnInvalidCommand_whenCallRequestResetPassowrd_thenShouldThrowException() {
         // given
         final var aEmail = "teste@teste.com";
         final var expectedErrorMessage = "Account with id teste@teste.com was not found";

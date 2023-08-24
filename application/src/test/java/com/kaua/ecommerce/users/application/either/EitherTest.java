@@ -8,7 +8,7 @@ import java.util.NoSuchElementException;
 public class EitherTest {
 
     @Test
-    public void testLeft() {
+    void testLeft() {
         Either<Integer, String> either = Either.left(42);
         Assertions.assertTrue(either.isLeft());
         Assertions.assertFalse(either.isRight());
@@ -26,7 +26,7 @@ public class EitherTest {
     }
 
     @Test
-    public void testRightWithLeftMethods() {
+    void testRightWithLeftMethods() {
         Either<Integer, String> either = Either.right("Hello");
         Assertions.assertFalse(either.isLeft());
         Assertions.assertTrue(either.isRight());
@@ -38,7 +38,7 @@ public class EitherTest {
     }
 
     @Test
-    public void testLeftWithRightMethods() {
+    void testLeftWithRightMethods() {
         Either<Integer, String> either = Either.left(42);
         Assertions.assertTrue(either.isLeft());
         Assertions.assertFalse(either.isRight());
@@ -50,7 +50,7 @@ public class EitherTest {
     }
 
     @Test
-    public void testBaseMethods() {
+    void testBaseMethods() {
         Either<Integer, String> either = new Either.BaseMethods<>();
         Assertions.assertThrows(UnsupportedOperationException.class, either::isLeft);
         Assertions.assertThrows(UnsupportedOperationException.class, either::isRight);
