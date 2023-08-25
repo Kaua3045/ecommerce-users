@@ -4,6 +4,8 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.create.DefaultCreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DefaultDeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.account.retrieve.get.DefaultGetAccountUseCase;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
@@ -30,6 +32,11 @@ public class AccountUseCaseConfig {
     @Bean
     public CreateAccountUseCase createAccountUseCase() {
         return new DefaultCreateAccountUseCase(accountGateway, encrypterGateway);
+    }
+
+    @Bean
+    public GetAccountUseCase getAccountUseCase() {
+        return new DefaultGetAccountUseCase(accountGateway);
     }
 
     @Bean
