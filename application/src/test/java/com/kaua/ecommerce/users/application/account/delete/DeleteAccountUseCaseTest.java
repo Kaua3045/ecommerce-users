@@ -1,7 +1,12 @@
 package com.kaua.ecommerce.users.application.account.delete;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
+import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
+import com.kaua.ecommerce.users.domain.utils.InstantUtils;
+import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -9,6 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
 public class DeleteAccountUseCaseTest {
@@ -20,6 +28,9 @@ public class DeleteAccountUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
+
+    @Mock
+    private AccountMailGateway accountMailGateway;
 
     @InjectMocks
     private DefaultDeleteAccountUseCase useCase;
@@ -38,6 +49,14 @@ public class DeleteAccountUseCaseTest {
         final var aCommand = DeleteAccountCommand.with(aId);
 
         // when
+        Mockito.when(accountMailGateway.findAllByAccountId(aId)).thenReturn(List.of(
+                AccountMail.newAccountMail(
+                        RandomStringUtils.generateValue(36),
+                        AccountMailType.ACCOUNT_CONFIRMATION,
+                        aAccount,
+                        InstantUtils.now().plus(10, ChronoUnit.MINUTES)
+                )
+        ));
         Mockito.doNothing().when(accountGateway).deleteById(aId);
 
         Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
@@ -55,6 +74,7 @@ public class DeleteAccountUseCaseTest {
         final var aCommand = DeleteAccountCommand.with(aId);
 
         // when
+        Mockito.when(accountMailGateway.findAllByAccountId(aId)).thenReturn(List.of());
         Mockito.doNothing().when(accountGateway).deleteById(aId);
 
         Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
