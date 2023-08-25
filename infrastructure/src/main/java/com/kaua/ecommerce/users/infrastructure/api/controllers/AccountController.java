@@ -5,9 +5,9 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountCommand;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountCommand;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountOutput;
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import com.kaua.ecommerce.users.infrastructure.accounts.presenters.GetAccountPresenter;
 import com.kaua.ecommerce.users.infrastructure.api.AccountAPI;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +47,11 @@ public class AccountController implements AccountAPI {
     }
 
     @Override
-    public ResponseEntity<GetAccountOutput> getAccount(String id) {
-        return ResponseEntity.ok(this.getAccountUseCase.execute(GetAccountCommand.with(id)));
+    public ResponseEntity<GetAccountPresenter> getAccount(String id) {
+        final var aResult = GetAccountPresenter.from(this.getAccountUseCase
+                .execute(GetAccountCommand.with(id)));
+
+        return ResponseEntity.ok(aResult);
     }
 
     @Override

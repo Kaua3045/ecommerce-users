@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.api;
 
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountOutput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import com.kaua.ecommerce.users.infrastructure.accounts.presenters.GetAccountPresenter;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +19,7 @@ public interface AccountAPI {
             value = "{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    ResponseEntity<GetAccountOutput> getAccount(@PathVariable String id);
+    ResponseEntity<GetAccountPresenter> getAccount(@PathVariable String id);
 
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteAccount(@PathVariable String id);
