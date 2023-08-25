@@ -57,4 +57,11 @@ public class AccountMySQLGateway implements AccountGateway {
                 .save(AccountJpaEntity.toEntity(aAccount))
                 .toDomain();
     }
+
+    @Override
+    public void deleteById(String aId) {
+        if (this.accountJpaRepository.existsById(aId)) {
+            this.accountJpaRepository.deleteById(aId);
+        }
+    }
 }
