@@ -5,9 +5,9 @@ import com.kaua.ecommerce.users.ControllerTest;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
@@ -41,10 +41,7 @@ public class AccountAPITest {
     private CreateAccountUseCase createAccountUseCase;
 
     @MockBean
-    private RequestResetPasswordUseCase requestResetPasswordUseCase;
-
-    @MockBean
-    private ResetPasswordUseCase resetPasswordUseCase;
+    private DeleteAccountUseCase deleteAccountUseCase;
 
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
@@ -431,5 +428,43 @@ public class AccountAPITest {
                         Objects.equals(aEmail, cmd.email()) &&
                         Objects.equals(aPassword, cmd.password())
         ));
+    }
+
+    @Test
+    void givenAValidCommandWithAccountId_whenCallDeleteAccount_thenShouldReturnOk() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "testes",
+                "teste",
+                "teste@testes.com",
+                "1234567Ab"
+        );
+        final var aId = aAccount.getId().getValue();
+
+        final var request = MockMvcRequestBuilders.delete("/accounts/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(deleteAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAnInvalidAccountId_whenCallDeleteAccount_thenShouldReturnOk() throws Exception {
+        // given
+        final var aId = "invalid";
+
+        final var request = MockMvcRequestBuilders.delete("/accounts/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(deleteAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
     }
 }

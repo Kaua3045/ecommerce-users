@@ -15,4 +15,6 @@ public interface AccountGateway {
     Optional<Account> findByEmail(String aEmail);
 
     Account update(Account aAccount);
+
+    void deleteById(String aId);
 }
