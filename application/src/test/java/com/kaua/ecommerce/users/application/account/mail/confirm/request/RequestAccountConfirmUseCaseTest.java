@@ -1,6 +1,8 @@
-package com.kaua.ecommerce.users.application.account.update.password;
+package com.kaua.ecommerce.users.application.account.mail.confirm.request;
 
+import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailOutput;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
+import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
@@ -17,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class RequestResetPasswordUseCaseTest {
+public class RequestAccountConfirmUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
@@ -26,10 +28,10 @@ public class RequestResetPasswordUseCaseTest {
     private CreateAccountMailUseCase createAccountMailUseCase;
 
     @InjectMocks
-    private DefaultRequestResetPasswordUseCase useCase;
+    private DefaultRequestAccountConfirmUseCase useCase;
 
     @Test
-    void givenAValidCommand_whenCallRequestResetPassowrd_thenShouldDoesNotThrow() {
+    void givenAValidCommand_whenCallRequestAccountConfirmationCode_thenShouldReturnAccountMailId() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -42,33 +44,38 @@ public class RequestResetPasswordUseCaseTest {
                 aPassword
         );
 
-        final var aCommand = RequestResetPasswordCommand.with(aEmail);
+        final var aCommand = RequestAccountConfirmCommand.with(aAccount.getId().getValue());
 
         // when
-        Mockito.when(accountGateway.findByEmail(Mockito.any()))
+        Mockito.when(accountGateway.findById(Mockito.any()))
                 .thenReturn(Optional.of(aAccount));
+        Mockito.when(createAccountMailUseCase.execute(Mockito.any()))
+                .thenReturn(Either.right(CreateAccountMailOutput.from("123123123123")));
 
-        Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
+        final var aOutput = useCase.execute(aCommand).getRight();
+
+        Assertions.assertNotNull(aOutput);
+        Assertions.assertNotNull(aOutput.id());
 
         Mockito.verify(accountGateway, Mockito.times(1))
-                .findByEmail(aEmail);
+                .findById(aAccount.getId().getValue());
         Mockito.verify(createAccountMailUseCase, Mockito.times(1))
                 .execute(Mockito.argThat(cmd ->
                         Objects.equals(aAccount, cmd.account()) &&
-                        Objects.equals(AccountMailType.PASSWORD_RESET, cmd.type())
+                                Objects.equals(AccountMailType.ACCOUNT_CONFIRMATION, cmd.type())
                 ));
     }
 
     @Test
-    void givenAnInvalidCommand_whenCallRequestResetPassowrd_thenShouldThrowException() {
+    void givenAnInvalidCommand_whenCallRequestAccountConfirmationCode_thenShouldThrowException() {
         // given
-        final var aEmail = "teste@teste.com";
-        final var expectedErrorMessage = "Account with id teste@teste.com was not found";
+        final var aId = "12341242421";
+        final var expectedErrorMessage = "Account with id 12341242421 was not found";
 
-        final var aCommand = RequestResetPasswordCommand.with(aEmail);
+        final var aCommand = RequestAccountConfirmCommand.with(aId);
 
         // when
-        Mockito.when(accountGateway.findByEmail(Mockito.any()))
+        Mockito.when(accountGateway.findById(Mockito.any()))
                 .thenReturn(Optional.empty());
 
         final var aException = Assertions.assertThrows(NotFoundException.class,
@@ -77,7 +84,7 @@ public class RequestResetPasswordUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, aException.getMessage());
 
         Mockito.verify(accountGateway, Mockito.times(1))
-                .findByEmail(aEmail);
+                .findById(aId);
         Mockito.verify(createAccountMailUseCase, Mockito.times(0))
                 .execute(Mockito.any());
     }

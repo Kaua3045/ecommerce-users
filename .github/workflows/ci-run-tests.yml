@@ -1,9 +1,14 @@
-name: Feature Branch
+name: CI - Run tests after push
 
 on:
   push:
     branches:
       - feature/*
+      - refactor/*
+      - hotfix/*
+      - bugfix/*
+      - release/*
+  workflow_dispatch:
 
 jobs:
   run-tests:
@@ -19,5 +24,5 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Run tests
+      - name: Run application tests
         run: ./gradlew test
