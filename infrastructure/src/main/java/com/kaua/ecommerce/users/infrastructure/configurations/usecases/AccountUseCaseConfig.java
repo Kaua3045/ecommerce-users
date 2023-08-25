@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.create.DefaultCreateAccountUseCase;
+import com.kaua.ecommerce.users.application.account.delete.DefaultDeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import org.springframework.context.annotation.Bean;
@@ -21,5 +23,10 @@ public class AccountUseCaseConfig {
     @Bean
     public CreateAccountUseCase createAccountUseCase() {
         return new DefaultCreateAccountUseCase(accountGateway, encrypterGateway);
+    }
+
+    @Bean
+    public DeleteAccountUseCase deleteAccountUseCase() {
+        return new DefaultDeleteAccountUseCase(accountGateway);
     }
 }
