@@ -6,6 +6,9 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountCommand;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountOutput;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
@@ -42,6 +45,9 @@ public class AccountAPITest {
 
     @MockBean
     private DeleteAccountUseCase deleteAccountUseCase;
+
+    @MockBean
+    private GetAccountUseCase getAccountUseCase;
 
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
@@ -465,6 +471,44 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         Mockito.verify(deleteAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAValidCommand_whenCallGetAccount_thenShouldReturneAnAccount() throws Exception {
+        // given
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+        final var aId = aAccount.getId().getValue();
+
+        Mockito.when(getAccountUseCase.execute(Mockito.any(GetAccountCommand.class)))
+                .thenReturn(GetAccountOutput.from(aAccount));
+
+        final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.first_name", equalTo(aFirstName)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.last_name", equalTo(aLastName)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.email", equalTo(aEmail)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.avatar_url", equalTo(aAccount.getAvatarUrl())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.mail_status", equalTo(aAccount.getMailStatus().name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aAccount.getCreatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aAccount.getUpdatedAt().toString())));
+
+        Mockito.verify(getAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
     }
 }
