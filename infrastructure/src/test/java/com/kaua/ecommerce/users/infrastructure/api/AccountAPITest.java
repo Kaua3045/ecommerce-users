@@ -6,9 +6,9 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountCommand;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountOutput;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdCommand;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdOutput;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -48,7 +48,7 @@ public class AccountAPITest {
     private DeleteAccountUseCase deleteAccountUseCase;
 
     @MockBean
-    private GetAccountUseCase getAccountUseCase;
+    private GetAccountByIdUseCase getAccountByIdUseCase;
 
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
@@ -490,8 +490,8 @@ public class AccountAPITest {
         );
         final var aId = aAccount.getId().getValue();
 
-        Mockito.when(getAccountUseCase.execute(Mockito.any(GetAccountCommand.class)))
-                .thenReturn(GetAccountOutput.from(aAccount));
+        Mockito.when(getAccountByIdUseCase.execute(Mockito.any(GetAccountByIdCommand.class)))
+                .thenReturn(GetAccountByIdOutput.from(aAccount));
 
         final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
                 .contentType(MediaType.APPLICATION_JSON);
@@ -509,7 +509,7 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aAccount.getCreatedAt().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aAccount.getUpdatedAt().toString())));
 
-        Mockito.verify(getAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+        Mockito.verify(getAccountByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
     }
 
@@ -519,7 +519,7 @@ public class AccountAPITest {
         final var expectedErrorMessage = "Account with id 123 was not found";
         final var aId = "123";
 
-        Mockito.when(getAccountUseCase.execute(Mockito.any(GetAccountCommand.class)))
+        Mockito.when(getAccountByIdUseCase.execute(Mockito.any(GetAccountByIdCommand.class)))
                 .thenThrow(NotFoundException.with(Account.class, aId));
 
         final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
@@ -531,7 +531,7 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
-        Mockito.verify(getAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+        Mockito.verify(getAccountByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
     }
 }

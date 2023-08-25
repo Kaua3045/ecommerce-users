@@ -6,18 +6,18 @@ import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 
 import java.util.Objects;
 
-public class DefaultGetAccountUseCase extends GetAccountUseCase {
+public class DefaultGetAccountByIdUseCase extends GetAccountByIdUseCase {
 
     private final AccountGateway accountGateway;
 
-    public DefaultGetAccountUseCase(final AccountGateway accountGateway) {
+    public DefaultGetAccountByIdUseCase(final AccountGateway accountGateway) {
         this.accountGateway = Objects.requireNonNull(accountGateway);
     }
 
     @Override
-    public GetAccountOutput execute(GetAccountCommand aCommand) {
+    public GetAccountByIdOutput execute(GetAccountByIdCommand aCommand) {
         return this.accountGateway.findById(aCommand.id())
-                .map(GetAccountOutput::from)
+                .map(GetAccountByIdOutput::from)
                 .orElseThrow(() -> NotFoundException.with(Account.class, aCommand.id()));
     }
 }

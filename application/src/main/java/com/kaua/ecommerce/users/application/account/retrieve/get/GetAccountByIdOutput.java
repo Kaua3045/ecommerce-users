@@ -2,7 +2,7 @@ package com.kaua.ecommerce.users.application.account.retrieve.get;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
 
-public record GetAccountOutput(
+public record GetAccountByIdOutput(
         String id,
         String firstName,
         String lastName,
@@ -13,8 +13,8 @@ public record GetAccountOutput(
         String updatedAt
 ) {
 
-    public static GetAccountOutput from(final Account aAccount) {
-        return new GetAccountOutput(
+    public static GetAccountByIdOutput from(final Account aAccount) {
+        return new GetAccountByIdOutput(
                 aAccount.getId().getValue(),
                 aAccount.getFirstName(),
                 aAccount.getLastName(),

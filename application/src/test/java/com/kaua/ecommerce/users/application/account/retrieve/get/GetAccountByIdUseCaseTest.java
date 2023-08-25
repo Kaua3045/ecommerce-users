@@ -2,7 +2,6 @@ package com.kaua.ecommerce.users.application.account.retrieve.get;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
-import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -12,19 +11,16 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Objects;
 import java.util.Optional;
 
-import static org.mockito.AdditionalAnswers.returnsFirstArg;
-
 @ExtendWith(MockitoExtension.class)
-public class GetAccountUseCaseTest {
+public class GetAccountByIdUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
 
     @InjectMocks
-    private DefaultGetAccountUseCase useCase;
+    private DefaultGetAccountByIdUseCase useCase;
 
     @Test
     void givenAValidCommand_whenCallGetByIdAccount_thenShouldReturneAnAccount() {
@@ -40,7 +36,7 @@ public class GetAccountUseCaseTest {
                 aPassword
         );
 
-        final var aCommand = GetAccountCommand.with(aAccount.getId().getValue());
+        final var aCommand = GetAccountByIdCommand.with(aAccount.getId().getValue());
 
         // when
         Mockito.when(accountGateway.findById(Mockito.any()))
@@ -68,7 +64,7 @@ public class GetAccountUseCaseTest {
         // given
         final var expectedErrorMessage = "Account with id 123 was not found";
 
-        final var aCommand = GetAccountCommand.with("123");
+        final var aCommand = GetAccountByIdCommand.with("123");
 
         // when
         Mockito.when(accountGateway.findById(Mockito.any()))

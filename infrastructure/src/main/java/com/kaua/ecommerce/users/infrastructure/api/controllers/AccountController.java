@@ -4,8 +4,8 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountCommand;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountCommand;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdCommand;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.GetAccountPresenter;
 import com.kaua.ecommerce.users.infrastructure.accounts.presenters.AccountApiPresenter;
@@ -19,16 +19,16 @@ public class AccountController implements AccountAPI {
 
     private final CreateAccountUseCase createAccountUseCase;
     private final DeleteAccountUseCase deleteAccountUseCase;
-    private final GetAccountUseCase getAccountUseCase;
+    private final GetAccountByIdUseCase getAccountByIdUseCase;
 
     public AccountController(
             final CreateAccountUseCase createAccountUseCase,
             final DeleteAccountUseCase deleteAccountUseCase,
-            final GetAccountUseCase getAccountUseCase
+            final GetAccountByIdUseCase getAccountByIdUseCase
     ) {
         this.createAccountUseCase = createAccountUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
-        this.getAccountUseCase = getAccountUseCase;
+        this.getAccountByIdUseCase = getAccountByIdUseCase;
     }
 
     @Override
@@ -49,8 +49,8 @@ public class AccountController implements AccountAPI {
 
     @Override
     public GetAccountPresenter getAccount(String id) {
-        return AccountApiPresenter.present(this.getAccountUseCase
-                .execute(GetAccountCommand.with(id)));
+        return AccountApiPresenter.present(this.getAccountByIdUseCase
+                .execute(GetAccountByIdCommand.with(id)));
     }
 
     @Override
