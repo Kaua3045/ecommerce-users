@@ -197,4 +197,34 @@ public class AccountMySQLGatewayTest {
 
         Assertions.assertTrue(actualAccount.isEmpty());
     }
+
+    @Test
+    void givenAPrePersistedAccount_whenCallDeleteById_shouldBeOk() {
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "testes@teste.com",
+                "1234567Ab"
+        );
+        final var aId = aAccount.getId().getValue();
+
+        accountRepository.saveAndFlush(AccountJpaEntity.toEntity(aAccount));
+
+        Assertions.assertEquals(1, accountRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> accountGateway.deleteById(aId));
+
+        Assertions.assertEquals(0, accountRepository.count());
+    }
+
+    @Test
+    void givenAnNotPrePersistedccount_whenCallDeleteById_shouldBeOk() {
+        final var aId = "123";
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> accountGateway.deleteById(aId));
+
+        Assertions.assertEquals(0, accountRepository.count());
+    }
 }
