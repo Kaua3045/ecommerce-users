@@ -4,6 +4,9 @@ import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountCommand;
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountCommand;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountOutput;
+import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.api.AccountAPI;
 import org.springframework.http.HttpStatus;
@@ -15,13 +18,16 @@ public class AccountController implements AccountAPI {
 
     private final CreateAccountUseCase createAccountUseCase;
     private final DeleteAccountUseCase deleteAccountUseCase;
+    private final GetAccountUseCase getAccountUseCase;
 
     public AccountController(
             final CreateAccountUseCase createAccountUseCase,
-            final DeleteAccountUseCase deleteAccountUseCase
+            final DeleteAccountUseCase deleteAccountUseCase,
+            final GetAccountUseCase getAccountUseCase
     ) {
         this.createAccountUseCase = createAccountUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
+        this.getAccountUseCase = getAccountUseCase;
     }
 
     @Override
@@ -41,7 +47,12 @@ public class AccountController implements AccountAPI {
     }
 
     @Override
-    public ResponseEntity<?> deleteAccount(String id) {
+    public ResponseEntity<GetAccountOutput> getAccount(String id) {
+        return ResponseEntity.ok(this.getAccountUseCase.execute(GetAccountCommand.with(id)));
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteAccount(String id) {
         this.deleteAccountUseCase.execute(DeleteAccountCommand.with(id));
         return ResponseEntity.status(HttpStatus.OK).build();
     }
