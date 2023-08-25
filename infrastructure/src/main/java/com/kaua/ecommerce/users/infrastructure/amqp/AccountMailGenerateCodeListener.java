@@ -11,6 +11,7 @@ import com.kaua.ecommerce.users.domain.utils.IdUtils;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.context.annotation.Profile;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 @Component
+@Profile("!development")
 public class AccountMailGenerateCodeListener {
 
     public static final String ACCOUNT_MAIL_GENERATE_CODE_LISTENER = "AccountMailGenerateCodeListener";
