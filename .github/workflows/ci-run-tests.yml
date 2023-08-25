@@ -1,10 +1,13 @@
-name: Feature Branch
+name: CI - Run tests after push
 
 on:
   push:
     branches:
       - feature/*
       - refactor/*
+      - hotfix/*
+      - bugfix/*
+      - release/*
 
 jobs:
   run-tests:
