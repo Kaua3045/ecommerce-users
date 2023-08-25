@@ -11,6 +11,7 @@ import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountOutpu
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
@@ -507,6 +508,28 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.mail_status", equalTo(aAccount.getMailStatus().name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aAccount.getCreatedAt().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aAccount.getUpdatedAt().toString())));
+
+        Mockito.verify(getAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAnInvalidId_whenCallGetAccount_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var expectedErrorMessage = "Account with id 123 was not found";
+        final var aId = "123";
+
+        Mockito.when(getAccountUseCase.execute(Mockito.any(GetAccountCommand.class)))
+                .thenThrow(NotFoundException.with(Account.class, aId));
+
+        final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
         Mockito.verify(getAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
