@@ -27,7 +27,7 @@ public class RabbitQueueServiceTest {
     private RabbitListenerTestHarness harness;
 
     @Test
-    void shouldSendMessage() throws InterruptedException {
+    void shouldSendQueueMessage() throws InterruptedException {
         final var aMail = CreateMailQueueCommand.with(
                 RandomStringUtils.generateValue(36),
                 "Teste",

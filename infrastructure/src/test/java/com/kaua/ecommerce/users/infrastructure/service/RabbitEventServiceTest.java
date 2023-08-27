@@ -1,7 +1,8 @@
 package com.kaua.ecommerce.users.infrastructure.service;
 
 import com.kaua.ecommerce.users.AmqpTest;
-import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountCreatedEvent;
+import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
+import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountEvents;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import com.kaua.ecommerce.users.infrastructure.services.EventService;
 import org.junit.jupiter.api.Assertions;
@@ -17,7 +18,7 @@ public class RabbitEventServiceTest {
     public static final String LISTENER = "account.created";
 
     @Autowired
-    @AccountCreatedEvent
+    @AccountEvents
     private EventService publisher;
 
     @Autowired
@@ -25,7 +26,7 @@ public class RabbitEventServiceTest {
 
     @Test
     void shouldSendMessage() throws InterruptedException {
-        final var aEvent = new com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent(
+        final var aEvent = new AccountCreatedEvent(
                 "123",
                 "teste",
                 "testes",
@@ -34,7 +35,7 @@ public class RabbitEventServiceTest {
 
         final var expectedMessage = Json.writeValueAsString(aEvent);
 
-        this.publisher.send(aEvent);
+        this.publisher.send(aEvent, LISTENER);
 
         final var invocationData =
                 harness.getNextInvocationDataFor(LISTENER, 1, TimeUnit.SECONDS);
