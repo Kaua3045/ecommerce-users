@@ -8,7 +8,6 @@ import com.kaua.ecommerce.users.infrastructure.configurations.properties.amqp.Qu
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -52,6 +51,10 @@ public class AmqpConfig {
                 // TODO: falhou, se retorno é porque falhou, pronto!
             });
             template.setConfirmCallback((correlationData, ack, cause) -> {
+                if (!ack) {
+                    System.out.println("NOT CONFIRMED");
+                    // TODO: falhou a publicação no rabbitmq (timeout ou erro)
+                }
                 System.out.println("Message confirmed");
                 System.out.println(correlationData);
                 System.out.println(ack);
