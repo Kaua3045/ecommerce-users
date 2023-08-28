@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 public class AmqpTestConfiguration {
 
     @Bean
-    public TestRabbitTemplate rabbitTemplate(final ConnectionFactory connectionFactory) {
+    public TestRabbitTemplate testRabbitTemplate(final ConnectionFactory connectionFactory) {
         return new TestRabbitTemplate(connectionFactory);
     }
 

@@ -11,7 +11,7 @@ public class InMemoryEventService implements EventService {
     private static final Logger log = LoggerFactory.getLogger(InMemoryEventService.class);
 
     @Override
-    public void send(Object event) {
+    public void send(Object event, String routingKey) {
         log.debug("Event was observed: {}", Json.writeValueAsString(event));
     }
 }

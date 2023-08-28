@@ -18,4 +18,9 @@ public class RabbitListenersTest {
     public void onEmailConfirmationSend(@Payload final String message) {
         System.out.println(message);
     }
+
+    @RabbitListener(id = "account.deleted", queues = "${amqp.queues.account-deleted.routing-key}")
+    public void onAccountDeleted(@Payload final String message) {
+        System.out.println(message);
+    }
 }
