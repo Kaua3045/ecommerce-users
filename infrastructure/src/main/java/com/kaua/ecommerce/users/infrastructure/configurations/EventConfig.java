@@ -15,12 +15,12 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class EventConfig {
 
-//    @Bean
-//    @AccountEvents
-//    @Profile({"development"})
-//    public EventService localEventService() {
-//        return new InMemoryEventService();
-//    }
+    @Bean
+    @AccountEvents
+    @Profile({"development"})
+    public EventService localEventService() {
+        return new InMemoryEventService();
+    }
 
     @Bean
     @AccountEvents
