@@ -8,7 +8,7 @@ amqp:
 
 logging:
   level:
-    com.kaua.ecommerce.users.infrastructure.services: DEBUG
+    com.kaua.ecommerce.users.infrastructure: DEBUG
 
 server:
   undertow:
