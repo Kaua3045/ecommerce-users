@@ -50,12 +50,12 @@ public class AmqpConfig {
             final var template = new RabbitTemplate(connectionFactory);
             template.setMandatory(true);
             template.setReturnsCallback(returned -> {
-                log.debug("Message returned: {}, body: {}", returned, new String(returned.getMessage().getBody()));
+                log.info("Message returned: {}, body: {}", returned, new String(returned.getMessage().getBody()));
                 // falhou, se retorno é porque falhou, pronto!
             });
             template.setConfirmCallback((correlationData, ack, cause) -> {
                 if (!ack) {
-                    log.debug("Message failed: {}, cause: {}, ack: {}", correlationData, cause, ack);
+                    log.info("Message failed: {}, cause: {}, ack: {}", correlationData, cause, ack);
                     // falhou a publicação no rabbitmq (timeout ou erro)
                 }
                 log.debug("Message confirmed: {}, ack: {}", correlationData, ack);
