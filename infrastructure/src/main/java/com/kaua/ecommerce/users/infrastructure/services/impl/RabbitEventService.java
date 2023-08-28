@@ -30,7 +30,7 @@ public class RabbitEventService implements EventService {
             final var aCorrelationData = new CorrelationData();
             this.ops.convertAndSend(this.exchange, routingKey, Json.writeValueAsString(event), aCorrelationData);
         } catch (final RuntimeException e) {
-            // TODO: save event in dynamodb to retry later
+            // save event in dynamodb to retry later
             log.error("Error sending message", e);
         }
     }

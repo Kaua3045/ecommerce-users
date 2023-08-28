@@ -33,7 +33,6 @@ public class RabbitQueueService implements QueueGateway {
             final var aCorrelationData = new CorrelationData();
             this.ops.convertAndSend(this.exchange, this.routingKey, Json.writeValueAsString(event), aCorrelationData);
         } catch (final Exception e) {
-            // TODO: save event in dynamodb to retry later
             log.error("Error sending message", e);
             throw e;
         }
