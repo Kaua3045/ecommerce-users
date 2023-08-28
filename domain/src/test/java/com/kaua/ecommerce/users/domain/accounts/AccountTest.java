@@ -57,9 +57,35 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidFirstName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidFirstNameBlank_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "123456Ab";
+        final var expectedErrorMessage = "'firstName' should not be null or blank";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnInvalidFirstNameNull_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final String aFirstName = null;
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
@@ -135,7 +161,33 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidLastName_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidLastNameBlank_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "123456Ab";
+        final var expectedErrorMessage = "'lastName' should not be null or blank";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnInvalidLastNameNull_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final String aLastName = null;
@@ -213,11 +265,37 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidEmail_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidEmailBlank_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "";
+        final var aPassword = "123456Ab";
+        final var expectedErrorMessage = "'email' should not be null or blank";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnInvalidEmailNull_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final String aEmail = null;
         final var aPassword = "123456Ab";
         final var expectedErrorMessage = "'email' should not be null or blank";
 
