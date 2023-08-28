@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import com.kaua.ecommerce.users.infrastructure.services.EventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.UncategorizedAmqpException;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitOperations;
 
@@ -29,9 +30,10 @@ public class RabbitEventService implements EventService {
         try {
             final var aCorrelationData = new CorrelationData();
             this.ops.convertAndSend(this.exchange, routingKey, Json.writeValueAsString(event), aCorrelationData);
-        } catch (final RuntimeException e) {
+        } catch (final UncategorizedAmqpException e) {
             // save event in dynamodb to retry later
-            log.error("Error sending message", e);
+            log.error("Error sending message: {}", e.getMessage());
+            throw e;
         }
     }
 }
