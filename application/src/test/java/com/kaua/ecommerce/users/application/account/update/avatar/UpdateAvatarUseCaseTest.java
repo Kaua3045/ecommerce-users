@@ -78,6 +78,44 @@ public class UpdateAvatarUseCaseTest {
     }
 
     @Test
+    void givenAnInvalidCommandWithNullResource_whenCallUpdate_shouldReturnAccountIdAndNotUpdateAvatar() {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "123456Ab"
+        );
+        final var aId = aAccount.getId().getValue();
+
+        final var aCommand = UpdateAvatarCommand.with(aId, null);
+
+        // when
+        Mockito.when(accountGateway.findById(aId)).thenReturn(Optional.of(aAccount));
+        Mockito.when(accountGateway.update(Mockito.any())).thenAnswer(returnsFirstArg());
+
+        final var actualAccount = Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
+
+        // then
+        Assertions.assertNotNull(actualAccount);
+        Assertions.assertEquals(aId, actualAccount.id());
+
+        Mockito.verify(accountGateway, Mockito.times(1)).findById(aId);
+        Mockito.verify(avatarGateway, Mockito.times(0)).save(Mockito.any(), Mockito.any());
+        Mockito.verify(accountGateway, Mockito.times(1)).update(Mockito.argThat(cmd ->
+                Objects.equals(aId, cmd.getId().getValue()) &&
+                        Objects.equals(aAccount.getAvatarUrl(), cmd.getAvatarUrl()) &&
+                        Objects.equals(aAccount.getFirstName(), cmd.getFirstName()) &&
+                        Objects.equals(aAccount.getLastName(), cmd.getLastName()) &&
+                        Objects.equals(aAccount.getEmail(), cmd.getEmail()) &&
+                        Objects.equals(aAccount.getPassword(), cmd.getPassword()) &&
+                        Objects.equals(aAccount.getMailStatus(), cmd.getMailStatus()) &&
+                        Objects.equals(aAccount.getCreatedAt(), cmd.getCreatedAt()) &&
+                        Objects.nonNull(cmd.getUpdatedAt())
+        ));
+    }
+
+    @Test
     void givenAnInvalidCommand_whenCallUpdate_shouldThrowNotFoundException() {
         // given
         final var aId = "123";
