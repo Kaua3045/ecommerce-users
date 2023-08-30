@@ -20,4 +20,9 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ApiError> handleNotFoundException(final NotFoundException exception) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiError.from(exception));
     }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGenericException(final Exception exception) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiError.from("Internal server error"));
+    }
 }
