@@ -21,7 +21,7 @@ public class AwsS3StorageService implements StorageService {
 
 
     @Override
-    public void uploadFile(String key, Resource resource) {
+    public String uploadFile(String key, Resource resource) {
         try {
             final var KEY_WITH_PREFIX = key + "-" + resource.fileName();
 
@@ -47,6 +47,8 @@ public class AwsS3StorageService implements StorageService {
                     resource.inputStream(),
                     resource.inputStream().available()
             ));
+
+            return getFileUrl(KEY_WITH_PREFIX).orElse(null);
         } catch (final Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -79,6 +81,26 @@ public class AwsS3StorageService implements StorageService {
                     .build();
 
             return Optional.ofNullable(s3Client.utilities().getUrl(request).toString());
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            s3Client.close();
+        }
+    }
+
+    @Override
+    public void deleteFileByPrefix(String prefix) {
+        try {
+            final var request = ListObjectsRequest.builder()
+                    .bucket(bucketName)
+                    .prefix(prefix)
+                    .build();
+
+            final var avatars = s3Client.listObjects(request);
+
+            if (!avatars.contents().isEmpty()) {
+                avatars.contents().forEach(image -> deleteFile(image.key()));
+            }
         } catch (final Exception e) {
             throw new RuntimeException(e);
         } finally {
