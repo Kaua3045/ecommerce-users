@@ -6,9 +6,5 @@ public interface AvatarGateway {
 
     String save(String aAccountId, Resource aResource);
 
-    void delete(String key);
-
-    String findAvatarByKey(String key);
-
-    void deleteByAccountId(String aAccountId);
+    void delete(String accountId);
 }
