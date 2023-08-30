@@ -20,14 +20,14 @@ public class InMemoryStorageService implements StorageService {
     }
 
     @Override
-    public void uploadFile(String key, Resource resource) {
+    public String uploadFile(String key, Resource resource) {
         final var KEY_WITH_FILENAME = key + "-" + resource.fileName();
         final var url = "http://localhost:8080/files/" +
                 KEY_WITH_FILENAME +
                 "." +
                 resource.contentType().substring(6);
-        System.out.println(url);
         this.storage.put(KEY_WITH_FILENAME, url);
+        return url;
     }
 
     @Override
@@ -38,5 +38,10 @@ public class InMemoryStorageService implements StorageService {
     @Override
     public Optional<String> getFileUrl(String key) {
         return Optional.ofNullable(this.storage.get(key));
+    }
+
+    @Override
+    public void deleteFileByPrefix(String prefix) {
+        this.storage.keySet().removeIf(key -> key.startsWith(prefix));
     }
 }
