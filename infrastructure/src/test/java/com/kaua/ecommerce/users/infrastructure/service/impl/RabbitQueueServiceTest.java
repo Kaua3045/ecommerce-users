@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users.infrastructure.service;
+package com.kaua.ecommerce.users.infrastructure.service.impl;
 
 import com.kaua.ecommerce.users.AmqpTest;
 import com.kaua.ecommerce.users.application.account.mail.create.CreateMailQueueCommand;
