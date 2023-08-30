@@ -5,6 +5,7 @@ import com.kaua.ecommerce.users.infrastructure.accounts.models.GetAccountPresent
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequestMapping(value = "accounts")
 public interface AccountAPI {
@@ -20,6 +21,12 @@ public interface AccountAPI {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     GetAccountPresenter getAccount(@PathVariable String id);
+
+    @PatchMapping("{id}")
+    ResponseEntity<?> updateAccountAvatar(
+            @PathVariable String id,
+            @RequestParam("avatar") MultipartFile avatarFile
+    );
 
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteAccount(@PathVariable String id);
