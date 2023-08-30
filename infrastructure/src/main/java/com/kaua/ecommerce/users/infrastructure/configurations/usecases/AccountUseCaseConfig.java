@@ -52,6 +52,6 @@ public class AccountUseCaseConfig {
 
     @Bean
     public DeleteAccountUseCase deleteAccountUseCase() {
-        return new DefaultDeleteAccountUseCase(accountGateway, accountMailGateway);
+        return new DefaultDeleteAccountUseCase(accountGateway, accountMailGateway, avatarGateway);
     }
 }
