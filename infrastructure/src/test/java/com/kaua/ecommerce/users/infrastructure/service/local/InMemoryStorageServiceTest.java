@@ -31,10 +31,10 @@ public class InMemoryStorageServiceTest {
         final var expectedUrl = "http://localhost:8080/files/" + aKey + "-" + aFileName + ".png";
 
         // when
-        this.target.uploadFile(aKey, aResource);
+        final var aResult = this.target.uploadFile(aKey, aResource);
 
         // then
-        Assertions.assertEquals(expectedUrl, this.target.getFileUrl(aKey + "-avatar").get());
+        Assertions.assertEquals(expectedUrl, aResult);
     }
 
     @Test
@@ -84,5 +84,24 @@ public class InMemoryStorageServiceTest {
         final var aUrl = this.target.getFileUrl(aKey + "-avatar");
         // then
         Assertions.assertTrue(aUrl.isEmpty());
+    }
+
+    @Test
+    void givenValidPrefix_whenCallDeleteFileByPrefix_thenShouldDeleteFile() {
+        // given
+        final var aFileName = "avatar";
+        final var aResource = Resource.with(
+                InputStream.nullInputStream(),
+                "image/png",
+                aFileName
+        );
+        final var aKey = IdUtils.generate();
+        this.target.uploadFile(aKey, aResource);
+
+        // when
+        this.target.deleteFileByPrefix(aKey + "-avatar");
+
+        // then
+        Assertions.assertTrue(this.target.getFileUrl(aKey + "-avatar").isEmpty());
     }
 }

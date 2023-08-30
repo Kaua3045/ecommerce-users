@@ -38,8 +38,9 @@ public class AwsS3StorageServiceTest {
     }
 
     @Test
-    void givenAValidResource_whenCallUploadFile_thenShouldUploadFile() {
+    void givenAValidResource_whenCallUploadFile_thenShouldUploadFile() throws MalformedURLException {
         // given
+        final var expectedUrl = "http://localhost:8080/files/test-teste.png";
         final var key = "test";
         final var resource = Resource.with(
                 InputStream.nullInputStream(),
@@ -54,11 +55,15 @@ public class AwsS3StorageServiceTest {
         Mockito.doReturn(buildPutObjectResponse())
                 .when(s3Client)
                         .putObject(Mockito.any(PutObjectRequest.class), Mockito.any(RequestBody.class));
+        Mockito.when(s3Utilities.getUrl(Mockito.any(GetUrlRequest.class)))
+                .thenReturn(buildUrl());
 
-        this.target.uploadFile(key, resource);
+        final var aResult = this.target.uploadFile(key, resource);
 
         // then
         final var captor = ArgumentCaptor.forClass(PutObjectRequest.class);
+
+        Assertions.assertEquals(expectedUrl, aResult);
 
         Mockito.verify(s3Client, Mockito.times(1)).putObject(captor.capture(), Mockito.any(RequestBody.class));
     }
@@ -90,7 +95,7 @@ public class AwsS3StorageServiceTest {
     }
 
     @Test
-    void givenAValidResourceAndNotExistsImageWithKey_whenCallUploadFile_thenShouldUploadFile() {
+    void givenAValidResourceAndNotExistsImageWithKey_whenCallUploadFile_thenShouldUploadFile() throws MalformedURLException {
         // given
         final var key = "test";
         final var resource = Resource.with(
@@ -98,6 +103,7 @@ public class AwsS3StorageServiceTest {
                 "image/png",
                 "test.png"
         );
+        final var expectedUrl = "http://localhost:8080/files/test-teste.png";
 
         // when
         Mockito.doReturn(ListObjectsResponse.builder().build())
@@ -106,18 +112,23 @@ public class AwsS3StorageServiceTest {
         Mockito.doReturn(buildPutObjectResponse())
                 .when(s3Client)
                 .putObject(Mockito.any(PutObjectRequest.class), Mockito.any(RequestBody.class));
+        Mockito.when(s3Utilities.getUrl(Mockito.any(GetUrlRequest.class)))
+                .thenReturn(buildUrl());
 
-        this.target.uploadFile(key, resource);
+        final var aResult = this.target.uploadFile(key, resource);
 
         // then
         final var captor = ArgumentCaptor.forClass(PutObjectRequest.class);
+
+        Assertions.assertEquals(expectedUrl, aResult);
 
         Mockito.verify(s3Client, Mockito.times(1)).putObject(captor.capture(), Mockito.any(RequestBody.class));
     }
 
     @Test
-    void givenAValidResourceAndPrefixIsNotMatchingWithKey_whenCallUploadFile_thenShouldUploadFile() {
+    void givenAValidResourceAndPrefixIsNotMatchingWithKey_whenCallUploadFile_thenShouldUploadFile() throws MalformedURLException {
         // given
+        final var expectedUrl = "http://localhost:8080/files/test-teste.png";
         final var key = "test";
         final var resource = Resource.with(
                 InputStream.nullInputStream(),
@@ -137,11 +148,15 @@ public class AwsS3StorageServiceTest {
         Mockito.doReturn(buildPutObjectResponse())
                 .when(s3Client)
                 .putObject(Mockito.any(PutObjectRequest.class), Mockito.any(RequestBody.class));
+        Mockito.when(s3Utilities.getUrl(Mockito.any(GetUrlRequest.class)))
+                .thenReturn(buildUrl());
 
-        this.target.uploadFile(key, resource);
+        final var aResult = this.target.uploadFile(key, resource);
 
         // then
         final var captor = ArgumentCaptor.forClass(PutObjectRequest.class);
+
+        Assertions.assertEquals(expectedUrl, aResult);
 
         Mockito.verify(s3Client, Mockito.times(1)).putObject(captor.capture(), Mockito.any(RequestBody.class));
     }
@@ -185,7 +200,7 @@ public class AwsS3StorageServiceTest {
     }
 
     @Test
-    void givenAValidPrefix_whenCallDeleteFile_thenShouldDeleteFile() {
+    void givenAValidKey_whenCallDeleteFile_thenShouldDeleteFile() {
         // given
         final var key = "test";
 
@@ -200,7 +215,7 @@ public class AwsS3StorageServiceTest {
     }
 
     @Test
-    void givenAValidPrefixButS3Throws_whenCallDeleteFile_thenShouldThrowRuntimeException() {
+    void givenAValidKeyButS3Throws_whenCallDeleteFile_thenShouldThrowRuntimeException() {
         // given
         final var key = "test";
         final var expectedErrorMessage = "software.amazon.awssdk.services.s3.model.S3Exception";
@@ -211,6 +226,64 @@ public class AwsS3StorageServiceTest {
 
         final var aResult = Assertions.assertThrows(RuntimeException.class,
                 () -> this.target.deleteFile(key));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aResult.getMessage());
+
+        Mockito.verify(s3Client, Mockito.times(1)).deleteObject(Mockito.any(DeleteObjectRequest.class));
+    }
+
+    @Test
+    void givenAValidPrefix_whenCallDeleteFileByPrefix_thenShouldDeleteFile() {
+        // given
+        final var aPrefix = "test";
+
+        // when
+        Mockito.doReturn(buildListObjectsResponse())
+                .when(s3Client)
+                .listObjects(Mockito.any(ListObjectsRequest.class));
+        Mockito.when(s3Client.deleteObject(Mockito.any(DeleteObjectRequest.class)))
+                .thenReturn(DeleteObjectResponse.builder().build());
+
+        Assertions.assertDoesNotThrow(() -> this.target.deleteFileByPrefix(aPrefix));
+
+        // then
+        Mockito.verify(s3Client, Mockito.times(1)).deleteObject(Mockito.any(DeleteObjectRequest.class));
+    }
+
+    @Test
+    void givenAValidPrefixButNotExistsOldAvatar_whenCallDeleteFileByPrefix_thenShouldBeOk() {
+        // given
+        final var aPrefix = "test";
+
+        // when
+        Mockito.doReturn(ListObjectsResponse.builder()
+                        .prefix(aPrefix)
+                        .build())
+                .when(s3Client)
+                .listObjects(Mockito.any(ListObjectsRequest.class));
+
+        Assertions.assertDoesNotThrow(() -> this.target.deleteFileByPrefix(aPrefix));
+
+        // then
+        Mockito.verify(s3Client, Mockito.times(0)).deleteObject(Mockito.any(DeleteObjectRequest.class));
+    }
+
+    @Test
+    void givenAValidPrefixButS3Throws_whenCallDeleteFileByPrefix_thenShouldThrowRuntimeException() {
+        // given
+        final var aPrefix = "test";
+        final var expectedErrorMessage = "java.lang.RuntimeException: software.amazon.awssdk.services.s3.model.S3Exception";
+
+        // when
+        Mockito.doReturn(buildListObjectsResponse())
+                .when(s3Client)
+                .listObjects(Mockito.any(ListObjectsRequest.class));
+        Mockito.when(s3Client.deleteObject(Mockito.any(DeleteObjectRequest.class)))
+                .thenThrow(S3Exception.class);
+
+        final var aResult = Assertions.assertThrows(RuntimeException.class,
+                () -> this.target.deleteFileByPrefix(aPrefix));
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aResult.getMessage());
