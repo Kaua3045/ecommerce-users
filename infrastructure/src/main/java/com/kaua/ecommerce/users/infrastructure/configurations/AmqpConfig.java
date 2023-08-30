@@ -45,7 +45,7 @@ public class AmqpConfig {
         private static final Logger log = LoggerFactory.getLogger(Admin.class);
 
         @Bean
-        @Profile("production")
+        @Profile({"production", "test-integration"})
         public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
             final var template = new RabbitTemplate(connectionFactory);
             template.setMandatory(true);
