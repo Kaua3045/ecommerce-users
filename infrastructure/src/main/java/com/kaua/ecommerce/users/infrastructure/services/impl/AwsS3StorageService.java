@@ -51,8 +51,6 @@ public class AwsS3StorageService implements StorageService {
             return getFileUrl(KEY_WITH_PREFIX).orElse(null);
         } catch (final Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            s3Client.close();
         }
     }
 
@@ -67,8 +65,6 @@ public class AwsS3StorageService implements StorageService {
             s3Client.deleteObject(request);
         } catch (final Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            s3Client.close();
         }
     }
 
@@ -83,8 +79,6 @@ public class AwsS3StorageService implements StorageService {
             return Optional.ofNullable(s3Client.utilities().getUrl(request).toString());
         } catch (final Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            s3Client.close();
         }
     }
 
@@ -103,8 +97,6 @@ public class AwsS3StorageService implements StorageService {
             }
         } catch (final Exception e) {
             throw new RuntimeException(e);
-        } finally {
-            s3Client.close();
         }
     }
 }
