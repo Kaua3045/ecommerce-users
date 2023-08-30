@@ -6,9 +6,11 @@ import java.util.Optional;
 
 public interface StorageService {
 
-    void uploadFile(String key, Resource resource);
+    String uploadFile(String key, Resource resource);
 
     void deleteFile(String key);
 
     Optional<String> getFileUrl(String key);
+
+    void deleteFileByPrefix(String prefix);
 }
