@@ -39,10 +39,7 @@ public class DefaultResetPasswordUseCase extends ResetPasswordUseCase {
             return Either.left(notification.append(new Error("Token expired")));
         }
 
-        final var aAccount = aAccountMail.getAccount().update(
-                input.newPassword(),
-                aAccountMail.getAccount().getAvatarUrl()
-        );
+        final var aAccount = aAccountMail.getAccount().changePassword(input.newPassword());
         aAccount.validate(notification);
 
         return notification.hasError()
