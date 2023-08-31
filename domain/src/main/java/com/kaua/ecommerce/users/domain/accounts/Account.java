@@ -65,11 +65,13 @@ public class Account extends AggregateRoot<AccountID> {
         );
     }
 
-    public Account update(
-            final String aPassword,
-            final String aAvatarUrl
-    ) {
+    public Account changePassword(final String aPassword) {
         this.password = aPassword;
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
+    public Account changeAvatarUrl(final String aAvatarUrl) {
         this.avatarUrl = aAvatarUrl;
         this.updatedAt = InstantUtils.now();
         return this;
