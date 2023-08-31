@@ -26,10 +26,7 @@ public class DefaultUpdateAvatarUseCase extends UpdateAvatarUseCase {
                 ? aAccount.getAvatarUrl()
                 : this.avatarGateway.save(aCommand.accountId(), aCommand.resource());
 
-        final var aAccountUpdated = aAccount.update(
-                aAccount.getPassword(),
-                avatarUrlStored
-        );
+        final var aAccountUpdated = aAccount.changeAvatarUrl(avatarUrlStored);
 
         final var aAccountSaved = this.accountGateway.update(aAccountUpdated);
 
