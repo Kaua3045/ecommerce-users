@@ -1,6 +1,5 @@
-package com.kaua.ecommerce.users.application.exception;
+package com.kaua.ecommerce.users.domain.exceptions;
 
-import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.Validation;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
@@ -9,28 +8,8 @@ import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-public class NotificationHandlerTest {
-
-    @Test
-    void givenValidate_whenCallValidate_thenShouldReturnDomainException() {
-        final var expectedErrorMessage = "Simulated error";
-
-        final var validation = Mockito.mock(Validation.class);
-        Mockito.doThrow(DomainException.with(new Error(expectedErrorMessage)))
-                .when(validation)
-                .validate();
-
-        final var handler = NotificationHandler.create();
-
-        handler.validate(validation);
-
-        Assertions.assertTrue(handler.hasError());
-        Assertions.assertEquals(1, handler.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, handler.getErrors().get(0).message());
-    }
-
+public class NotificationHandlerTestUnit {
     @Test
     void givenAValidError_whenCallCreateNotification_thenShouldReturnTrueHasError() {
         // given
