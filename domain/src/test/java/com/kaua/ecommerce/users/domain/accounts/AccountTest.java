@@ -421,13 +421,12 @@ public class AccountTest {
     }
 
     @Test
-    void givenAValidValues_whenCallsUpdateAccount_thenAnAccountShouldBeUpdated() {
+    void givenAValidPassword_whenCallsChangePassword_thenAnAccountShouldBeChangePassword() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
-        final var aAvatarUrl = "http://teste.com/avatar.png";
 
         // when
         final var aAccount = Account.newAccount(
@@ -439,10 +438,41 @@ public class AccountTest {
 
         final var aAccountUpdatedAt = aAccount.getUpdatedAt();
 
-        final var aAccountUpdated = aAccount.update(
-                aPassword,
-                aAvatarUrl
+        final var aAccountUpdated = aAccount.changePassword(aPassword);
+
+        //then
+        Assertions.assertDoesNotThrow(() -> aAccountUpdated.validate(new ThrowsValidationHandler()));
+        Assertions.assertEquals(aAccount.getId().getValue(), aAccountUpdated.getId().getValue());
+        Assertions.assertEquals(aAccount.getFirstName(), aAccountUpdated.getFirstName());
+        Assertions.assertEquals(aAccount.getLastName(), aAccountUpdated.getLastName());
+        Assertions.assertEquals(aAccount.getEmail(), aAccountUpdated.getEmail());
+        Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccountUpdated.getMailStatus());
+        Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
+        Assertions.assertNull(aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
+        Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
+    }
+
+    @Test
+    void givenAValidAvatarUrl_whenCallsChangeAvatarUrl_thenAnAccountShouldBeChangeAvatarUrl() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+        final var aAvatarUrl = "http://localhost:8080/files/avatar.png";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
         );
+
+        final var aAccountUpdatedAt = aAccount.getUpdatedAt();
+
+        final var aAccountUpdated = aAccount.changeAvatarUrl(aAvatarUrl);
 
         //then
         Assertions.assertDoesNotThrow(() -> aAccountUpdated.validate(new ThrowsValidationHandler()));
@@ -458,13 +488,12 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidPassword_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPassword_whenCallsChangePassword_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final String aPassword = null;
-        final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' should not be null or blank";
 
         // when
@@ -475,10 +504,7 @@ public class AccountTest {
                 "87654321Ab*"
         );
 
-        final var aAccountUpdated = aAccount.update(
-                aPassword,
-                aAvatarUrl
-        );
+        final var aAccountUpdated = aAccount.changePassword(aPassword);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
@@ -490,13 +516,12 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidPasswordLengthLessThan8_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordLengthLessThan8_whenCallsChangePassword_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345";
-        final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -507,10 +532,7 @@ public class AccountTest {
                 "87654321Ab*"
         );
 
-        final var aAccountUpdated = aAccount.update(
-                aPassword,
-                aAvatarUrl
-        );
+        final var aAccountUpdated = aAccount.changePassword(aPassword);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
@@ -522,13 +544,12 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidPasswordLengthMoreThan255_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordLengthMoreThan255_whenCallsChangePassword_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = RandomStringUtils.generateValue(256);
-        final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -539,10 +560,7 @@ public class AccountTest {
                 "87654321Ab*"
         );
 
-        final var aAccountUpdated = aAccount.update(
-                aPassword,
-                aAvatarUrl
-        );
+        final var aAccountUpdated = aAccount.changePassword(aPassword);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
@@ -554,13 +572,12 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsUpdateAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordButNotContainsLowerAndUpercaseLetter_whenCallsChangePassword_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678";
-        final var aAvatarUrl = "http://teste.com/avatar.png";
         final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
 
         // when
@@ -571,10 +588,7 @@ public class AccountTest {
                 "87654321Ab*"
         );
 
-        final var aAccountUpdated = aAccount.update(
-                aPassword,
-                aAvatarUrl
-        );
+        final var aAccountUpdated = aAccount.changePassword(aPassword);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
