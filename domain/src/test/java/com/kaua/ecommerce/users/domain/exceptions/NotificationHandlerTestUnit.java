@@ -9,8 +9,7 @@ import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandle
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class NotificationTest {
-
+public class NotificationHandlerTestUnit {
     @Test
     void givenAValidError_whenCallCreateNotification_thenShouldReturnTrueHasError() {
         // given

@@ -9,6 +9,7 @@ import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountCreatedGenerateMailCodeEvent;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import com.kaua.ecommerce.users.infrastructure.configurations.properties.amqp.QueueProperties;
@@ -84,5 +85,31 @@ public class AccountCreatedListenerTest {
         final var actualCommand = cmdCaptor.getValue();
         Assertions.assertEquals(aAccount.getId().getValue(), actualCommand.account().getId().getValue());
         Assertions.assertEquals(AccountMailType.ACCOUNT_CONFIRMATION, actualCommand.type());
+    }
+
+    @Test
+    void givenAnInvalidAccount_whenCallsListener_shouldThrowNotFoundException() {
+        final var expectedErrorMessage = "Account with id 123456789 was not found";
+
+        final var createAccountMailUseCase = Mockito.mock(CreateAccountMailUseCase.class);
+        final var accountGateway = Mockito.mock(AccountGateway.class);
+
+        final var listener = new AccountMailGenerateCodeListener(
+                createAccountMailUseCase,
+                accountGateway);
+
+        final var aMessage = "{\"id\":\"123456789\",\"firstName\":\"teste\",\"lastName\":\"testes\",\"email\":\"teste@teste.com\"}";
+
+        Mockito.when(accountGateway.findById(Mockito.any()))
+                .thenReturn(Optional.empty());
+
+        final var aException = Assertions.assertThrows(
+                NotFoundException.class,
+                () -> listener.onGenerateAccountMailCode(aMessage));
+
+        Assertions.assertEquals(expectedErrorMessage, aException.getMessage());
+
+        Mockito.verify(createAccountMailUseCase, Mockito.times(0))
+                .execute(Mockito.any());
     }
 }

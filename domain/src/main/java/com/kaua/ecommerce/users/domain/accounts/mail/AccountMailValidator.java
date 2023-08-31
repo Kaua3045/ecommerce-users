@@ -31,8 +31,7 @@ public class AccountMailValidator extends Validator {
             return;
         }
 
-        if (this.accountMail.getToken() != null &&
-                this.accountMail.getToken().trim().length() > TOKEN_MAXIMUM_LENGTH) {
+        if (this.accountMail.getToken().trim().length() > TOKEN_MAXIMUM_LENGTH) {
             this.validationHandler().append(new Error("'token' should not be greater than " + TOKEN_MAXIMUM_LENGTH));
         }
     }
@@ -55,8 +54,7 @@ public class AccountMailValidator extends Validator {
             return;
         }
 
-        if (this.accountMail.getExpiresAt() != null &&
-                this.accountMail.getExpiresAt().isBefore(InstantUtils.now())) {
+        if (this.accountMail.getExpiresAt().isBefore(InstantUtils.now())) {
             this.validationHandler().append(new Error("'expiresAt' should not be before now"));
         }
     }

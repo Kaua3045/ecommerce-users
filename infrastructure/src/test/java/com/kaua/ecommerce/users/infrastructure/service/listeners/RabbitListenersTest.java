@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.service.listeners;
 
-import com.kaua.ecommerce.users.infrastructure.service.RabbitEventServiceTest;
-import com.kaua.ecommerce.users.infrastructure.service.RabbitQueueServiceTest;
+import com.kaua.ecommerce.users.infrastructure.service.impl.RabbitEventServiceTest;
+import com.kaua.ecommerce.users.infrastructure.service.impl.RabbitQueueServiceTest;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;

@@ -39,8 +39,6 @@ public class DefaultConfirmAccountMailUseCase extends ConfirmAccountMailUseCase 
         this.accountGateway.update(aAccount);
         this.accountMailGateway.deleteById(aAccountMail.getId().getValue());
 
-        return notification.hasError()
-                ? Either.left(notification)
-                : Either.right(true);
+        return Either.right(true);
     }
 }

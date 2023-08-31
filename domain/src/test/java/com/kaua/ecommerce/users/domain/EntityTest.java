@@ -53,6 +53,8 @@ public class EntityTest {
         Assertions.assertNotEquals(entity1, entity3);
         Assertions.assertNotEquals(entity1.hashCode(), entity2.hashCode());
         Assertions.assertNotEquals(entity1.hashCode(), entity3.hashCode());
+        Assertions.assertFalse(entity1.equals(null));
+        Assertions.assertFalse(entity1.equals(new Object()));
     }
 
     @Test

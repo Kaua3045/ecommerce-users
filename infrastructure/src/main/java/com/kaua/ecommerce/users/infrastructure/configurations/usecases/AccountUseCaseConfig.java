@@ -6,8 +6,11 @@ import com.kaua.ecommerce.users.application.account.delete.DefaultDeleteAccountU
 import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.account.retrieve.get.DefaultGetAccountByIdUseCase;
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.account.update.avatar.DefaultUpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,15 +21,18 @@ public class AccountUseCaseConfig {
     private final AccountGateway accountGateway;
     private final EncrypterGateway encrypterGateway;
     private final AccountMailGateway accountMailGateway;
+    private final AvatarGateway avatarGateway;
 
     public AccountUseCaseConfig(
             final AccountGateway accountGateway,
             final EncrypterGateway encrypterGateway,
-            final AccountMailGateway accountMailGateway
+            final AccountMailGateway accountMailGateway,
+            final AvatarGateway avatarGateway
     ) {
         this.accountGateway = accountGateway;
         this.encrypterGateway = encrypterGateway;
         this.accountMailGateway = accountMailGateway;
+        this.avatarGateway = avatarGateway;
     }
 
     @Bean
@@ -40,7 +46,12 @@ public class AccountUseCaseConfig {
     }
 
     @Bean
+    public UpdateAvatarUseCase updateAvatarUseCase() {
+        return new DefaultUpdateAvatarUseCase(avatarGateway, accountGateway);
+    }
+
+    @Bean
     public DeleteAccountUseCase deleteAccountUseCase() {
-        return new DefaultDeleteAccountUseCase(accountGateway, accountMailGateway);
+        return new DefaultDeleteAccountUseCase(accountGateway, accountMailGateway, avatarGateway);
     }
 }

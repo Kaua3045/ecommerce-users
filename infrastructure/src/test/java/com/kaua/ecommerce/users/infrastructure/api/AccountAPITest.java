@@ -9,6 +9,9 @@ import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdCommand;
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdOutput;
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarCommand;
+import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarOutput;
+import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -16,11 +19,17 @@ import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import com.kaua.ecommerce.users.infrastructure.exceptions.ImageSizeNotValidException;
+import com.kaua.ecommerce.users.infrastructure.exceptions.ImageTypeNotValidException;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
@@ -49,6 +58,9 @@ public class AccountAPITest {
 
     @MockBean
     private GetAccountByIdUseCase getAccountByIdUseCase;
+
+    @MockBean
+    private UpdateAvatarUseCase updateAvatarUseCase;
 
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
@@ -533,5 +545,181 @@ public class AccountAPITest {
 
         Mockito.verify(getAccountByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAValidIdAndImage_whenCallUpdateAvatarAccount_thenShouldReturnOkAndAccountId() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "teste123A"
+        );
+        final var aId = aAccount.getId().getValue();
+
+        final var aImage = new MockMultipartFile(
+                "avatar",
+                "image.png",
+                "image/png",
+                "image".getBytes()
+        );
+
+        Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
+                .thenReturn(UpdateAvatarOutput.from(aAccount));
+
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+                .file(aImage)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateAvatarCommand.class);
+
+        Mockito.verify(updateAvatarUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aId, actualCmd.accountId());
+        Assertions.assertEquals(aImage.getContentType(), actualCmd.resource().contentType());
+        Assertions.assertEquals(aImage.getOriginalFilename(), actualCmd.resource().fileName());
+    }
+
+    @Test
+    void givenAnInvalidIdAndImageSize_whenCallUpdateAvatarAccount_thenShouldThrowDomainException() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "teste123A"
+        );
+        final var aId = aAccount.getId().getValue();
+        final var aImage = new MockMultipartFile(
+                "avatar",
+                "image.png",
+                "image/png",
+                new byte[600 * 1024 + 2]
+        );
+
+        final var expectedErrorMessage = "Maximum image size is 600kb";
+
+        Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
+                .thenThrow(new ImageSizeNotValidException());
+
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+                .file(aImage)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(updateAvatarUseCase, Mockito.times(0)).execute(Mockito.any());
+    }
+
+    @Test
+    void givenAnInvalidIdAndImageType_whenCallUpdateAvatarAccount_thenShouldThrowDomainException() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "teste123A"
+        );
+        final var aId = aAccount.getId().getValue();
+        final var aImage = new MockMultipartFile(
+                "avatar",
+                "video.mp4",
+                "video/mp4",
+                "video".getBytes()
+        );
+
+        final var expectedErrorMessage = "Image type is not valid, types accept: jpg, jpeg and png";
+
+        Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
+                .thenThrow(new ImageTypeNotValidException());
+
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+                .file(aImage)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(updateAvatarUseCase, Mockito.times(0)).execute(Mockito.any());
+    }
+
+    @Test
+    void givenAnInvalidId_whenCallUpdateAvatarAccount_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var aId = "123";
+        final var aImage = new MockMultipartFile(
+                "avatar",
+                "image.png",
+                "image/png",
+                "image".getBytes()
+        );
+        final var expectedErrorMessage = "Account with id 123 was not found";
+
+        Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
+                .thenThrow(NotFoundException.with(Account.class, aId));
+
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+                .file(aImage)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateAvatarCommand.class);
+
+        Mockito.verify(updateAvatarUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aId, actualCmd.accountId());
+        Assertions.assertEquals(aImage.getContentType(), actualCmd.resource().contentType());
+        Assertions.assertEquals(aImage.getOriginalFilename(), actualCmd.resource().fileName());
+    }
+
+    @Test
+    void givenAnInvalidIdAndImage_whenCallUpdateAvatarAccount_thenShouldThrowException() throws Exception {
+        // given
+        final var aId = "123";
+        final var aImage = new MockMultipartFile(
+                "avatar",
+                "image.png",
+                "image/png",
+                "image".getBytes()
+        );
+        final var expectedErrorMessage = "Internal server error";
+
+        Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
+                .thenThrow(new RuntimeException(expectedErrorMessage));
+
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+                .file(aImage)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(updateAvatarUseCase, Mockito.times(1)).execute(Mockito.any());
     }
 }

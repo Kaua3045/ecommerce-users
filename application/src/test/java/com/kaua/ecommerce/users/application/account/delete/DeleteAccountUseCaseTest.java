@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.account.delete;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
@@ -32,6 +33,9 @@ public class DeleteAccountUseCaseTest {
     @Mock
     private AccountMailGateway accountMailGateway;
 
+    @Mock
+    private AvatarGateway avatarGateway;
+
     @InjectMocks
     private DefaultDeleteAccountUseCase useCase;
 
@@ -58,12 +62,15 @@ public class DeleteAccountUseCaseTest {
                 )
         ));
         Mockito.doNothing().when(accountGateway).deleteById(aId);
+        Mockito.doNothing().when(avatarGateway).delete(aId);
 
         Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
 
         // then
         Mockito.verify(accountGateway, Mockito.times(1))
                 .deleteById(aId);
+        Mockito.verify(avatarGateway, Mockito.times(1))
+                .delete(aId);
     }
 
     @Test
@@ -76,11 +83,14 @@ public class DeleteAccountUseCaseTest {
         // when
         Mockito.when(accountMailGateway.findAllByAccountId(aId)).thenReturn(List.of());
         Mockito.doNothing().when(accountGateway).deleteById(aId);
+        Mockito.doNothing().when(avatarGateway).delete(aId);
 
         Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
 
         // then
         Mockito.verify(accountGateway, Mockito.times(1))
                 .deleteById(aId);
+        Mockito.verify(avatarGateway, Mockito.times(1))
+                .delete(aId);
     }
 }
