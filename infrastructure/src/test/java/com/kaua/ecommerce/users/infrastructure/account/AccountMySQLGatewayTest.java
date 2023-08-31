@@ -134,9 +134,10 @@ public class AccountMySQLGatewayTest {
 
         Assertions.assertEquals(1, accountRepository.count());
 
-        final var aAccountUpdated = aAccount.update(aPassword, aAvatarUrl);
+        final var aAccountWithPasswordUpdated = aAccount.changePassword(aPassword);
+        final var aAccountUpdatedWithPasswordAndAvatarUrl = aAccountWithPasswordUpdated.changeAvatarUrl(aAvatarUrl);
 
-        final var actualAccount = this.accountGateway.update(aAccountUpdated);
+        final var actualAccount = this.accountGateway.update(aAccountUpdatedWithPasswordAndAvatarUrl);
 
         Assertions.assertEquals(aAccount.getId(), actualAccount.getId());
         Assertions.assertEquals(aFirstName, actualAccount.getFirstName());
