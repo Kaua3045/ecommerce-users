@@ -694,4 +694,32 @@ public class AccountAPITest {
         Assertions.assertEquals(aImage.getContentType(), actualCmd.resource().contentType());
         Assertions.assertEquals(aImage.getOriginalFilename(), actualCmd.resource().fileName());
     }
+
+    @Test
+    void givenAnInvalidIdAndImage_whenCallUpdateAvatarAccount_thenShouldThrowException() throws Exception {
+        // given
+        final var aId = "123";
+        final var aImage = new MockMultipartFile(
+                "avatar",
+                "image.png",
+                "image/png",
+                "image".getBytes()
+        );
+        final var expectedErrorMessage = "Internal server error";
+
+        Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
+                .thenThrow(new RuntimeException(expectedErrorMessage));
+
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+                .file(aImage)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.MULTIPART_FORM_DATA);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(updateAvatarUseCase, Mockito.times(1)).execute(Mockito.any());
+    }
 }
