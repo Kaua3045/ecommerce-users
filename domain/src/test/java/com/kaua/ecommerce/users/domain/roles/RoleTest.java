@@ -24,11 +24,13 @@ public class RoleTest {
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
 
-        Assertions.assertDoesNotThrow(aRoleValidator::validate);
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(0, aTestValidationHandler.getErrors().size());
     }
 
     @Test
-    void givenAnInvalidNameNull_whenCallNewRole_thenRoleShouldBeThrowDomainException() {
+    void givenAnInvalidNameNull_whenCallNewRole_shouldReturnADomainException() {
         final String aName = null;
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
@@ -48,7 +50,7 @@ public class RoleTest {
     }
 
     @Test
-    void givenAnInvalidNameBlank_whenCallNewRole_thenRoleShouldBeThrowDomainException() {
+    void givenAnInvalidNameBlank_whenCallNewRole_shouldReturnADomainExceptio() {
         final var aName = "";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
