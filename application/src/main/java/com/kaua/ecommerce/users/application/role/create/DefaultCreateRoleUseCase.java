@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.role.create;
 
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
@@ -43,7 +44,7 @@ public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
 
     private RoleTypes getRoleType(String roleType) {
         return RoleTypes.of(roleType)
-                .orElseThrow(() -> NotFoundException.with(
+                .orElseThrow(() -> DomainException.with(
                         new Error("RoleType not found, role types available: "
                                 + Arrays.toString(RoleTypes.values()))));
     }
