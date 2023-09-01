@@ -41,7 +41,7 @@ public class RoleValidator extends Validator {
     }
 
     private void checkDescriptionConstraints() {
-        if (this.role.getDescription().trim().length() > MAXIMUM_DESCRIPTION_LENGTH) {
+        if (this.role.getDescription() != null && this.role.getDescription().trim().length() > MAXIMUM_DESCRIPTION_LENGTH) {
             this.validationHandler().append(new Error(commonLengthErrorMessage("description", 0, MAXIMUM_DESCRIPTION_LENGTH)));
             return;
         }
