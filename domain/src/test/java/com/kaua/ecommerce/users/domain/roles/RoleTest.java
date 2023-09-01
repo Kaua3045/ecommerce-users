@@ -26,4 +26,44 @@ public class RoleTest {
 
         Assertions.assertDoesNotThrow(aRoleValidator::validate);
     }
+
+    @Test
+    void givenAnInvalidNameNull_whenCallNewRole_thenRoleShouldBeThrowDomainException() {
+        final String aName = null;
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidNameBlank_whenCallNewRole_thenRoleShouldBeThrowDomainException() {
+        final var aName = "";
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
 }
