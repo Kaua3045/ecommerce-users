@@ -109,4 +109,24 @@ public class RoleTest {
         Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
     }
+
+    @Test
+    void givenAnInvalidDescriptionLengthMoreThan255_whenCallNewRole_shouldReturnADomainException() {
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(256);
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
 }
