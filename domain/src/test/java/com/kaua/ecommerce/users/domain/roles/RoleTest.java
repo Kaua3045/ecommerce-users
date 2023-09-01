@@ -8,9 +8,32 @@ import org.junit.jupiter.api.Test;
 public class RoleTest {
 
     @Test
-    void givenAValidValues_whenCallNewRole_thenRoleShouldBeCreated() {
+    void givenAValidValuesWithDescription_whenCallNewRole_thenRoleShouldBeCreated() {
         final var aName = "ceo";
         final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        Assertions.assertNotNull(aRole.getId());
+        Assertions.assertEquals(aName, aRole.getName());
+        Assertions.assertEquals(aDescription, aRole.getDescription());
+        Assertions.assertEquals(aRoleType, aRole.getRoleType());
+        Assertions.assertNotNull(aRole.getCreatedAt());
+        Assertions.assertNotNull(aRole.getUpdatedAt());
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(0, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAValidValuesWithNullDescription_whenCallNewRole_thenRoleShouldBeCreated() {
+        final var aName = "ceo";
+        final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
 
         final var aRole = Role.newRole(aName, aDescription, aRoleType);
