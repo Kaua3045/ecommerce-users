@@ -317,12 +317,38 @@ public class AccountTest {
     }
 
     @Test
-    void givenAnInvalidPassword_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+    void givenAnInvalidPasswordNull_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final String aPassword = null;
+        final var expectedErrorMessage = "'password' should not be null or blank";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnInvalidPasswordBlank_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "";
         final var expectedErrorMessage = "'password' should not be null or blank";
 
         // when
@@ -683,5 +709,18 @@ public class AccountTest {
         Assertions.assertNull(aAccountUpdated.getAvatarUrl());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
         Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
+    }
+
+    @Test
+    void givenAValidId_whenCallNewAccountDeletedEvent_shouldReturnAnAccountDeletedEvent() {
+        // given
+        final var aId = AccountID.unique();
+
+        // when
+        final var aAccountDeletedEvent = new AccountDeletedEvent(aId.getValue());
+
+        // then
+        Assertions.assertEquals(aId.getValue(), aAccountDeletedEvent.id());
+        Assertions.assertNotNull(aAccountDeletedEvent.occurredOn());
     }
 }
