@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.role.create;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -213,6 +214,29 @@ public class CreateRoleUseCaseTest {
         // then
         Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
+
+        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
+    }
+
+    @Test
+    void givenAnInvalidRoleTypeNull_whenCallCreateRole_shouldReturnDomainException() {
+        // given
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final String aRoleType = null;
+        final var expectedErrorMessage = "RoleType not found, role types available: [COMMON, EMPLOYEES]";
+        final var expectedErrorCount = 1;
+
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+
+        // when
+        final var aException = Assertions.assertThrows(DomainException.class,
+                () -> useCase.execute(aCommnad));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aException.getErrors().size());
 
         Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
