@@ -1,6 +1,5 @@
 package com.kaua.ecommerce.users.domain.roles;
 
-import com.kaua.ecommerce.users.domain.utils.CommonErrorsMessages;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import com.kaua.ecommerce.users.domain.validation.Validator;
