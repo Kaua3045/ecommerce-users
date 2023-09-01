@@ -10,7 +10,7 @@ public class RoleTest {
     void givenAValidValues_whenCallNewRole_thenRoleShouldBeCreated() {
         final var aName = "ceo";
         final var aDescription = "Ceo of the application";
-        final var aRoleType = RoleTypes.EMPLOYEE;
+        final var aRoleType = RoleTypes.EMPLOYEES;
 
         final var aRole = Role.newRole(aName, aDescription, aRoleType);
 
