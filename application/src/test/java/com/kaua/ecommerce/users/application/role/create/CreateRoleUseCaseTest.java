@@ -25,7 +25,7 @@ public class CreateRoleUseCaseTest {
     private DefaultCreateRoleUseCase useCase;
 
     @Test
-    void givenAValidCommand_whenCallCreateRole_shouldReturnRoleId() {
+    void givenAValidCommandWithNullDescription_whenCallCreateRole_shouldReturnRoleId() {
         // given
         final var aName = "ceo";
         final String aDescription = null;
@@ -51,6 +51,36 @@ public class CreateRoleUseCaseTest {
                 Objects.nonNull(cmd.getId()) &&
                 Objects.nonNull(cmd.getCreatedAt()) &&
                 Objects.nonNull(cmd.getUpdatedAt())
+        ));
+    }
+
+    @Test
+    void givenAValidCommandWithDescription_whenCallCreateRole_shouldReturnRoleId() {
+        // given
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final var aRoleType = "employees";
+
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+
+        // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
+        Mockito.when(roleGateway.create(Mockito.any())).thenAnswer(returnsFirstArg());
+
+        final var aResult = useCase.execute(aCommnad).getRight();
+
+        // then
+        Assertions.assertNotNull(aResult);
+        Assertions.assertNotNull(aResult.id());
+
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).create(argThat(cmd ->
+                Objects.equals(aName, cmd.getName()) &&
+                        Objects.equals(aDescription, cmd.getDescription()) &&
+                        Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
+                        Objects.nonNull(cmd.getId()) &&
+                        Objects.nonNull(cmd.getCreatedAt()) &&
+                        Objects.nonNull(cmd.getUpdatedAt())
         ));
     }
 
