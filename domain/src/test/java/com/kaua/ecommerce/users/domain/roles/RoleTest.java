@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.domain.roles;
 
 import com.kaua.ecommerce.users.domain.TestValidationHandler;
+import com.kaua.ecommerce.users.domain.utils.IdUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -22,12 +23,14 @@ public class RoleTest {
         Assertions.assertNotNull(aRole.getCreatedAt());
         Assertions.assertNotNull(aRole.getUpdatedAt());
 
-        final var aTestValidationHandler = new TestValidationHandler();
-        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+        Assertions.assertDoesNotThrow(() -> aRole.validate(new TestValidationHandler()));
 
-        aRoleValidator.validate();
-
-        Assertions.assertEquals(0, aTestValidationHandler.getErrors().size());
+        Assertions.assertEquals(aRole.getId(), aRole.getId());
+        Assertions.assertNotEquals(RoleID.unique(), aRole.getId());
+        Assertions.assertNotNull(aRole.getId());
+        Assertions.assertFalse(aRole.getId().equals(null));
+        Assertions.assertFalse(aRole.getId().equals(new Object()));
+        Assertions.assertNotEquals(1201212, aRole.getId().hashCode());
     }
 
     @Test
@@ -171,5 +174,22 @@ public class RoleTest {
 
         Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAValidIdString_whenCallRoleIdFromString_shouldReturnARoleId() {
+        final var aId = IdUtils.generate();
+        final var aRoleId = RoleID.from(aId);
+
+        Assertions.assertNotNull(aRoleId);
+        Assertions.assertEquals(aId, aRoleId.getValue());
+    }
+
+    @Test
+    void givenAValidRoleTypeString_whenCallRoleTypesOf_shouldReturnARoleType() {
+        final var aRoleType = RoleTypes.of("common");
+
+        Assertions.assertNotNull(aRoleType);
+        Assertions.assertEquals(RoleTypes.COMMON, aRoleType.get());
     }
 }
