@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.domain.roles;
 
 import com.kaua.ecommerce.users.domain.TestValidationHandler;
+import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -50,12 +51,52 @@ public class RoleTest {
     }
 
     @Test
-    void givenAnInvalidNameBlank_whenCallNewRole_shouldReturnADomainExceptio() {
+    void givenAnInvalidNameBlank_whenCallNewRole_shouldReturnADomainException() {
         final var aName = "";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidNameLengthLessThan3_whenCallNewRole_shouldReturnADomainException() {
+        final var aName = "ce ";
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidNameLengthMoreThan50_whenCallNewRole_shouldReturnADomainException() {
+        final var aName = RandomStringUtils.generateValue(51);
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
         final var aRole = Role.newRole(aName, aDescription, aRoleType);
