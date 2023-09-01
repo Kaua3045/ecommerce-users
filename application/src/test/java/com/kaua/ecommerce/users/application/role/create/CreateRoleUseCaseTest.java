@@ -165,4 +165,26 @@ public class CreateRoleUseCaseTest {
         Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
+
+    @Test
+    void givenAnInvalidDescriptionLengthMoreThan255_whenCallCreateRole_shouldReturnDomainException() {
+        // given
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(256);
+        final var aRoleType = "employees";
+        final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+
+        // when
+        final var aResult = useCase.execute(aCommnad).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
+
+        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
+    }
 }
