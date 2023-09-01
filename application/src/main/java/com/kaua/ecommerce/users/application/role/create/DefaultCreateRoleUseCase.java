@@ -23,10 +23,6 @@ public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
     public Either<NotificationHandler, CreateRoleOutput> execute(final CreateRoleCommand aCommand) {
         final var notification = NotificationHandler.create();
 
-        if (aCommand.name() != null && roleGateway.existsByName(aCommand.name())) {
-            return Either.left(notification.append(new Error("Role already exists")));
-        }
-
         final var aRole = Role.newRole(
                 aCommand.name(),
                 aCommand.description(),
@@ -34,9 +30,15 @@ public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
         );
         aRole.validate(notification);
 
-        return notification.hasError()
-                ? Either.left(notification)
-                : Either.right(CreateRoleOutput.from(this.roleGateway.create(aRole)));
+        if (notification.hasError()) {
+            return Either.left(notification);
+        }
+
+        if (roleGateway.existsByName(aCommand.name())) {
+            return Either.left(notification.append(new Error("Role already exists")));
+        }
+
+        return Either.right(CreateRoleOutput.from(this.roleGateway.create(aRole)));
     }
 
     private RoleTypes getRoleType(String roleType) {
