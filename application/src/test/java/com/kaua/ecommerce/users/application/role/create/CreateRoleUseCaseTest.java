@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.role.create;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -51,5 +52,27 @@ public class CreateRoleUseCaseTest {
                 Objects.nonNull(cmd.getCreatedAt()) &&
                 Objects.nonNull(cmd.getUpdatedAt())
         ));
+    }
+
+    @Test
+    void givenAnExistingRoleName_whenCallCreateRole_shouldReturnDomainException() {
+        // given
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(36);
+        final var aRoleType = "employees";
+        final var expectedErrorMessage = "Role already exists";
+
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+
+        // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(true);
+
+        final var aResult = useCase.execute(aCommnad).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
+
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 }
