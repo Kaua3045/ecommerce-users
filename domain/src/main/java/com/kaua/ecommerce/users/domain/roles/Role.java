@@ -52,6 +52,24 @@ public class Role extends AggregateRoot<RoleID> {
         );
     }
 
+    public static Role with(
+            final String aId,
+            final String aName,
+            final String aDescription,
+            final RoleTypes aRoleType,
+            final Instant aCreatedAt,
+            final Instant aUpdatedAt
+    ) {
+        return new Role(
+                RoleID.from(aId),
+                aName,
+                aDescription,
+                aRoleType,
+                aCreatedAt,
+                aUpdatedAt
+        );
+    }
+
     public String getName() {
         return name;
     }
