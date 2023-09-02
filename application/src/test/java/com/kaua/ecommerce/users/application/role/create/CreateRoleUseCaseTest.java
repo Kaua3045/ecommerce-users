@@ -127,7 +127,7 @@ public class CreateRoleUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.any());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 
@@ -149,7 +149,7 @@ public class CreateRoleUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 
@@ -165,13 +165,14 @@ public class CreateRoleUseCaseTest {
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
 
         // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
         final var aResult = useCase.execute(aCommnad).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 
@@ -187,13 +188,14 @@ public class CreateRoleUseCaseTest {
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
 
         // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
         final var aResult = useCase.execute(aCommnad).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 
@@ -209,13 +211,14 @@ public class CreateRoleUseCaseTest {
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
 
         // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
         final var aResult = useCase.execute(aCommnad).getLeft();
 
         // then
         Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 
@@ -231,6 +234,8 @@ public class CreateRoleUseCaseTest {
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
 
         // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
+
         final var aException = Assertions.assertThrows(DomainException.class,
                 () -> useCase.execute(aCommnad));
 
@@ -238,7 +243,7 @@ public class CreateRoleUseCaseTest {
         Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
         Assertions.assertEquals(expectedErrorCount, aException.getErrors().size());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
     }
 }
