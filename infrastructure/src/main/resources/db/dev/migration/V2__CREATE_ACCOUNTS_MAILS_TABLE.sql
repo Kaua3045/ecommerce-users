@@ -6,5 +6,5 @@ CREATE TABLE accounts_mails (
     account_id VARCHAR(36) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
-    CONSTRAINT FK_ACCOUNTS_MAILS_ACCOUNT_ID FOREIGN KEY (account_id) REFERENCES accounts(id)
+    CONSTRAINT FK_ACCOUNTS_MAILS_ACCOUNT_ID FOREIGN KEY (account_id) REFERENCES accounts(account_id)
 );

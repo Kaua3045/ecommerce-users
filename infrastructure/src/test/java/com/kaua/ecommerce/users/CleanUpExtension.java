@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users;
 
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.springframework.data.repository.CrudRepository;
@@ -17,6 +18,7 @@ public class CleanUpExtension implements BeforeEachCallback {
         final var appContext = SpringExtension.getApplicationContext(context);
 
         cleanUp(List.of(
+                appContext.getBean(RoleJpaRepository.class),
                 appContext.getBean(AccountMailJpaRepository.class),
                 appContext.getBean(AccountJpaRepository.class)
         ));

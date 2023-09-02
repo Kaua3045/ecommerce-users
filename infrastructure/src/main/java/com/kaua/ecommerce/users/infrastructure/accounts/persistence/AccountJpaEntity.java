@@ -11,6 +11,7 @@ import java.time.Instant;
 public class AccountJpaEntity {
 
     @Id
+    @Column(name ="account_id", nullable = false, unique = true)
     private String id;
 
     @Column(name = "first_name", nullable = false)
