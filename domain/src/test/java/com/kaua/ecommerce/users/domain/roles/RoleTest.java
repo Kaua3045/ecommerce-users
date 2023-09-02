@@ -192,4 +192,30 @@ public class RoleTest {
         Assertions.assertNotNull(aRoleType);
         Assertions.assertEquals(RoleTypes.COMMON, aRoleType.get());
     }
+
+    @Test
+    void givenValidValues_whenCalledWithInRole_shouldReturnAnRoleObjectWithDataEqualToWhatWasPassed() {
+        final var aName = "ceo";
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        final var aRoleCloned = Role.with(
+                aRole.getId().getValue(),
+                aRole.getName(),
+                aRole.getDescription(),
+                aRole.getRoleType(),
+                aRole.getCreatedAt(),
+                aRole.getUpdatedAt()
+        );
+
+        // then
+        Assertions.assertEquals(aRole.getId().getValue(), aRoleCloned.getId().getValue());
+        Assertions.assertEquals(aRole.getName(), aRoleCloned.getName());
+        Assertions.assertEquals(aRole.getDescription(), aRoleCloned.getDescription());
+        Assertions.assertEquals(aRole.getRoleType(), aRoleCloned.getRoleType());
+        Assertions.assertEquals(aRole.getCreatedAt(), aRoleCloned.getCreatedAt());
+        Assertions.assertEquals(aRole.getUpdatedAt(), aRoleCloned.getUpdatedAt());
+    }
 }
