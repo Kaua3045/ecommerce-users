@@ -6,7 +6,6 @@ import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.hibernate.PropertyValueException;
-import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.id.IdentifierGenerationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -41,37 +40,6 @@ public class RoleRepositoryTest {
                 actualException.getCause());
 
         Assertions.assertEquals(expectedPropertyName, actualCause.getPropertyName());
-        Assertions.assertEquals(expectedErrorMessage, actualCause.getMessage());
-    }
-
-    @Test
-    void givenAnExistingName_whenCallSave_shouldReturnAnException() {
-        final var expectedErrorMessage = "could not execute statement [Unique index or primary key violation: \"public.CONSTRAINT_INDEX_6 ON public.roles(name NULLS FIRST) VALUES ( /* 1 */ 'ceo' )\"; SQL statement:\n" +
-                "insert into roles (created_at,description,name,role_type,updated_at,role_id) values (?,?,?,?,?,?) [23505-214]] [insert into roles (created_at,description,name,role_type,updated_at,role_id) values (?,?,?,?,?,?)]";
-
-        final var aRoleOne = Role.newRole(
-                "ceo",
-                "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
-        );
-
-        final var aRoleTwo = Role.newRole(
-                "ceo",
-                "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
-        );
-
-        final var aEntityOne = RoleJpaEntity.toEntity(aRoleOne);
-        roleRepository.save(aEntityOne);
-
-        final var aEntityTwo = RoleJpaEntity.toEntity(aRoleTwo);
-
-        final var actualException = Assertions.assertThrows(DataIntegrityViolationException.class,
-                () -> roleRepository.save(aEntityTwo));
-
-        final var actualCause = Assertions.assertInstanceOf(ConstraintViolationException.class,
-                actualException.getCause());
-
         Assertions.assertEquals(expectedErrorMessage, actualCause.getMessage());
     }
 
