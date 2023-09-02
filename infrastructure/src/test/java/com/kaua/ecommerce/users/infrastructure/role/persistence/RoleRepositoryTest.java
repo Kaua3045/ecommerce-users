@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users.infrastructure.role;
+package com.kaua.ecommerce.users.infrastructure.role.persistence;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.roles.Role;
