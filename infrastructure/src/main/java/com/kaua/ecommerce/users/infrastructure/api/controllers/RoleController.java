@@ -6,7 +6,9 @@ import com.kaua.ecommerce.users.infrastructure.api.RoleAPI;
 import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class RoleController implements RoleAPI {
 
     private final CreateRoleUseCase createRoleUseCase;
