@@ -7,4 +7,8 @@ public record CreateRoleOutput(String id) {
     public static CreateRoleOutput from(final Role aRole) {
         return new CreateRoleOutput(aRole.getId().getValue());
     }
+
+    public static CreateRoleOutput from(final String aId) {
+        return new CreateRoleOutput(aId);
+    }
 }
