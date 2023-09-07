@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.role;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
@@ -103,5 +104,75 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(1, roleRepository.count());
 
         Assertions.assertTrue(roleGateway.existsByName(aName));
+    }
+
+    @Test
+    void givenAValidRole_whenCallUpdate_shouldReturnAUpdatedRole() {
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        Role aRole = Role.newRole("User", "Common user", RoleTypes.COMMON);
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
+
+        Assertions.assertEquals(1, roleRepository.count());
+
+        final var aRoleUpdatedDate = aRole.getUpdatedAt();
+
+        final var aRoleUpdated = aRole.update(aName, aDescription, aRoleType);
+
+        final var actualRole = this.roleGateway.update(aRoleUpdated);
+
+        Assertions.assertEquals(aRole.getId(), actualRole.getId());
+        Assertions.assertEquals(aName, actualRole.getName());
+        Assertions.assertEquals(aDescription, actualRole.getDescription());
+        Assertions.assertEquals(aRoleType, actualRole.getRoleType());
+        Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
+        Assertions.assertTrue(actualRole.getUpdatedAt().isAfter(aRoleUpdatedDate));
+
+        final var actualEntity = roleRepository.findById(actualRole.getId().getValue()).get();
+
+        Assertions.assertEquals(aRole.getId().getValue(), actualEntity.getId());
+        Assertions.assertEquals(aName, actualEntity.getName());
+        Assertions.assertEquals(aDescription, actualEntity.getDescription());
+        Assertions.assertEquals(aRoleType, actualEntity.getRoleType());
+        Assertions.assertEquals(aRole.getCreatedAt(), actualEntity.getCreatedAt());
+        Assertions.assertTrue(actualEntity.getUpdatedAt().isAfter(aRoleUpdatedDate));
+    }
+
+    @Test
+    void givenAPrePersistedRoleAndValidRoleId_whenCallFindById_shouldReturnRole() {
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        Role aRole = Role.newRole(aName, aDescription, aRoleType);
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
+
+        Assertions.assertEquals(1, roleRepository.count());
+
+        final var actualRole = roleGateway.findById(aRole.getId().getValue()).get();
+
+        Assertions.assertEquals(aRole.getId(), actualRole.getId());
+        Assertions.assertEquals(aRole.getName(), actualRole.getName());
+        Assertions.assertEquals(aRole.getDescription(), actualRole.getDescription());
+        Assertions.assertEquals(aRole.getRoleType(), actualRole.getRoleType());
+        Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
+        Assertions.assertEquals(aRole.getUpdatedAt(), actualRole.getUpdatedAt());
+    }
+
+    @Test
+    void givenAValidRoleIdButNotStored_whenCallFindById_shouldReturnEmpty() {
+        Assertions.assertEquals(0, roleRepository.count());
+
+        final var actualRole = roleGateway.findById(RoleID.from("empty").getValue());
+
+        Assertions.assertTrue(actualRole.isEmpty());
     }
 }
