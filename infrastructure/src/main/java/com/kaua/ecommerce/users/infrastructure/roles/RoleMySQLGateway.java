@@ -7,6 +7,7 @@ import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaReposito
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class RoleMySQLGateway implements RoleGateway {
@@ -25,5 +26,15 @@ public class RoleMySQLGateway implements RoleGateway {
     @Override
     public boolean existsByName(String aName) {
         return this.roleRepository.existsByName(aName);
+    }
+
+    @Override
+    public Optional<Role> findById(String aId) {
+        return this.roleRepository.findById(aId).map(RoleJpaEntity::toDomain);
+    }
+
+    @Override
+    public Role update(Role aRole) {
+        return this.roleRepository.save(RoleJpaEntity.toEntity(aRole)).toDomain();
     }
 }
