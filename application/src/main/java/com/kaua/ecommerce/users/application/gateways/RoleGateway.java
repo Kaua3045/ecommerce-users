@@ -13,4 +13,6 @@ public interface RoleGateway {
     Optional<Role> findById(String aId);
 
     Role update(Role aRole);
+
+    void deleteById(String aId);
 }
