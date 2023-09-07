@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.role.create;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
+import com.kaua.ecommerce.users.domain.utils.IdUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -245,5 +246,16 @@ public class CreateRoleUseCaseTest {
 
         Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
+    }
+
+    @Test
+    void givenAValidStringId_whenCallCreateRoleOutputFrom_shouldReturnCreateRoleOutputInstance() {
+        final var aId = IdUtils.generate();
+
+        final var aResult = CreateRoleOutput.from(aId);
+
+        Assertions.assertNotNull(aResult);
+        Assertions.assertEquals(aId, aResult.id());
+        Assertions.assertInstanceOf(CreateRoleOutput.class, aResult);
     }
 }
