@@ -219,7 +219,7 @@ public class AccountMySQLGatewayTest {
     }
 
     @Test
-    void givenAnNotPrePersistedccount_whenCallDeleteById_shouldBeOk() {
+    void givenAnNotPrePersistedAccount_whenCallDeleteById_shouldBeOk() {
         final var aId = "123";
 
         Assertions.assertEquals(0, accountRepository.count());
