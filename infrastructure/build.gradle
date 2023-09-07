@@ -73,6 +73,17 @@ jacocoTestCoverageVerification {
             }
         }
     }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            'com/kaua/ecommerce/users/infrastructure/configurations/*',
+                            'com/kaua/ecommerce/users/infrastructure/Main.class'
+                    ])
+                })
+        )
+    }
 }
 
 test {
