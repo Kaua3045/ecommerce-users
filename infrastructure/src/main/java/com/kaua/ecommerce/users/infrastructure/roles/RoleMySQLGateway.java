@@ -37,4 +37,11 @@ public class RoleMySQLGateway implements RoleGateway {
     public Role update(Role aRole) {
         return this.roleRepository.save(RoleJpaEntity.toEntity(aRole)).toDomain();
     }
+
+    @Override
+    public void deleteById(String aId) {
+        if (this.roleRepository.existsById(aId)) {
+            this.roleRepository.deleteById(aId);
+        }
+    }
 }
