@@ -175,4 +175,29 @@ public class RoleMySQLGatewayTest {
 
         Assertions.assertTrue(actualRole.isEmpty());
     }
+
+    @Test
+    void givenAPrePersistedRole_whenCallDeleteById_shouldBeOk() {
+        final var aRole = Role.newRole("User", "Common user", RoleTypes.COMMON);
+        final var aId = aRole.getId().getValue();
+
+        roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
+
+        Assertions.assertEquals(1, roleRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> roleGateway.deleteById(aId));
+
+        Assertions.assertEquals(0, roleRepository.count());
+    }
+
+    @Test
+    void givenAnNotPrePersistedRole_whenCallDeleteById_shouldBeOk() {
+        final var aId = "123";
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> roleGateway.deleteById(aId));
+
+        Assertions.assertEquals(0, roleRepository.count());
+    }
 }

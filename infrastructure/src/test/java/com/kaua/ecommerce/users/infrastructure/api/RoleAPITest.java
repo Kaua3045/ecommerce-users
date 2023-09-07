@@ -6,6 +6,7 @@ import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleCommand;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleOutput;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
+import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleOutput;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
@@ -49,6 +50,9 @@ public class RoleAPITest {
 
     @MockBean
     private UpdateRoleUseCase updateRoleUseCase;
+
+    @MockBean
+    private DeleteRoleUseCase deleteRoleUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
@@ -679,5 +683,38 @@ public class RoleAPITest {
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType())
         ));
+    }
+
+    @Test
+    void givenAValidCommandWithRoleId_whenCallDeleteRole_thenShouldReturnOk() throws Exception {
+        // given
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aId = aRole.getId().getValue();
+
+        final var request = MockMvcRequestBuilders.delete("/roles/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(deleteRoleUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAnInvalidRoleId_whenCallDeleteRole_thenShouldReturnOk() throws Exception {
+        // given
+        final var aId = "invalid";
+
+        final var request = MockMvcRequestBuilders.delete("/roles/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(deleteRoleUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
     }
 }
