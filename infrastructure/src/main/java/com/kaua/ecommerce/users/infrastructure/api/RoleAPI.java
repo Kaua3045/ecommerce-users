@@ -20,4 +20,7 @@ public interface RoleAPI {
             @PathVariable String id,
             @RequestBody UpdateRoleApiInput input
     );
+
+    @DeleteMapping("{id}")
+    ResponseEntity<?> deleteRole(@PathVariable String id);
 }
