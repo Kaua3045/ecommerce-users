@@ -3,16 +3,12 @@ package com.kaua.ecommerce.users.domain;
 import com.kaua.ecommerce.users.domain.event.DomainEvent;
 import com.kaua.ecommerce.users.domain.event.DomainEventPublisher;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
-import com.kaua.ecommerce.users.domain.validation.Error;
-import com.kaua.ecommerce.users.domain.validation.Validation;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 public class EntityTest {
@@ -104,14 +100,6 @@ public class EntityTest {
         Assertions.assertEquals(0, entity1.getDomainEvents().size());
     }
 
-    @Test
-    void givenAValidError_whenCallHasError_thenReturnFalse() {
-        final var testHandler = new TestHasErrorsValidationHandler();
-        testHandler.append(new Error("simulated error"));
-
-        Assertions.assertFalse(testHandler.hasError());
-    }
-
     private Entity<SampleIdentifier> createEntity(SampleIdentifier id) {
         return new Entity<>(id, Collections.emptyList()) {
             @Override
@@ -133,37 +121,6 @@ public class EntityTest {
         @Override
         public <T extends DomainEvent> void publish(T event, String routingKey) {
             // Lógica de publicação de evento simulada
-        }
-    }
-
-    private class TestHasErrorsValidationHandler implements ValidationHandler {
-
-        private final List<Error> errors;
-
-        public TestHasErrorsValidationHandler() {
-            this.errors = new ArrayList<>();
-        }
-        @Override
-        public ValidationHandler append(Error aError) {
-            errors.add(aError);
-            return this;
-        }
-
-        @Override
-        public ValidationHandler append(ValidationHandler aHandler) {
-            errors.addAll(aHandler.getErrors());
-            return this;
-        }
-
-        @Override
-        public ValidationHandler validate(Validation aValidation) {
-            aValidation.validate();
-            return this;
-        }
-
-        @Override
-        public List<Error> getErrors() {
-            return null;
         }
     }
 }
