@@ -218,4 +218,214 @@ public class RoleTest {
         Assertions.assertEquals(aRole.getCreatedAt(), aRoleCloned.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), aRoleCloned.getUpdatedAt());
     }
+
+    @Test
+    void givenAValidValuesWithDescription_whenCallUpdateRole_shouldReturnAnRoleUpdated() {
+        final var aName = "ceo";
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var aRole = Role.newRole("user", "Common user", RoleTypes.COMMON);
+
+        final var aRoleUpdatedDate = aRole.getUpdatedAt();
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        // then
+        Assertions.assertEquals(aRole.getId().getValue(), aRoleUpdated.getId().getValue());
+        Assertions.assertEquals(aName, aRoleUpdated.getName());
+        Assertions.assertEquals(aDescription, aRoleUpdated.getDescription());
+        Assertions.assertEquals(RoleTypes.EMPLOYEES, aRoleUpdated.getRoleType());
+        Assertions.assertEquals(aRole.getCreatedAt(), aRoleUpdated.getCreatedAt());
+        Assertions.assertTrue(aRoleUpdated.getUpdatedAt().isAfter(aRoleUpdatedDate));
+
+        Assertions.assertDoesNotThrow(() -> aRoleUpdated.validate(new TestValidationHandler()));
+    }
+
+    @Test
+    void givenAValidValuesWithNullDescription_whenCallUpdateRole_shouldReturnAnRoleUpdated() {
+        final var aName = "ceo";
+        final String aDescription = null;
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var aRole = Role.newRole("User", "aaaaaaaaaa", RoleTypes.COMMON);
+
+        final var aRoleUpdatedDate = aRole.getUpdatedAt();
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        // then
+        Assertions.assertEquals(aRole.getId().getValue(), aRoleUpdated.getId().getValue());
+        Assertions.assertEquals(aName, aRoleUpdated.getName());
+        Assertions.assertNull(aRoleUpdated.getDescription());
+        Assertions.assertEquals(RoleTypes.EMPLOYEES, aRoleUpdated.getRoleType());
+        Assertions.assertEquals(aRole.getCreatedAt(), aRoleUpdated.getCreatedAt());
+        Assertions.assertTrue(aRoleUpdated.getUpdatedAt().isAfter(aRoleUpdatedDate));
+
+        Assertions.assertDoesNotThrow(() -> aRoleUpdated.validate(new TestValidationHandler()));
+    }
+
+    @Test
+    void givenAnInvalidNameNull_whenCallUpdateRole_shouldReturnADomainException() {
+        final String aName = null;
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", aDescription, aRoleType);
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRoleUpdated, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidNameBlank_whenCallUpdateRole_shouldReturnADomainException() {
+        final var aName = "";
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' should not be null or blank";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", aDescription, aRoleType);
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRoleUpdated, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidNameLengthLessThan3_whenCallUpdateRole_shouldReturnADomainException() {
+        final var aName = "ce ";
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", aDescription, aRoleType);
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRoleUpdated, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidNameLengthMoreThan50_whenCallUpdateRole_shouldReturnADomainException() {
+        final var aName = RandomStringUtils.generateValue(51);
+        final var aDescription = "Ceo of the application";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", aDescription, aRoleType);
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRoleUpdated, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidDescriptionLengthMoreThan255_whenCallUpdateRole_shouldReturnADomainException() {
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(256);
+        final var aRoleType = RoleTypes.EMPLOYEES;
+
+        final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", "Common user", aRoleType);
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRoleUpdated, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
+
+    @Test
+    void givenAnInvalidRoleTypeNull_whenCallUpdateRole_shouldReturnADomainException() {
+        final var aName = "ceo";
+        final String aDescription = null;
+        final RoleTypes aRoleType = null;
+
+        final var expectedErrorMessage = "'roleType' must not be null";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", aDescription, RoleTypes.EMPLOYEES);
+
+        final var aRoleUpdated = aRole.update(
+                aName,
+                aDescription,
+                aRoleType
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aRoleValidator = new RoleValidator(aRoleUpdated, aTestValidationHandler);
+
+        aRoleValidator.validate();
+
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
+    }
 }

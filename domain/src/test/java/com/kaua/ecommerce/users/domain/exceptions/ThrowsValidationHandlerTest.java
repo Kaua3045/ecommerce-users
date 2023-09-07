@@ -7,6 +7,9 @@ import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandle
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ThrowsValidationHandlerTest {
 
     @Test
@@ -45,5 +48,44 @@ public class ThrowsValidationHandlerTest {
         ThrowsValidationHandler handler = new ThrowsValidationHandler();
 
         Assertions.assertEquals(0, handler.getErrors().size());
+    }
+
+    @Test
+    void givenAValidError_whenCallHasError_thenReturnFalse() {
+        final var testHandler = new TestHasErrorsValidationHandler();
+        testHandler.append(new Error("simulated error"));
+
+        Assertions.assertFalse(testHandler.hasError());
+    }
+
+    private class TestHasErrorsValidationHandler implements ValidationHandler {
+
+        private final List<Error> errors;
+
+        public TestHasErrorsValidationHandler() {
+            this.errors = new ArrayList<>();
+        }
+        @Override
+        public ValidationHandler append(Error aError) {
+            errors.add(aError);
+            return this;
+        }
+
+        @Override
+        public ValidationHandler append(ValidationHandler aHandler) {
+            errors.addAll(aHandler.getErrors());
+            return this;
+        }
+
+        @Override
+        public ValidationHandler validate(Validation aValidation) {
+            aValidation.validate();
+            return this;
+        }
+
+        @Override
+        public List<Error> getErrors() {
+            return null;
+        }
     }
 }

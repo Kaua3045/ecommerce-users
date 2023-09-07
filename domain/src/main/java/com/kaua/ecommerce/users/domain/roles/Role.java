@@ -70,6 +70,18 @@ public class Role extends AggregateRoot<RoleID> {
         );
     }
 
+    public Role update(
+            final String aName,
+            final String aDescription,
+            final RoleTypes aRoleType
+    ) {
+        this.name = aName;
+        this.description = aDescription;
+        this.roleType = aRoleType;
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
     public String getName() {
         return name;
     }

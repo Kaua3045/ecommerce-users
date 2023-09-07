@@ -1,11 +1,10 @@
 package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = "roles")
 public interface RoleAPI {
@@ -15,4 +14,10 @@ public interface RoleAPI {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<?> createRole(@RequestBody CreateRoleApiInput input);
+
+    @PatchMapping("{id}")
+    ResponseEntity<?> updateRole(
+            @PathVariable String id,
+            @RequestBody UpdateRoleApiInput input
+    );
 }

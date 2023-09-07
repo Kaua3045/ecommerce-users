@@ -46,9 +46,22 @@ dependencies {
     testRuntimeOnly 'com.h2database:h2'
 }
 
-jacocoTestReport {
+testCodeCoverageReport {
+    dependsOn(test)
+
     reports {
         csv.required = true
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            'com/kaua/ecommerce/users/infrastructure/configurations/*',
+                            'com/kaua/ecommerce/users/infrastructure/Main.class'
+                    ])
+                })
+        )
     }
 }
 
@@ -59,6 +72,17 @@ jacocoTestCoverageVerification {
                 minimum = 0.95
             }
         }
+    }
+
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, exclude: [
+                            'com/kaua/ecommerce/users/infrastructure/configurations/*',
+                            'com/kaua/ecommerce/users/infrastructure/Main.class'
+                    ])
+                })
+        )
     }
 }
 
