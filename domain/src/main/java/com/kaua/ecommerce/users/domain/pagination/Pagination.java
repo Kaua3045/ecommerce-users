@@ -6,8 +6,8 @@ import java.util.function.Function;
 public record Pagination<T>(
         int currentPage,
         int perPage,
-        int totalPage,
-        long total,
+        int totalPages,
+        long totalItems,
         List<T> items
 ) {
 
@@ -19,8 +19,8 @@ public record Pagination<T>(
         return new Pagination<>(
                 currentPage(),
                 perPage(),
-                totalPage(),
-                total(),
+                totalPages(),
+                totalItems(),
                 aNewList
         );
     }
