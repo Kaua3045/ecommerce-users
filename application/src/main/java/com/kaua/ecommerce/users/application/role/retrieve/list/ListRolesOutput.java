@@ -6,7 +6,7 @@ import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 
 import java.time.Instant;
 
-public record ListRoleOutput(
+public record ListRolesOutput(
         RoleID id,
         String name,
         String description,
@@ -14,8 +14,8 @@ public record ListRoleOutput(
         Instant createdAt
 ) {
 
-    public static ListRoleOutput from(final Role aRole) {
-        return new ListRoleOutput(
+    public static ListRolesOutput from(final Role aRole) {
+        return new ListRolesOutput(
                 aRole.getId(),
                 aRole.getName(),
                 aRole.getDescription(),

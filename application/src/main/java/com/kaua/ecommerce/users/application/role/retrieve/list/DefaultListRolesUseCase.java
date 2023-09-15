@@ -6,17 +6,17 @@ import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
 
 import java.util.Objects;
 
-public class DefaultListRoleUseCase extends ListRoleUseCase {
+public class DefaultListRolesUseCase extends ListRolesUseCase {
 
     private final RoleGateway roleGateway;
 
-    public DefaultListRoleUseCase(final RoleGateway roleGateway) {
+    public DefaultListRolesUseCase(final RoleGateway roleGateway) {
         this.roleGateway = Objects.requireNonNull(roleGateway);
     }
 
     @Override
-    public Pagination<ListRoleOutput> execute(RoleSearchQuery aQuery) {
+    public Pagination<ListRolesOutput> execute(RoleSearchQuery aQuery) {
         return this.roleGateway.findAll(aQuery)
-                .map(ListRoleOutput::from);
+                .map(ListRolesOutput::from);
     }
 }

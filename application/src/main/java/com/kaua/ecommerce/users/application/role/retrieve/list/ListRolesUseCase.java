@@ -4,5 +4,5 @@ import com.kaua.ecommerce.users.application.UseCase;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
 
-public abstract class ListRoleUseCase extends UseCase<RoleSearchQuery, Pagination<ListRoleOutput>> {
+public abstract class ListRolesUseCase extends UseCase<RoleSearchQuery, Pagination<ListRolesOutput>> {
 }
