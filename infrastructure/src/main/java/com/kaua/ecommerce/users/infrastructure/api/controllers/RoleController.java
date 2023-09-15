@@ -6,11 +6,15 @@ import com.kaua.ecommerce.users.application.role.delete.DeleteRoleCommand;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
+import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesUseCase;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
+import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
 import com.kaua.ecommerce.users.infrastructure.api.RoleAPI;
 import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
-import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleOutput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleResponse;
+import com.kaua.ecommerce.users.infrastructure.roles.models.ListRoleResponse;
 import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
 import com.kaua.ecommerce.users.infrastructure.roles.presenters.RoleApiPresenter;
 import org.springframework.http.HttpStatus;
@@ -24,17 +28,20 @@ public class RoleController implements RoleAPI {
     private final UpdateRoleUseCase updateRoleUseCase;
     private final DeleteRoleUseCase deleteRoleUseCase;
     private final GetRoleByIdUseCase getRoleByIdUseCase;
+    private final ListRolesUseCase listRolesUseCase;
 
     public RoleController(
             final CreateRoleUseCase createRoleUseCase,
             final UpdateRoleUseCase updateRoleUseCase,
             final DeleteRoleUseCase deleteRoleUseCase,
-            final GetRoleByIdUseCase getRoleByIdUseCase
+            final GetRoleByIdUseCase getRoleByIdUseCase,
+            final ListRolesUseCase listRolesUseCase
     ) {
         this.createRoleUseCase = createRoleUseCase;
         this.updateRoleUseCase = updateRoleUseCase;
         this.deleteRoleUseCase = deleteRoleUseCase;
         this.getRoleByIdUseCase = getRoleByIdUseCase;
+        this.listRolesUseCase = listRolesUseCase;
     }
 
     @Override
@@ -69,9 +76,16 @@ public class RoleController implements RoleAPI {
     }
 
     @Override
-    public GetRoleOutput getRole(String id) {
+    public GetRoleResponse getRole(String id) {
         return RoleApiPresenter.present(this.getRoleByIdUseCase
                 .execute(GetRoleByIdCommand.with(id)));
+    }
+
+    @Override
+    public Pagination<ListRoleResponse> listRoles(String search, int page, int perPage, String sort, String direction) {
+        return this.listRolesUseCase
+                .execute(new RoleSearchQuery(page, perPage, search, sort, direction))
+                .map(RoleApiPresenter::present);
     }
 
     @Override
