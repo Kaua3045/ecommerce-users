@@ -4,11 +4,15 @@ import com.kaua.ecommerce.users.application.role.create.CreateRoleCommand;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleCommand;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
+import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.infrastructure.api.RoleAPI;
 import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleOutput;
 import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.presenters.RoleApiPresenter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,15 +23,18 @@ public class RoleController implements RoleAPI {
     private final CreateRoleUseCase createRoleUseCase;
     private final UpdateRoleUseCase updateRoleUseCase;
     private final DeleteRoleUseCase deleteRoleUseCase;
+    private final GetRoleByIdUseCase getRoleByIdUseCase;
 
     public RoleController(
             final CreateRoleUseCase createRoleUseCase,
             final UpdateRoleUseCase updateRoleUseCase,
-            final DeleteRoleUseCase deleteRoleUseCase
+            final DeleteRoleUseCase deleteRoleUseCase,
+            final GetRoleByIdUseCase getRoleByIdUseCase
     ) {
         this.createRoleUseCase = createRoleUseCase;
         this.updateRoleUseCase = updateRoleUseCase;
         this.deleteRoleUseCase = deleteRoleUseCase;
+        this.getRoleByIdUseCase = getRoleByIdUseCase;
     }
 
     @Override
@@ -59,6 +66,12 @@ public class RoleController implements RoleAPI {
         return aResult.isLeft()
                 ? ResponseEntity.unprocessableEntity().body(aResult.getLeft())
                 : ResponseEntity.ok().body(aResult.getRight());
+    }
+
+    @Override
+    public GetRoleOutput getRole(String id) {
+        return RoleApiPresenter.present(this.getRoleByIdUseCase
+                .execute(GetRoleByIdCommand.with(id)));
     }
 
     @Override

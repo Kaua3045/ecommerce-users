@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleOutput;
 import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +21,12 @@ public interface RoleAPI {
             @PathVariable String id,
             @RequestBody UpdateRoleApiInput input
     );
+
+    @GetMapping(
+            value = "{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    GetRoleOutput getRole(@PathVariable String id);
 
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteRole(@PathVariable String id);

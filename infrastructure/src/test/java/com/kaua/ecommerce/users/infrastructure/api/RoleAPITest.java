@@ -7,6 +7,9 @@ import com.kaua.ecommerce.users.application.role.create.CreateRoleCommand;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleOutput;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
+import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdOutput;
+import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleOutput;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
@@ -53,6 +56,9 @@ public class RoleAPITest {
 
     @MockBean
     private DeleteRoleUseCase deleteRoleUseCase;
+
+    @MockBean
+    private GetRoleByIdUseCase getRoleByIdUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
@@ -715,6 +721,58 @@ public class RoleAPITest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         Mockito.verify(deleteRoleUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAValidCommand_whenCallGetRole_thenShouldReturneAnRole() throws Exception {
+        // given
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aId = aRole.getId().getValue();
+
+        Mockito.when(getRoleByIdUseCase.execute(Mockito.any(GetRoleByIdCommand.class)))
+                .thenReturn(GetRoleByIdOutput.from(aRole));
+
+        final var request = MockMvcRequestBuilders.get("/roles/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo(aName)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", equalTo(aDescription)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.role_type", equalTo(aRoleType.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aRole.getCreatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aRole.getUpdatedAt().toString())));
+
+        Mockito.verify(getRoleByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAnInvalidId_whenCallGetAccount_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var expectedErrorMessage = "Role with id 123 was not found";
+        final var aId = "123";
+
+        Mockito.when(getRoleByIdUseCase.execute(Mockito.any(GetRoleByIdCommand.class)))
+                .thenThrow(NotFoundException.with(Role.class, aId));
+
+        final var request = MockMvcRequestBuilders.get("/roles/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(getRoleByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
     }
 }
