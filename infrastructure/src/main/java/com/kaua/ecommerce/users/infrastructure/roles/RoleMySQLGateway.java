@@ -51,7 +51,8 @@ public class RoleMySQLGateway implements RoleGateway {
         final var aSpecification = Optional.ofNullable(aQuery.terms())
                 .filter(term -> !term.isBlank())
                 .map(term -> SpecificationUtils.<RoleJpaEntity>like("name", term)
-                        .or(SpecificationUtils.like("description", term))).orElse(null);
+                        .or(SpecificationUtils.<RoleJpaEntity>like("description", term)
+                                .or(SpecificationUtils.like("roleType", term)))).orElse(null);
 
         final var aPageResult = this.roleRepository.findAll(Specification.where(aSpecification), aPage);
 
