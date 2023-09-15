@@ -7,7 +7,6 @@ public record ListRoleResponse(
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
         @JsonProperty("role_type") String roleType,
-        @JsonProperty("created_at") String createdAt,
-        @JsonProperty("updated_at") String updatedAt
+        @JsonProperty("created_at") String createdAt
 ) {
 }
