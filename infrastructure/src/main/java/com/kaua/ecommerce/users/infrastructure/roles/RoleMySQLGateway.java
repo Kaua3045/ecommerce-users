@@ -1,9 +1,16 @@
 package com.kaua.ecommerce.users.infrastructure.roles;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.utils.SpecificationUtils;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
@@ -31,6 +38,29 @@ public class RoleMySQLGateway implements RoleGateway {
     @Override
     public Optional<Role> findById(String aId) {
         return this.roleRepository.findById(aId).map(RoleJpaEntity::toDomain);
+    }
+
+    @Override
+    public Pagination<Role> findAll(RoleSearchQuery aQuery) {
+        final var aPage = PageRequest.of(
+                aQuery.page(),
+                aQuery.perPage(),
+                Sort.by(Direction.fromString(aQuery.direction()), aQuery.sort())
+        );
+
+        final var aSpecification = Optional.ofNullable(aQuery.terms())
+                .filter(str -> !str.isBlank())
+                .map(str -> SpecificationUtils.<RoleJpaEntity>like("name", str)).orElse(null);
+
+        final var aPageResult = this.roleRepository.findAll(Specification.where(aSpecification), aPage);
+
+        return new Pagination<>(
+                aPageResult.getNumber(),
+                aPageResult.getSize(),
+                aPageResult.getTotalPages(),
+                aPageResult.getTotalElements(),
+                aPageResult.map(RoleJpaEntity::toDomain).toList()
+        );
     }
 
     @Override
