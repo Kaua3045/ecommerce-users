@@ -3,8 +3,11 @@ package com.kaua.ecommerce.users.application.account.create;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
+import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
@@ -14,10 +17,16 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
 
     private final AccountGateway accountGateway;
     private final EncrypterGateway encrypterGateway;
+    private final RoleGateway roleGateway;
 
-    public DefaultCreateAccountUseCase(final AccountGateway accountGateway, final EncrypterGateway encrypterGateway) {
+    public DefaultCreateAccountUseCase(
+            final AccountGateway accountGateway,
+            final EncrypterGateway encrypterGateway,
+            final RoleGateway roleGateway
+    ) {
         this.accountGateway = Objects.requireNonNull(accountGateway);
         this.encrypterGateway = Objects.requireNonNull(encrypterGateway);
+        this.roleGateway = Objects.requireNonNull(roleGateway);
     }
 
     @Override
@@ -28,11 +37,15 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
             return Either.left(notification.append(new Error("'email' already exists")));
         }
 
+        final var aRoleDefault = this.roleGateway.findDefaultRole()
+                .orElseThrow(() -> NotFoundException.with(Role.class, "default"));
+
         final var aAccount = Account.newAccount(
                 aCommand.firstName(),
                 aCommand.lastName(),
                 aCommand.email(),
-                aCommand.password()
+                aCommand.password(),
+                aRoleDefault.getId()
         );
         aAccount.validate(notification);
 
@@ -58,6 +71,7 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                         aAccount.getMailStatus(),
                         this.encrypterGateway.encrypt(aAccount.getPassword()),
                         aAccount.getAvatarUrl(),
+                        aAccount.getRoleId().getValue(),
                         aAccount.getCreatedAt(),
                         aAccount.getUpdatedAt(),
                         aAccount.getDomainEvents())
