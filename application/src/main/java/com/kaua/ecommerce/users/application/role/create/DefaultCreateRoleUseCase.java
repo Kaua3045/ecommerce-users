@@ -23,15 +23,19 @@ public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
     public Either<NotificationHandler, CreateRoleOutput> execute(final CreateRoleCommand aCommand) {
         final var notification = NotificationHandler.create();
 
-
         if (roleGateway.existsByName(aCommand.name())) {
             return Either.left(notification.append(new Error("Role already exists")));
+        }
+
+        if (aCommand.isDefault() && roleGateway.findDefaultRole().isPresent()) {
+            return Either.left(notification.append(new Error("Default role already exists")));
         }
 
         final var aRole = Role.newRole(
                 aCommand.name(),
                 aCommand.description(),
-                getRoleType(aCommand.roleType())
+                getRoleType(aCommand.roleType()),
+                aCommand.isDefault()
         );
         aRole.validate(notification);
 
