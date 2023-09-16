@@ -78,7 +78,7 @@ public class CreateAccountUseCaseTest {
                         Objects.nonNull(aAccount.getCreatedAt()) &&
                         Objects.nonNull(aAccount.getUpdatedAt()) &&
                         Objects.isNull(aAccount.getAvatarUrl()) &&
-                                Objects.equals(aRole.getId(), aAccount.getRoleId())
+                                Objects.equals(aRole.getId(), aAccount.getRole().getId())
                 ));
         Mockito.verify(encrypterGateway, Mockito.times(1))
                 .encrypt(aPassword);

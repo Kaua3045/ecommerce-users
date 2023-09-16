@@ -45,7 +45,7 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                 aCommand.lastName(),
                 aCommand.email(),
                 aCommand.password(),
-                aRoleDefault.getId()
+                aRoleDefault
         );
         aAccount.validate(notification);
 
@@ -71,7 +71,7 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                         aAccount.getMailStatus(),
                         this.encrypterGateway.encrypt(aAccount.getPassword()),
                         aAccount.getAvatarUrl(),
-                        aAccount.getRoleId().getValue(),
+                        aAccount.getRole(),
                         aAccount.getCreatedAt(),
                         aAccount.getUpdatedAt(),
                         aAccount.getDomainEvents())

@@ -22,7 +22,7 @@ public record GetAccountByIdOutput(
                 aAccount.getEmail(),
                 aAccount.getAvatarUrl(),
                 aAccount.getMailStatus().name(),
-                aAccount.getRoleId().getValue(),
+                aAccount.getRole().getId().getValue(),
                 aAccount.getCreatedAt().toString(),
                 aAccount.getUpdatedAt().toString()
         );

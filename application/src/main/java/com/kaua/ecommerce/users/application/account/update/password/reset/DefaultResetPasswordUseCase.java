@@ -56,7 +56,7 @@ public class DefaultResetPasswordUseCase extends ResetPasswordUseCase {
                 aAccount.getMailStatus(),
                 this.encrypterGateway.encrypt(aAccount.getPassword()),
                 aAccount.getAvatarUrl(),
-                aAccount.getRoleId().getValue(),
+                aAccount.getRole(),
                 aAccount.getCreatedAt(),
                 aAccount.getUpdatedAt(),
                 aAccount.getDomainEvents()

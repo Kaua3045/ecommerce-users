@@ -3,7 +3,8 @@ package com.kaua.ecommerce.users.application.account.retrieve.get;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
-import com.kaua.ecommerce.users.domain.roles.RoleID;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,7 +36,7 @@ public class GetAccountByIdUseCaseTest {
                 aLastName,
                 aEmail,
                 aPassword,
-                RoleID.unique()
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
 
         final var aCommand = GetAccountByIdCommand.with(aAccount.getId().getValue());
@@ -54,7 +55,7 @@ public class GetAccountByIdUseCaseTest {
         Assertions.assertEquals(aOutput.email(), aAccount.getEmail());
         Assertions.assertEquals(aOutput.mailStatus(), aAccount.getMailStatus().name());
         Assertions.assertEquals(aOutput.avatarUrl(), aAccount.getAvatarUrl());
-        Assertions.assertEquals(aOutput.roleId(), aAccount.getRoleId().getValue());
+        Assertions.assertEquals(aOutput.roleId(), aAccount.getRole().getId().getValue());
         Assertions.assertEquals(aOutput.createdAt(), aAccount.getCreatedAt().toString());
         Assertions.assertEquals(aOutput.updatedAt(), aAccount.getUpdatedAt().toString());
 

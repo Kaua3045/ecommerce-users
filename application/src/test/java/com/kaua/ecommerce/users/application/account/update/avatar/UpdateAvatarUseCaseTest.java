@@ -4,7 +4,8 @@ import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
-import com.kaua.ecommerce.users.domain.roles.RoleID;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.Resource;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ public class UpdateAvatarUseCaseTest {
                 "testes",
                 "teste@teste.com",
                 "1234567890Ab",
-                RoleID.unique()
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aId = aAccount.getId().getValue();
         final var aResource = Resource.with(
@@ -76,7 +77,7 @@ public class UpdateAvatarUseCaseTest {
                         Objects.equals(aAccount.getMailStatus(), cmd.getMailStatus()) &&
                         Objects.equals(aAccount.getCreatedAt(), cmd.getCreatedAt()) &&
                         Objects.nonNull(cmd.getUpdatedAt()) &&
-                        Objects.equals(aAccount.getRoleId(), cmd.getRoleId())
+                        Objects.equals(aAccount.getRole(), cmd.getRole())
         ));
     }
 
@@ -88,7 +89,7 @@ public class UpdateAvatarUseCaseTest {
                 "testes",
                 "teste@teste.com",
                 "1234567890Ab",
-                RoleID.unique()
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aId = aAccount.getId().getValue();
 
@@ -116,7 +117,7 @@ public class UpdateAvatarUseCaseTest {
                         Objects.equals(aAccount.getMailStatus(), cmd.getMailStatus()) &&
                         Objects.equals(aAccount.getCreatedAt(), cmd.getCreatedAt()) &&
                         Objects.nonNull(cmd.getUpdatedAt()) &&
-                        Objects.equals(aAccount.getRoleId(), cmd.getRoleId())
+                        Objects.equals(aAccount.getRole(), cmd.getRole())
         ));
     }
 
