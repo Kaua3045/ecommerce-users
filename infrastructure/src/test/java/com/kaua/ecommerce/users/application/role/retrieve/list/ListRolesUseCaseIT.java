@@ -27,9 +27,9 @@ public class ListRolesUseCaseIT {
     @BeforeEach
     void mockUp() {
         final var roles = List.of(
-                RoleJpaEntity.toEntity(Role.newRole("User", null, RoleTypes.COMMON)),
-                RoleJpaEntity.toEntity(Role.newRole("Admin", null, RoleTypes.EMPLOYEES)),
-                RoleJpaEntity.toEntity(Role.newRole("ceo", "Chief Executive Officer", RoleTypes.EMPLOYEES))
+                RoleJpaEntity.toEntity(Role.newRole("User", null, RoleTypes.COMMON, true)),
+                RoleJpaEntity.toEntity(Role.newRole("Admin", null, RoleTypes.EMPLOYEES, false)),
+                RoleJpaEntity.toEntity(Role.newRole("ceo", "Chief Executive Officer", RoleTypes.EMPLOYEES, false))
         );
 
         roleRepository.saveAllAndFlush(roles);

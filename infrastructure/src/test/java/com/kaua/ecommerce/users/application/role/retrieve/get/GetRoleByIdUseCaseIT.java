@@ -25,8 +25,9 @@ public class GetRoleByIdUseCaseIT {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole(aName, aDescription, aType);
+        final var aRole = Role.newRole(aName, aDescription, aType, aIsDefault);
         final var aId = aRole.getId().getValue();
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
@@ -37,6 +38,7 @@ public class GetRoleByIdUseCaseIT {
         Assertions.assertEquals(aName, actualRole.name());
         Assertions.assertEquals(aDescription, actualRole.description());
         Assertions.assertEquals(aType.name(), actualRole.roleType());
+        Assertions.assertEquals(aIsDefault, actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt().toString(), actualRole.createdAt());
         Assertions.assertEquals(aRole.getUpdatedAt().toString(), actualRole.updatedAt());
     }

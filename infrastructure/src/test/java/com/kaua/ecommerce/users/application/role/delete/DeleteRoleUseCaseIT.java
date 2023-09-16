@@ -24,7 +24,8 @@ public class DeleteRoleUseCaseIT {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
         final var aId = aRole.getId().getValue();
 

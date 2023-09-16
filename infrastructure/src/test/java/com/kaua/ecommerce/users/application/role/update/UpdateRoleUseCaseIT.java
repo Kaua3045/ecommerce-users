@@ -28,16 +28,17 @@ public class UpdateRoleUseCaseIT {
 
     @Test
     void givenAValidCommandWithDescription_whenCallUpdateRole_shouldReturnRoleId() {
-        final var aRole = Role.newRole("user", null, RoleTypes.COMMON);
+        final var aRole = Role.newRole("user", null, RoleTypes.COMMON, false);
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
 
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = true;
         final var aId = aRole.getId().getValue();
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name());
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -53,22 +54,24 @@ public class UpdateRoleUseCaseIT {
         Assertions.assertEquals(aName, actualRole.getName());
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertTrue(aRole.getUpdatedAt().isBefore(actualRole.getUpdatedAt()));
     }
 
     @Test
     void givenAValidCommandWithNullDescription_whenCallUpdateRole_shouldReturnRoleId() {
-        final var aRole = Role.newRole("user", null, RoleTypes.COMMON);
+        final var aRole = Role.newRole("user", null, RoleTypes.COMMON, false);
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
 
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
         final var aId = aRole.getId().getValue();
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name());
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -84,25 +87,27 @@ public class UpdateRoleUseCaseIT {
         Assertions.assertEquals(aName, actualRole.getName());
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertTrue(aRole.getUpdatedAt().isBefore(actualRole.getUpdatedAt()));
     }
 
     @Test
     void givenAnInvalidName_whenCallUpdateRole_thenShouldReturnDomainException() {
-        final var aRole = Role.newRole("user", null, RoleTypes.COMMON);
+        final var aRole = Role.newRole("user", null, RoleTypes.COMMON, false);
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
 
         final var aName = "";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
         final var aId = aRole.getId().getValue();
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name());
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -119,11 +124,12 @@ public class UpdateRoleUseCaseIT {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
         final var aId = RoleID.from("123").getValue();
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name());
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
 
         final var actualException = Assertions.assertThrows(NotFoundException.class,
                 () -> this.updateRoleUseCase.execute(aCommand));

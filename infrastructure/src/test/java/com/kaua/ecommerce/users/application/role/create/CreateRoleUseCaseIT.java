@@ -27,10 +27,11 @@ public class CreateRoleUseCaseIT {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType.name());
+        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType.name(), aIsDefault);
 
         final var actualResult = this.createRoleUseCase.execute(aCommand).getRight();
 
@@ -44,6 +45,7 @@ public class CreateRoleUseCaseIT {
         Assertions.assertEquals(aName, actualRole.getName());
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualRole.isDefault());
         Assertions.assertNotNull(actualRole.getCreatedAt());
         Assertions.assertNotNull(actualRole.getUpdatedAt());
     }
@@ -53,10 +55,11 @@ public class CreateRoleUseCaseIT {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType.name());
+        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType.name(), aIsDefault);
 
         final var actualResult = this.createRoleUseCase.execute(aCommand).getRight();
 
@@ -70,6 +73,7 @@ public class CreateRoleUseCaseIT {
         Assertions.assertEquals(aName, actualRole.getName());
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualRole.isDefault());
         Assertions.assertNotNull(actualRole.getCreatedAt());
         Assertions.assertNotNull(actualRole.getUpdatedAt());
     }
@@ -79,12 +83,13 @@ public class CreateRoleUseCaseIT {
         final String aName = null;
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType);
+        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType, aIsDefault);
 
         final var notification = this.createRoleUseCase.execute(aCommand).getLeft();
 
