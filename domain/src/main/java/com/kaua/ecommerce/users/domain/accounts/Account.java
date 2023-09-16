@@ -2,7 +2,7 @@ package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.AggregateRoot;
 import com.kaua.ecommerce.users.domain.event.DomainEvent;
-import com.kaua.ecommerce.users.domain.roles.RoleID;
+import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
@@ -18,7 +18,7 @@ public class Account extends AggregateRoot<AccountID> {
     private AccountMailStatus mailStatus;
     private String password;
     private String avatarUrl;
-    private RoleID roleId;
+    private Role role;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -30,7 +30,7 @@ public class Account extends AggregateRoot<AccountID> {
             final AccountMailStatus aMailStatus,
             final String aPassword,
             final String aAvatarUrl,
-            final RoleID aRoleId,
+            final Role aRole,
             final Instant aCreatedAt,
             final Instant aUpdatedAt,
             final List<DomainEvent> aDomainEvents
@@ -42,7 +42,7 @@ public class Account extends AggregateRoot<AccountID> {
         this.mailStatus = aMailStatus;
         this.password = aPassword;
         this.avatarUrl = aAvatarUrl;
-        this.roleId = aRoleId;
+        this.role = aRole;
         this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' must not be null");
         this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' must not be null");
     }
@@ -52,7 +52,7 @@ public class Account extends AggregateRoot<AccountID> {
             final String aLastName,
             final String aEmail,
             final String aPassword,
-            final RoleID aRoleId
+            final Role aRole
     ) {
         final var id = AccountID.unique();
         final var now = InstantUtils.now();
@@ -64,7 +64,7 @@ public class Account extends AggregateRoot<AccountID> {
                 AccountMailStatus.WAITING_CONFIRMATION,
                 aPassword,
                 null,
-                aRoleId,
+                aRole,
                 now,
                 now,
                 null
@@ -91,7 +91,7 @@ public class Account extends AggregateRoot<AccountID> {
             final AccountMailStatus aMailStatus,
             final String aPassword,
             final String aAvatarUrl,
-            final String aRoleId,
+            final Role aRole,
             final Instant aCreatedAt,
             final Instant aUpdatedAt,
             final List<DomainEvent> aDomainEvents
@@ -104,7 +104,7 @@ public class Account extends AggregateRoot<AccountID> {
                 aMailStatus,
                 aPassword,
                 aAvatarUrl,
-                RoleID.from(aRoleId),
+                aRole,
                 aCreatedAt,
                 aUpdatedAt,
                 aDomainEvents
@@ -141,8 +141,8 @@ public class Account extends AggregateRoot<AccountID> {
         return avatarUrl;
     }
 
-    public RoleID getRoleId() {
-        return roleId;
+    public Role getRole() {
+        return role;
     }
 
     public Instant getCreatedAt() {

@@ -26,7 +26,7 @@ public class AccountValidator extends Validator {
         checkLastNameConstraints();
         checkEmailConstraints();
         checkPasswordConstraints();
-        checkRoleIdConstraint();
+        checkRoleConstraint();
     }
 
     private void checkFirstNameConstraints() {
@@ -76,9 +76,9 @@ public class AccountValidator extends Validator {
         }
     }
 
-    private void checkRoleIdConstraint() {
-        if (this.account.getRoleId() == null) {
-            this.validationHandler().append(new Error("'roleId' should not be null"));
+    private void checkRoleConstraint() {
+        if (this.account.getRole() == null) {
+            this.validationHandler().append(new Error("'role' should not be null"));
         }
     }
 }
