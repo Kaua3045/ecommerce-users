@@ -41,6 +41,11 @@ public class RoleMySQLGateway implements RoleGateway {
     }
 
     @Override
+    public Optional<Role> findDefaultRole() {
+        return this.roleRepository.findIsDefaultTrue().map(RoleJpaEntity::toDomain);
+    }
+
+    @Override
     public Pagination<Role> findAll(RoleSearchQuery aQuery) {
         final var aPage = PageRequest.of(
                 aQuery.page(),

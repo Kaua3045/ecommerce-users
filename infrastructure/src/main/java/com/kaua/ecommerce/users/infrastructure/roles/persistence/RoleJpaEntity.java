@@ -113,10 +113,6 @@ public class RoleJpaEntity {
         return isDefault;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
-    }
-
     public Instant getCreatedAt() {
         return createdAt;
     }
