@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.domain.accounts;
 
 import com.kaua.ecommerce.users.domain.TestValidationHandler;
+import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 import org.junit.jupiter.api.Assertions;
@@ -15,13 +16,15 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
 
         // when
         final var aAccount = Account.newAccount(
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aEvent = new AccountCreatedEvent(
@@ -42,6 +45,7 @@ public class AccountTest {
         Assertions.assertEquals(aPassword, aAccount.getPassword());
         Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccount.getMailStatus());
         Assertions.assertNull(aAccount.getAvatarUrl());
+        Assertions.assertEquals(aRoleId, aAccount.getRoleId());
         Assertions.assertNotNull(aAccount.getCreatedAt());
         Assertions.assertNotNull(aAccount.getUpdatedAt());
 
@@ -63,6 +67,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'firstName' should not be null or blank";
 
         // when
@@ -70,7 +75,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -89,6 +95,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'firstName' should not be null or blank";
 
         // when
@@ -96,7 +103,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -115,6 +123,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'firstName' must be between 3 and 255 characters";
 
         // when
@@ -122,7 +131,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -141,6 +151,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'firstName' must be between 3 and 255 characters";
 
         // when
@@ -148,7 +159,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -167,6 +179,7 @@ public class AccountTest {
         final var aLastName = "";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'lastName' should not be null or blank";
 
         // when
@@ -174,7 +187,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -193,6 +207,7 @@ public class AccountTest {
         final String aLastName = null;
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'lastName' should not be null or blank";
 
         // when
@@ -200,7 +215,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -219,6 +235,7 @@ public class AccountTest {
         final var aLastName = "Pe ";
         final var aEmail = "teste@teste.com";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'lastName' must be between 3 and 255 characters";
 
         // when
@@ -226,7 +243,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -245,6 +263,7 @@ public class AccountTest {
         final var aLastName = RandomStringUtils.generateValue(256);
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'lastName' must be between 3 and 255 characters";
 
         // when
@@ -252,7 +271,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -271,6 +291,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "";
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'email' should not be null or blank";
 
         // when
@@ -278,7 +299,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -297,6 +319,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final String aEmail = null;
         final var aPassword = "123456Ab";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'email' should not be null or blank";
 
         // when
@@ -304,7 +327,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -323,6 +347,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final String aPassword = null;
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' should not be null or blank";
 
         // when
@@ -330,7 +355,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -349,6 +375,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' should not be null or blank";
 
         // when
@@ -356,7 +383,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -375,6 +403,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "1234";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -382,7 +411,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -401,6 +431,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = RandomStringUtils.generateValue(256);
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -408,7 +439,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -427,6 +459,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
 
         // when
@@ -434,7 +467,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -453,13 +487,15 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
+        final var aRoleId = RoleID.unique();
 
         // when
         final var aAccount = Account.newAccount(
                 aFirstName,
                 aLastName,
                 aEmail,
-                "87654321Ab*"
+                "87654321Ab*",
+                aRoleId
         );
 
         final var aAccountUpdatedAt = aAccount.getUpdatedAt();
@@ -475,6 +511,7 @@ public class AccountTest {
         Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccountUpdated.getMailStatus());
         Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
         Assertions.assertNull(aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aRoleId, aAccountUpdated.getRoleId());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
         Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
     }
@@ -487,13 +524,15 @@ public class AccountTest {
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
         final var aAvatarUrl = "http://localhost:8080/files/avatar.png";
+        final var aRoleId = RoleID.unique();
 
         // when
         final var aAccount = Account.newAccount(
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aAccountUpdatedAt = aAccount.getUpdatedAt();
@@ -509,6 +548,7 @@ public class AccountTest {
         Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccountUpdated.getMailStatus());
         Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
         Assertions.assertEquals(aAvatarUrl, aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aRoleId, aAccountUpdated.getRoleId());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
         Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
     }
@@ -520,6 +560,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final String aPassword = null;
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' should not be null or blank";
 
         // when
@@ -527,7 +568,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                "87654321Ab*"
+                "87654321Ab*",
+                aRoleId
         );
 
         final var aAccountUpdated = aAccount.changePassword(aPassword);
@@ -548,6 +590,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -555,7 +598,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                "87654321Ab*"
+                "87654321Ab*",
+                aRoleId
         );
 
         final var aAccountUpdated = aAccount.changePassword(aPassword);
@@ -576,6 +620,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = RandomStringUtils.generateValue(256);
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' must be between 8 and 255 characters";
 
         // when
@@ -583,7 +628,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                "87654321Ab*"
+                "87654321Ab*",
+                aRoleId
         );
 
         final var aAccountUpdated = aAccount.changePassword(aPassword);
@@ -604,6 +650,7 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678";
+        final var aRoleId = RoleID.unique();
         final var expectedErrorMessage = "'password' should contain at least one uppercase letter, one lowercase letter and one number";
 
         // when
@@ -611,7 +658,8 @@ public class AccountTest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                "87654321Ab*"
+                "87654321Ab*",
+                aRoleId
         );
 
         final var aAccountUpdated = aAccount.changePassword(aPassword);
@@ -632,13 +680,15 @@ public class AccountTest {
         final var aLastName = "Teste";
         final var aEmail = "test@teste.com";
         final var aPassword = "1234567Ab";
+        final var aRoleId = RoleID.unique();
 
         // when
         final var aAccount = Account.newAccount(
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aEvent = new AccountCreatedEvent(
@@ -659,6 +709,7 @@ public class AccountTest {
                 aAccount.getMailStatus(),
                 aAccount.getPassword(),
                 aAccount.getAvatarUrl(),
+                aAccount.getRoleId().getValue(),
                 aAccount.getCreatedAt(),
                 aAccount.getUpdatedAt(),
                 aAccount.getDomainEvents()
@@ -672,6 +723,7 @@ public class AccountTest {
         Assertions.assertEquals(aAccount.getMailStatus(), aAccountCloned.getMailStatus());
         Assertions.assertEquals(aAccount.getPassword(), aAccountCloned.getPassword());
         Assertions.assertEquals(aAccount.getAvatarUrl(), aAccountCloned.getAvatarUrl());
+        Assertions.assertEquals(aAccount.getRoleId(), aAccountCloned.getRoleId());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountCloned.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), aAccountCloned.getUpdatedAt());
 
@@ -686,13 +738,15 @@ public class AccountTest {
         final var aLastName = "Pereira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "12345678Ab";
+        final var aRoleId = RoleID.unique();
 
         // when
         final var aAccount = Account.newAccount(
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRoleId
         );
 
         final var aAccountUpdatedAt = aAccount.getUpdatedAt();
@@ -707,6 +761,7 @@ public class AccountTest {
         Assertions.assertEquals(AccountMailStatus.CONFIRMED, aAccountUpdated.getMailStatus());
         Assertions.assertEquals(aPassword, aAccountUpdated.getPassword());
         Assertions.assertNull(aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aRoleId, aAccountUpdated.getRoleId());
         Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
         Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
     }
@@ -722,5 +777,32 @@ public class AccountTest {
         // then
         Assertions.assertEquals(aId.getValue(), aAccountDeletedEvent.id());
         Assertions.assertNotNull(aAccountDeletedEvent.occurredOn());
+    }
+
+    @Test
+    void givenAnInvalidRoleId_whenCallsNewAccount_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+        final var expectedErrorMessage = "'roleId' should not be null";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword,
+                null
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
 }
