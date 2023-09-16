@@ -29,7 +29,8 @@ public class GetRoleByIdUseCaseTest {
         final var aName = "Ceo";
         final var aDescription = "Chief executive officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aCommand = GetRoleByIdCommand.with(aRole.getId().getValue());
 
@@ -45,6 +46,7 @@ public class GetRoleByIdUseCaseTest {
         Assertions.assertEquals(aOutput.name(), aRole.getName());
         Assertions.assertEquals(aOutput.description(), aRole.getDescription());
         Assertions.assertEquals(aOutput.roleType(), aRole.getRoleType().name());
+        Assertions.assertEquals(aOutput.isDefault(), aRole.isDefault());
         Assertions.assertEquals(aOutput.createdAt(), aRole.getCreatedAt().toString());
         Assertions.assertEquals(aOutput.updatedAt(), aRole.getUpdatedAt().toString());
 

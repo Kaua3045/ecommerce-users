@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.application.role.create;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.IdUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -32,8 +35,9 @@ public class CreateRoleUseCaseTest {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = "employees";
+        final var aIsDefault = false;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
@@ -52,7 +56,8 @@ public class CreateRoleUseCaseTest {
                 Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
                 Objects.nonNull(cmd.getId()) &&
                 Objects.nonNull(cmd.getCreatedAt()) &&
-                Objects.nonNull(cmd.getUpdatedAt())
+                Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault())
         ));
     }
 
@@ -62,8 +67,9 @@ public class CreateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
+        final var aIsDefault = false;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
@@ -82,7 +88,8 @@ public class CreateRoleUseCaseTest {
                         Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
                         Objects.nonNull(cmd.getId()) &&
                         Objects.nonNull(cmd.getCreatedAt()) &&
-                        Objects.nonNull(cmd.getUpdatedAt())
+                        Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault())
         ));
     }
 
@@ -92,10 +99,11 @@ public class CreateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(36);
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "Role already exists";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(true);
@@ -111,15 +119,44 @@ public class CreateRoleUseCaseTest {
     }
 
     @Test
+    void givenAnIsDefaultTrueButExistingOtherDefaultRole_whenCallCreateRole_shouldReturnDomainException() {
+        // given
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(36);
+        final var aRoleType = "employees";
+        final var aIsDefault = true;
+        final var aDefaultRole = Role.newRole("User", null, RoleTypes.COMMON, true);
+        final var expectedErrorMessage = "Default role already exists";
+        final var expectedErrorCount = 1;
+
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
+
+        // when
+        Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
+        Mockito.when(roleGateway.findDefaultRole()).thenReturn(Optional.of(aDefaultRole));
+
+        final var aResult = useCase.execute(aCommnad).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
+
+        Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
+        Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
+    }
+
+    @Test
     void givenAnInvalidNameNull_whenCallCreateRole_shouldReturnDomainException() {
         // given
         final String aName = null;
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         final var aResult = useCase.execute(aCommnad).getLeft();
@@ -138,10 +175,11 @@ public class CreateRoleUseCaseTest {
         final var aName = "";
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         final var aResult = useCase.execute(aCommnad).getLeft();
@@ -160,10 +198,11 @@ public class CreateRoleUseCaseTest {
         final var aName = "ce ";
         final String aDescription = null;
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
@@ -183,10 +222,11 @@ public class CreateRoleUseCaseTest {
         final var aName = RandomStringUtils.generateValue(52);
         final String aDescription = null;
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
@@ -206,10 +246,11 @@ public class CreateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
+        final var aIsDefault = false;
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
@@ -229,10 +270,11 @@ public class CreateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
+        final var aIsDefault = false;
         final var expectedErrorMessage = "RoleType not found, role types available: [COMMON, EMPLOYEES]";
         final var expectedErrorCount = 1;
 
-        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType);
+        final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);

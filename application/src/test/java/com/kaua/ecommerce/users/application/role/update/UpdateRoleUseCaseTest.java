@@ -36,13 +36,15 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var aCommnad = UpdateRoleCommand.with(
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -62,7 +64,8 @@ public class UpdateRoleUseCaseTest {
                 Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
                 Objects.nonNull(cmd.getId()) &&
                 Objects.nonNull(cmd.getCreatedAt()) &&
-                Objects.nonNull(cmd.getUpdatedAt())
+                Objects.nonNull(cmd.getUpdatedAt()) &&
+                Objects.equals(aIsDefault, cmd.isDefault())
         ));
     }
 
@@ -72,13 +75,15 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var aCommnad = UpdateRoleCommand.with(
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -98,7 +103,8 @@ public class UpdateRoleUseCaseTest {
                         Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
                         Objects.nonNull(cmd.getId()) &&
                         Objects.nonNull(cmd.getCreatedAt()) &&
-                        Objects.nonNull(cmd.getUpdatedAt())
+                        Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault())
         ));
     }
 
@@ -109,10 +115,11 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(36);
         final var aRoleType = "employees";
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        final var aCommnad = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType);
+        final var aCommnad = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType, aIsDefault);
 
         // when
         Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.empty());
@@ -128,12 +135,40 @@ public class UpdateRoleUseCaseTest {
     }
 
     @Test
+    void givenAnIsDefaultTrueButExistingDefaultRole_whenCallUpdateRole_shouldReturnDomainException() {
+        // given
+        final var aId = "123";
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(36);
+        final var aRoleType = "employees";
+        final var aIsDefault = true;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+
+        final var expectedErrorMessage = "Default role already exists";
+
+        final var aCommnad = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType, aIsDefault);
+
+        // when
+        Mockito.when(roleGateway.findDefaultRole()).thenReturn(Optional.of(aRole));
+
+        final var aResult = useCase.execute(aCommnad).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
+
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
+        Mockito.verify(roleGateway, Mockito.times(0)).findById(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(0)).update(Mockito.any());
+    }
+
+    @Test
     void givenAnInvalidNameNull_whenCallUpdateRole_shouldReturnDomainException() {
         // given
         final String aName = null;
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
@@ -142,7 +177,8 @@ public class UpdateRoleUseCaseTest {
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -164,7 +200,8 @@ public class UpdateRoleUseCaseTest {
         final var aName = "";
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
@@ -173,7 +210,8 @@ public class UpdateRoleUseCaseTest {
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -195,7 +233,8 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ce ";
         final String aDescription = null;
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
@@ -204,7 +243,8 @@ public class UpdateRoleUseCaseTest {
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -226,7 +266,8 @@ public class UpdateRoleUseCaseTest {
         final var aName = RandomStringUtils.generateValue(52);
         final String aDescription = null;
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
@@ -235,7 +276,8 @@ public class UpdateRoleUseCaseTest {
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -257,7 +299,8 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
@@ -266,7 +309,8 @@ public class UpdateRoleUseCaseTest {
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
@@ -288,7 +332,8 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+        final var aIsDefault = false;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, aIsDefault);
 
         final var expectedErrorMessage = "RoleType not found, role types available: [COMMON, EMPLOYEES]";
         final var expectedErrorCount = 1;
@@ -297,7 +342,8 @@ public class UpdateRoleUseCaseTest {
                 aRole.getId().getValue(),
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // when
