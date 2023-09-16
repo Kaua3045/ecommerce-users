@@ -11,6 +11,7 @@ public class Role extends AggregateRoot<RoleID> {
     private String name;
     private String description;
     private RoleTypes roleType;
+    private boolean isDefault;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -19,6 +20,7 @@ public class Role extends AggregateRoot<RoleID> {
             final String aName,
             final String aDescription,
             final RoleTypes aRoleType,
+            final boolean isDefault,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
     ) {
@@ -26,6 +28,7 @@ public class Role extends AggregateRoot<RoleID> {
         this.name = aName;
         this.description = aDescription;
         this.roleType = aRoleType;
+        this.isDefault = isDefault;
         this.createdAt = aCreatedAt;
         this.updatedAt = aUpdatedAt;
     }
@@ -38,7 +41,8 @@ public class Role extends AggregateRoot<RoleID> {
     public static Role newRole(
             final String aName,
             final String aDescription,
-            final RoleTypes aRoleType
+            final RoleTypes aRoleType,
+            final boolean isDefault
     ) {
         final var aId = RoleID.unique();
         final var aNow = InstantUtils.now();
@@ -47,6 +51,7 @@ public class Role extends AggregateRoot<RoleID> {
                 aName,
                 aDescription,
                 aRoleType,
+                isDefault,
                 aNow,
                 aNow
         );
@@ -57,6 +62,7 @@ public class Role extends AggregateRoot<RoleID> {
             final String aName,
             final String aDescription,
             final RoleTypes aRoleType,
+            final boolean isDefault,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
     ) {
@@ -65,6 +71,7 @@ public class Role extends AggregateRoot<RoleID> {
                 aName,
                 aDescription,
                 aRoleType,
+                isDefault,
                 aCreatedAt,
                 aUpdatedAt
         );
@@ -73,11 +80,13 @@ public class Role extends AggregateRoot<RoleID> {
     public Role update(
             final String aName,
             final String aDescription,
-            final RoleTypes aRoleType
+            final RoleTypes aRoleType,
+            final boolean isDefault
     ) {
         this.name = aName;
         this.description = aDescription;
         this.roleType = aRoleType;
+        this.isDefault = isDefault;
         this.updatedAt = InstantUtils.now();
         return this;
     }
@@ -92,6 +101,10 @@ public class Role extends AggregateRoot<RoleID> {
 
     public RoleTypes getRoleType() {
         return roleType;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public Instant getCreatedAt() {
