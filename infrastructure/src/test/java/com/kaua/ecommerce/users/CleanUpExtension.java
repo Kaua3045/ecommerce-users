@@ -18,9 +18,9 @@ public class CleanUpExtension implements BeforeEachCallback {
         final var appContext = SpringExtension.getApplicationContext(context);
 
         cleanUp(List.of(
-                appContext.getBean(RoleJpaRepository.class),
                 appContext.getBean(AccountMailJpaRepository.class),
-                appContext.getBean(AccountJpaRepository.class)
+                appContext.getBean(AccountJpaRepository.class),
+                appContext.getBean(RoleJpaRepository.class)
         ));
     }
 

@@ -10,6 +10,8 @@ import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.AccountCreatedGenerateMailCodeEvent;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import com.kaua.ecommerce.users.infrastructure.configurations.properties.amqp.QueueProperties;
@@ -50,7 +52,8 @@ public class AccountCreatedListenerTest {
                 "teste",
                 "testes",
                 "teste@testes.com",
-                "123456789Ab"
+                "123456789Ab",
+                Role.newRole("ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aAccountCreatedEvent = new AccountCreatedEvent(
                 aAccount.getId().getValue(),

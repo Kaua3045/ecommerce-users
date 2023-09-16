@@ -101,7 +101,8 @@ public class AccountMailAPITest {
                 "teste",
                 "testes",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                null
         );
         final var aId = "123";
 
@@ -135,7 +136,8 @@ public class AccountMailAPITest {
                 "teste",
                 "testes",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                null
         );
 
         Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
@@ -182,7 +184,8 @@ public class AccountMailAPITest {
                 "teste",
                 "testes",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                null
         );
         final var expectedErrorMessage = "'expiresAt' should not be before now";
 

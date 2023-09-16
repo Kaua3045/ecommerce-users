@@ -1,11 +1,12 @@
 package com.kaua.ecommerce.users.infrastructure.account.mail;
 
 import com.kaua.ecommerce.users.IntegrationTest;
-import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailID;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.AccountMailMySQLGateway;
@@ -47,7 +48,8 @@ public class AccountMailMySQLGatewayTest {
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aExpiresAt = InstantUtils.now().plus(1, ChronoUnit.HOURS);
 
@@ -93,7 +95,8 @@ public class AccountMailMySQLGatewayTest {
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
 
         accountJpaRepository.save(AccountJpaEntity.toEntity(aAccount));
@@ -127,7 +130,8 @@ public class AccountMailMySQLGatewayTest {
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
 
         final var aAccountMail = AccountMailJpaEntity.toEntity(AccountMail.newAccountMail(
@@ -164,7 +168,8 @@ public class AccountMailMySQLGatewayTest {
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aToken = RandomStringUtils.generateValue(36);
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
