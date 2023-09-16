@@ -3,6 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.role;
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleID;
+import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
@@ -10,6 +11,8 @@ import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaReposito
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @IntegrationTest
 public class RoleMySQLGatewayTest {
@@ -199,5 +202,152 @@ public class RoleMySQLGatewayTest {
         Assertions.assertDoesNotThrow(() -> roleGateway.deleteById(aId));
 
         Assertions.assertEquals(0, roleRepository.count());
+    }
+
+    @Test
+    void givenPrePersistedRoles_whenCallFindAll_shouldReturnPaginated() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 3;
+        final var aTotalPages = 3;
+
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON);
+        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES);
+        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES);
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        roleRepository.saveAllAndFlush(List.of(
+                RoleJpaEntity.toEntity(aRoleUser),
+                RoleJpaEntity.toEntity(aRoleAdmin),
+                RoleJpaEntity.toEntity(aRoleCeo)
+        ));
+
+        Assertions.assertEquals(3, roleRepository.count());
+
+        final var aQuery = new RoleSearchQuery(0, 1, "", "name", "asc");
+        final var aResult = roleGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aRoleAdmin.getId(), aResult.items().get(0).getId());
+    }
+
+    @Test
+    void givenEmptyRolesTable_whenCallFindAll_shouldReturnEmptyPage() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 0;
+        final var aTotalPages = 0;
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        final var aQuery = new RoleSearchQuery(0, 1, "", "name", "asc");
+        final var aResult = roleGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(0, aResult.items().size());
+    }
+
+    @Test
+    void givenFollowPagination_whenCallFindAllWithPageOne_shouldReturnPaginated() {
+        var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 3;
+        final var aTotalPages = 3;
+
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON);
+        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES);
+        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES);
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        roleRepository.saveAllAndFlush(List.of(
+                RoleJpaEntity.toEntity(aRoleUser),
+                RoleJpaEntity.toEntity(aRoleAdmin),
+                RoleJpaEntity.toEntity(aRoleCeo)
+        ));
+
+        Assertions.assertEquals(3, roleRepository.count());
+
+        // Page 0
+        var aQuery = new RoleSearchQuery(0, 1, "", "name", "asc");
+        var aResult = roleGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aRoleAdmin.getId(), aResult.items().get(0).getId());
+
+        // Page 1
+        aPage = 1;
+
+        aQuery = new RoleSearchQuery(1, 1, "", "name", "asc");
+        aResult = roleGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aRoleCeo.getId(), aResult.items().get(0).getId());
+
+        // Page 2
+        aPage = 2;
+
+        aQuery = new RoleSearchQuery(2, 1, "", "name", "asc");
+        aResult = roleGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aRoleUser.getId(), aResult.items().get(0).getId());
+    }
+
+    @Test
+    void givenPrePersistedRolesAndCeAsTerm_whenCallFindAll_shouldReturnPaginated() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 1;
+        final var aTotalPages = 1;
+
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON);
+        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES);
+        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES);
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        roleRepository.saveAllAndFlush(List.of(
+                RoleJpaEntity.toEntity(aRoleUser),
+                RoleJpaEntity.toEntity(aRoleAdmin),
+                RoleJpaEntity.toEntity(aRoleCeo)
+        ));
+
+        Assertions.assertEquals(3, roleRepository.count());
+
+        final var aQuery = new RoleSearchQuery(0, 1, "ce", "name", "asc");
+        final var aResult = roleGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aRoleCeo.getId(), aResult.items().get(0).getId());
     }
 }

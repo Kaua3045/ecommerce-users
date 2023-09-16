@@ -10,11 +10,15 @@ import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdOutput;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
+import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesOutput;
+import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesUseCase;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleOutput;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -33,6 +37,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -59,6 +64,9 @@ public class RoleAPITest {
 
     @MockBean
     private GetRoleByIdUseCase getRoleByIdUseCase;
+
+    @MockBean
+    private ListRolesUseCase listRolesUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
@@ -774,5 +782,60 @@ public class RoleAPITest {
 
         Mockito.verify(getRoleByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAValidParams_whenCallListRoles_shouldReturnRoles() throws Exception {
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON);
+
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTerms = "user";
+        final var aSort = "name";
+        final var aDirection = "asc";
+        final var aTotalItems = 1;
+        final var aTotalPage = 1;
+        final var aItems = List.of(ListRolesOutput.from(aRole));
+
+        Mockito.when(listRolesUseCase.execute(Mockito.any(RoleSearchQuery.class)))
+                .thenReturn(new Pagination<>(
+                        aPage,
+                        aPerPage,
+                        aTotalPage,
+                        aTotalItems,
+                        aItems
+                ));
+
+        final var request = MockMvcRequestBuilders.get("/roles")
+                .queryParam("page", String.valueOf(aPage))
+                .queryParam("perPage", String.valueOf(aPerPage))
+                .queryParam("sort", aSort)
+                .queryParam("dir", aDirection)
+                .queryParam("search", aTerms)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.currentPage", equalTo(aPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.perPage", equalTo(aPerPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages", equalTo(aTotalPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalItems", equalTo(aTotalItems)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items", hasSize(aItems.size())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].id", equalTo(aRole.getId().getValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name", equalTo(aRole.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].description", equalTo(aRole.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].role_type", equalTo(aRole.getRoleType().name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].created_at", equalTo(aRole.getCreatedAt().toString())));
+
+        Mockito.verify(listRolesUseCase, Mockito.times(1)).execute(argThat(query ->
+                Objects.equals(aPage, query.page()) &&
+                        Objects.equals(aPerPage, query.perPage()) &&
+                        Objects.equals(aSort, query.sort()) &&
+                        Objects.equals(aDirection, query.direction()) &&
+                        Objects.equals(aTerms, query.terms())
+        ));
     }
 }

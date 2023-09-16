@@ -7,6 +7,8 @@ import com.kaua.ecommerce.users.application.role.delete.DefaultDeleteRoleUseCase
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.DefaultGetRoleByIdUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
+import com.kaua.ecommerce.users.application.role.retrieve.list.DefaultListRolesUseCase;
+import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesUseCase;
 import com.kaua.ecommerce.users.application.role.update.DefaultUpdateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import org.springframework.context.annotation.Bean;
@@ -36,6 +38,11 @@ public class RoleUseCaseConfg {
     @Bean
     public GetRoleByIdUseCase getRoleByIdUseCase() {
         return new DefaultGetRoleByIdUseCase(roleGateway);
+    }
+
+    @Bean
+    public ListRolesUseCase listRolesUseCase() {
+        return new DefaultListRolesUseCase(roleGateway);
     }
 
     @Bean

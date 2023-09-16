@@ -2,7 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.roles.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record GetRoleOutput(
+public record GetRoleResponse(
         @JsonProperty("id") String id,
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
