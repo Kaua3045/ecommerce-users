@@ -15,6 +15,7 @@ public final class RoleApiPresenter {
                 aOutput.name(),
                 aOutput.description(),
                 aOutput.roleType(),
+                aOutput.isDefault(),
                 aOutput.createdAt(),
                 aOutput.updatedAt()
         );
@@ -26,6 +27,7 @@ public final class RoleApiPresenter {
                 aOutput.name(),
                 aOutput.description(),
                 aOutput.type().name(),
+                aOutput.isDefault(),
                 aOutput.createdAt().toString()
         );
     }
