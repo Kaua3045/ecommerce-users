@@ -27,7 +27,8 @@ public class RoleRepositoryTest {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
 
         final var aEntity = RoleJpaEntity.toEntity(aRole);
@@ -51,7 +52,8 @@ public class RoleRepositoryTest {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
 
         final var aEntity = RoleJpaEntity.toEntity(aRole);
@@ -75,7 +77,8 @@ public class RoleRepositoryTest {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
 
         final var aEntity = RoleJpaEntity.toEntity(aRole);
@@ -99,7 +102,8 @@ public class RoleRepositoryTest {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
 
         final var aEntity = RoleJpaEntity.toEntity(aRole);
@@ -120,7 +124,8 @@ public class RoleRepositoryTest {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
 
         final var aEntity = RoleJpaEntity.toEntity(aRole);
@@ -138,7 +143,8 @@ public class RoleRepositoryTest {
         final var aRole = Role.newRole(
                 "ceo",
                 "Chief Executive Officer",
-                RoleTypes.EMPLOYEES
+                RoleTypes.EMPLOYEES,
+                false
         );
 
         final var aEntity = RoleJpaEntity.toEntity(aRole);

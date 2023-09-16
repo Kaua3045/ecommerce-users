@@ -28,8 +28,9 @@ public class RoleMySQLGatewayTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -41,6 +42,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aRole.getName(), actualRole.getName());
         Assertions.assertEquals(aRole.getDescription(), actualRole.getDescription());
         Assertions.assertEquals(aRole.getRoleType(), actualRole.getRoleType());
+        Assertions.assertEquals(aRole.isDefault(), actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), actualRole.getUpdatedAt());
 
@@ -50,6 +52,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aName, actualEntity.getName());
         Assertions.assertEquals(aDescription, actualEntity.getDescription());
         Assertions.assertEquals(aRoleType, actualEntity.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualEntity.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), actualEntity.getUpdatedAt());
     }
@@ -59,8 +62,9 @@ public class RoleMySQLGatewayTest {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -72,6 +76,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aRole.getName(), actualRole.getName());
         Assertions.assertEquals(aRole.getDescription(), actualRole.getDescription());
         Assertions.assertEquals(aRole.getRoleType(), actualRole.getRoleType());
+        Assertions.assertEquals(aRole.isDefault(), actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), actualRole.getUpdatedAt());
 
@@ -81,6 +86,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aName, actualEntity.getName());
         Assertions.assertEquals(aDescription, actualEntity.getDescription());
         Assertions.assertEquals(aRoleType, actualEntity.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualEntity.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), actualEntity.getUpdatedAt());
     }
@@ -99,8 +105,9 @@ public class RoleMySQLGatewayTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         Assertions.assertEquals(0, roleRepository.count());
         roleRepository.save(RoleJpaEntity.toEntity(aRole));
@@ -114,8 +121,9 @@ public class RoleMySQLGatewayTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        Role aRole = Role.newRole("User", "Common user", RoleTypes.COMMON);
+        Role aRole = Role.newRole("User", "Common user", RoleTypes.COMMON, true);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -125,7 +133,7 @@ public class RoleMySQLGatewayTest {
 
         final var aRoleUpdatedDate = aRole.getUpdatedAt();
 
-        final var aRoleUpdated = aRole.update(aName, aDescription, aRoleType);
+        final var aRoleUpdated = aRole.update(aName, aDescription, aRoleType, aIsDefault);
 
         final var actualRole = this.roleGateway.update(aRoleUpdated);
 
@@ -133,6 +141,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aName, actualRole.getName());
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertTrue(actualRole.getUpdatedAt().isAfter(aRoleUpdatedDate));
 
@@ -142,6 +151,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aName, actualEntity.getName());
         Assertions.assertEquals(aDescription, actualEntity.getDescription());
         Assertions.assertEquals(aRoleType, actualEntity.getRoleType());
+        Assertions.assertEquals(aIsDefault, actualEntity.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertTrue(actualEntity.getUpdatedAt().isAfter(aRoleUpdatedDate));
     }
@@ -151,8 +161,9 @@ public class RoleMySQLGatewayTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        Role aRole = Role.newRole(aName, aDescription, aRoleType);
+        Role aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -166,6 +177,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aRole.getName(), actualRole.getName());
         Assertions.assertEquals(aRole.getDescription(), actualRole.getDescription());
         Assertions.assertEquals(aRole.getRoleType(), actualRole.getRoleType());
+        Assertions.assertEquals(aRole.isDefault(), actualRole.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), actualRole.getUpdatedAt());
     }
@@ -181,7 +193,7 @@ public class RoleMySQLGatewayTest {
 
     @Test
     void givenAPrePersistedRole_whenCallDeleteById_shouldBeOk() {
-        final var aRole = Role.newRole("User", "Common user", RoleTypes.COMMON);
+        final var aRole = Role.newRole("User", "Common user", RoleTypes.COMMON, true);
         final var aId = aRole.getId().getValue();
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
@@ -211,9 +223,9 @@ public class RoleMySQLGatewayTest {
         final var aTotalItems = 3;
         final var aTotalPages = 3;
 
-        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON);
-        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES);
-        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES);
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON, true);
+        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES, false);
+        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES, false);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -263,9 +275,9 @@ public class RoleMySQLGatewayTest {
         final var aTotalItems = 3;
         final var aTotalPages = 3;
 
-        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON);
-        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES);
-        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES);
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON, true);
+        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES, false);
+        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES, false);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -325,9 +337,9 @@ public class RoleMySQLGatewayTest {
         final var aTotalItems = 1;
         final var aTotalPages = 1;
 
-        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON);
-        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES);
-        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES);
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON, true);
+        final var aRoleAdmin = Role.newRole("Admin", "Admin user", RoleTypes.EMPLOYEES, false);
+        final var aRoleCeo = Role.newRole("CEO", "Chief Executive Officer", RoleTypes.EMPLOYEES, false);
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -349,5 +361,31 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(aPerPage, aResult.items().size());
 
         Assertions.assertEquals(aRoleCeo.getId(), aResult.items().get(0).getId());
+    }
+
+    @Test
+    void givenAPrePersistedRoleAndValidRoleId_whenCallFindDefaultRoleTrue_shouldReturnRole() {
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = true;
+
+        Role aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
+
+        Assertions.assertEquals(0, roleRepository.count());
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
+
+        Assertions.assertEquals(1, roleRepository.count());
+
+        final var actualRole = roleGateway.findDefaultRole().get();
+
+        Assertions.assertEquals(aRole.getId(), actualRole.getId());
+        Assertions.assertEquals(aRole.getName(), actualRole.getName());
+        Assertions.assertEquals(aRole.getDescription(), actualRole.getDescription());
+        Assertions.assertEquals(aRole.getRoleType(), actualRole.getRoleType());
+        Assertions.assertEquals(aRole.isDefault(), actualRole.isDefault());
+        Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
+        Assertions.assertEquals(aRole.getUpdatedAt(), actualRole.getUpdatedAt());
     }
 }
