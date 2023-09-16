@@ -22,16 +22,21 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
 
     @Override
     public Either<NotificationHandler, UpdateRoleOutput> execute(final UpdateRoleCommand aCommand) {
+        final var aNotification = NotificationHandler.create();
+
+        if (aCommand.isDefault() && this.roleGateway.findDefaultRole().isPresent()) {
+            return Either.left(aNotification.append(new Error("Default role already exists")));
+        }
+
         final var aRole = this.roleGateway.findById(aCommand.id())
                 .orElseThrow(() -> NotFoundException.with(Role.class, aCommand.id()));
 
         final var aRoleUpdated = aRole.update(
                 aCommand.name(),
                 aCommand.description(),
-                getRoleType(aCommand.roleType())
+                getRoleType(aCommand.roleType()),
+                aCommand.isDefault()
         );
-        final var aNotification = NotificationHandler.create();
-
         aRoleUpdated.validate(aNotification);
 
 
