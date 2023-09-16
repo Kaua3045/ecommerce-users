@@ -75,8 +75,8 @@ public class UpdateRoleUseCaseTest {
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
-        final var aIsDefault = false;
-        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+        final var aIsDefault = true;
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, false);
 
         final var aCommnad = UpdateRoleCommand.with(
                 aRole.getId().getValue(),
@@ -87,6 +87,7 @@ public class UpdateRoleUseCaseTest {
         );
 
         // when
+        Mockito.when(roleGateway.findDefaultRole()).thenReturn(Optional.empty());
         Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
         Mockito.when(roleGateway.update(Mockito.any())).thenAnswer(returnsFirstArg());
 
