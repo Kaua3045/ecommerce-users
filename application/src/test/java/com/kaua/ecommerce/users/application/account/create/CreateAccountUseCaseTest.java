@@ -5,6 +5,7 @@ import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
@@ -495,5 +496,36 @@ public class CreateAccountUseCaseTest {
         final var aOutput = CreateAccountOutput.from(aAccountId.getValue(), null, null);
 
         Assertions.assertEquals(aAccountId.getValue(), aOutput.id());
+    }
+
+    @Test
+    void givenAValidValuesButNotExistsDefaultRole_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "teste";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "Role with id default was not found";
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.empty());
+
+        final var aNotification = Assertions.assertThrows(NotFoundException.class,
+                () -> useCase.execute(aCommand));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getMessage());
+
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1))
+                .findDefaultRole();
+        Mockito.verify(accountGateway, Mockito.never())
+                .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 }
