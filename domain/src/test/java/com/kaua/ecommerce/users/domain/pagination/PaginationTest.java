@@ -15,7 +15,7 @@ public class PaginationTest {
         final var perPage = 10;
         final var totalPages = 1;
         final var totalItems = 1;
-        final var items = List.of(Role.newRole("admin", null, RoleTypes.EMPLOYEES));
+        final var items = List.of(Role.newRole("admin", null, RoleTypes.EMPLOYEES, false));
 
         final var pagination = new Pagination<>(page, perPage, totalPages, totalItems, items);
         final var aResultWithMap = pagination.map(Role::getName);

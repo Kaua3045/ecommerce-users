@@ -13,13 +13,15 @@ public class RoleTest {
         final var aName = "ceo";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         Assertions.assertNotNull(aRole.getId());
         Assertions.assertEquals(aName, aRole.getName());
         Assertions.assertEquals(aDescription, aRole.getDescription());
         Assertions.assertEquals(aRoleType, aRole.getRoleType());
+        Assertions.assertFalse(aRole.isDefault());
         Assertions.assertNotNull(aRole.getCreatedAt());
         Assertions.assertNotNull(aRole.getUpdatedAt());
 
@@ -38,13 +40,15 @@ public class RoleTest {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = true;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         Assertions.assertNotNull(aRole.getId());
         Assertions.assertEquals(aName, aRole.getName());
         Assertions.assertEquals(aDescription, aRole.getDescription());
         Assertions.assertEquals(aRoleType, aRole.getRoleType());
+        Assertions.assertTrue(aRole.isDefault());
         Assertions.assertNotNull(aRole.getCreatedAt());
         Assertions.assertNotNull(aRole.getUpdatedAt());
 
@@ -61,11 +65,12 @@ public class RoleTest {
         final String aName = null;
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
@@ -81,11 +86,12 @@ public class RoleTest {
         final var aName = "";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
@@ -101,11 +107,12 @@ public class RoleTest {
         final var aName = "ce ";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
@@ -121,11 +128,12 @@ public class RoleTest {
         final var aName = RandomStringUtils.generateValue(51);
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
@@ -141,11 +149,12 @@ public class RoleTest {
         final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
@@ -161,11 +170,12 @@ public class RoleTest {
         final var aName = "ceo";
         final String aDescription = null;
         final RoleTypes aRoleType = null;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'roleType' must not be null";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aRoleValidator = new RoleValidator(aRole, aTestValidationHandler);
@@ -198,14 +208,16 @@ public class RoleTest {
         final var aName = "ceo";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole(aName, aDescription, aRoleType);
+        final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
         final var aRoleCloned = Role.with(
                 aRole.getId().getValue(),
                 aRole.getName(),
                 aRole.getDescription(),
                 aRole.getRoleType(),
+                aRole.isDefault(),
                 aRole.getCreatedAt(),
                 aRole.getUpdatedAt()
         );
@@ -215,6 +227,7 @@ public class RoleTest {
         Assertions.assertEquals(aRole.getName(), aRoleCloned.getName());
         Assertions.assertEquals(aRole.getDescription(), aRoleCloned.getDescription());
         Assertions.assertEquals(aRole.getRoleType(), aRoleCloned.getRoleType());
+        Assertions.assertEquals(aRole.isDefault(), aRoleCloned.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), aRoleCloned.getCreatedAt());
         Assertions.assertEquals(aRole.getUpdatedAt(), aRoleCloned.getUpdatedAt());
     }
@@ -224,15 +237,17 @@ public class RoleTest {
         final var aName = "ceo";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = true;
 
-        final var aRole = Role.newRole("user", "Common user", RoleTypes.COMMON);
+        final var aRole = Role.newRole("user", "Common user", RoleTypes.COMMON, false);
 
         final var aRoleUpdatedDate = aRole.getUpdatedAt();
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // then
@@ -240,6 +255,7 @@ public class RoleTest {
         Assertions.assertEquals(aName, aRoleUpdated.getName());
         Assertions.assertEquals(aDescription, aRoleUpdated.getDescription());
         Assertions.assertEquals(RoleTypes.EMPLOYEES, aRoleUpdated.getRoleType());
+        Assertions.assertTrue(aRoleUpdated.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), aRoleUpdated.getCreatedAt());
         Assertions.assertTrue(aRoleUpdated.getUpdatedAt().isAfter(aRoleUpdatedDate));
 
@@ -251,15 +267,17 @@ public class RoleTest {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
-        final var aRole = Role.newRole("User", "aaaaaaaaaa", RoleTypes.COMMON);
+        final var aRole = Role.newRole("User", "aaaaaaaaaa", RoleTypes.COMMON, true);
 
         final var aRoleUpdatedDate = aRole.getUpdatedAt();
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         // then
@@ -267,6 +285,7 @@ public class RoleTest {
         Assertions.assertEquals(aName, aRoleUpdated.getName());
         Assertions.assertNull(aRoleUpdated.getDescription());
         Assertions.assertEquals(RoleTypes.EMPLOYEES, aRoleUpdated.getRoleType());
+        Assertions.assertFalse(aRoleUpdated.isDefault());
         Assertions.assertEquals(aRole.getCreatedAt(), aRoleUpdated.getCreatedAt());
         Assertions.assertTrue(aRoleUpdated.getUpdatedAt().isAfter(aRoleUpdatedDate));
 
@@ -278,16 +297,18 @@ public class RoleTest {
         final String aName = null;
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole("User", aDescription, aRoleType);
+        final var aRole = Role.newRole("User", aDescription, aRoleType, aIsDefault);
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -304,16 +325,18 @@ public class RoleTest {
         final var aName = "";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole("User", aDescription, aRoleType);
+        final var aRole = Role.newRole("User", aDescription, aRoleType, aIsDefault);
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -330,16 +353,18 @@ public class RoleTest {
         final var aName = "ce ";
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole("User", aDescription, aRoleType);
+        final var aRole = Role.newRole("User", aDescription, aRoleType, aIsDefault);
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -356,16 +381,18 @@ public class RoleTest {
         final var aName = RandomStringUtils.generateValue(51);
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole("User", aDescription, aRoleType);
+        final var aRole = Role.newRole("User", aDescription, aRoleType, aIsDefault);
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -382,16 +409,18 @@ public class RoleTest {
         final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = RoleTypes.EMPLOYEES;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole("User", "Common user", aRoleType);
+        final var aRole = Role.newRole("User", "Common user", aRoleType, aIsDefault);
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
@@ -408,16 +437,18 @@ public class RoleTest {
         final var aName = "ceo";
         final String aDescription = null;
         final RoleTypes aRoleType = null;
+        final var aIsDefault = false;
 
         final var expectedErrorMessage = "'roleType' must not be null";
         final var expectedErrorCount = 1;
 
-        final var aRole = Role.newRole("User", aDescription, RoleTypes.EMPLOYEES);
+        final var aRole = Role.newRole("User", aDescription, RoleTypes.EMPLOYEES, aIsDefault);
 
         final var aRoleUpdated = aRole.update(
                 aName,
                 aDescription,
-                aRoleType
+                aRoleType,
+                aIsDefault
         );
 
         final var aTestValidationHandler = new TestValidationHandler();
