@@ -8,6 +8,7 @@ import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -47,7 +48,8 @@ public class ResetPasswordUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                RoleID.unique()
         );
         final var aType = AccountMailType.PASSWORD_RESET;
         final var aExpiresAt = InstantUtils.now().plus(30, ChronoUnit.MINUTES);
@@ -88,7 +90,8 @@ public class ResetPasswordUseCaseTest {
                                 Objects.equals(newPassword, account.getPassword()) &&
                                 Objects.isNull(account.getAvatarUrl()) &&
                                 Objects.equals(aAccount.getCreatedAt(), account.getCreatedAt()) &&
-                                Objects.nonNull(account.getUpdatedAt())
+                                Objects.nonNull(account.getUpdatedAt()) &&
+                                Objects.equals(aAccount.getRoleId(), account.getRoleId())
                 ));
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .deleteById(Mockito.any());
@@ -105,7 +108,8 @@ public class ResetPasswordUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                RoleID.unique()
         );
         final var aType = AccountMailType.PASSWORD_RESET;
         final var aExpirestAt = InstantUtils.now().minus(1, ChronoUnit.HOURS);
@@ -173,7 +177,8 @@ public class ResetPasswordUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                RoleID.unique()
         );
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountMail = AccountMail.newAccountMail(
@@ -216,7 +221,8 @@ public class ResetPasswordUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                RoleID.unique()
         );
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountMail = AccountMail.newAccountMail(
@@ -258,7 +264,8 @@ public class ResetPasswordUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                RoleID.unique()
         );
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountMail = AccountMail.newAccountMail(
@@ -311,7 +318,8 @@ public class ResetPasswordUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                RoleID.unique()
         );
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccountMail = AccountMail.newAccountMail(
