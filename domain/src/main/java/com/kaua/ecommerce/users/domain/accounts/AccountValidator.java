@@ -26,6 +26,7 @@ public class AccountValidator extends Validator {
         checkLastNameConstraints();
         checkEmailConstraints();
         checkPasswordConstraints();
+        checkRoleIdConstraint();
     }
 
     private void checkFirstNameConstraints() {
@@ -72,6 +73,12 @@ public class AccountValidator extends Validator {
 
         if (!this.account.getPassword().matches("^(?=.*[a-z])(?=.*[A-Z]).*$")) {
             this.validationHandler().append(new Error("'password' should contain at least one uppercase letter, one lowercase letter and one number"));
+        }
+    }
+
+    private void checkRoleIdConstraint() {
+        if (this.account.getRoleId() == null) {
+            this.validationHandler().append(new Error("'roleId' should not be null"));
         }
     }
 }
