@@ -35,7 +35,7 @@ public class CreateRoleUseCaseTest {
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = "employees";
-        final var aIsDefault = false;
+        final var aIsDefault = true;
 
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault);
 
