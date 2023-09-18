@@ -2,8 +2,12 @@ package com.kaua.ecommerce.users.application.account.create;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
+import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,16 +17,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 
 @ExtendWith(MockitoExtension.class)
 public class CreateAccountUseCaseTest {
-
-    // 1. Teste do caminho feliz (onde veio tudo certo) ADDED
-    // 2. Teste passando uma propriedade inválida ADDED
-    // 3. Teste criando uma conta com um email já existente ADDED
-    // 4. Simulando um erro genérico vindo do gateway NOT ADDED
 
     @Mock
     private AccountGateway accountGateway;
@@ -33,6 +33,9 @@ public class CreateAccountUseCaseTest {
     @Mock
     private EncrypterGateway encrypterGateway;
 
+    @Mock
+    private RoleGateway roleGateway;
+
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() {
         // given
@@ -40,12 +43,15 @@ public class CreateAccountUseCaseTest {
         final var aLastName = "Silveira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "1234567Ab";
+        final var aRole = Role.newRole("user", null, RoleTypes.COMMON, true);
 
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
         Mockito.when(accountGateway.existsByEmail(Mockito.any()))
                 .thenReturn(false);
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(aRole));
         Mockito.when(encrypterGateway.encrypt(Mockito.any()))
                 .thenAnswer(returnsFirstArg());
         Mockito.when(accountGateway.create(Mockito.any()))
@@ -59,6 +65,8 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(aEmail);
+        Mockito.verify(roleGateway, Mockito.times(1))
+                .findDefaultRole();
         Mockito.verify(accountGateway, Mockito.times(1))
                 .create(Mockito.argThat(aAccount ->
                         Objects.equals(aFirstName, aAccount.getFirstName()) &&
@@ -69,7 +77,8 @@ public class CreateAccountUseCaseTest {
                         Objects.equals(AccountMailStatus.WAITING_CONFIRMATION, aAccount.getMailStatus()) &&
                         Objects.nonNull(aAccount.getCreatedAt()) &&
                         Objects.nonNull(aAccount.getUpdatedAt()) &&
-                        Objects.isNull(aAccount.getAvatarUrl())
+                        Objects.isNull(aAccount.getAvatarUrl()) &&
+                                Objects.equals(aRole.getId(), aAccount.getRole().getId())
                 ));
         Mockito.verify(encrypterGateway, Mockito.times(1))
                 .encrypt(aPassword);
@@ -88,6 +97,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -96,6 +108,8 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1))
+                .findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -115,6 +129,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -123,6 +140,8 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1))
+                .findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -152,6 +171,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -160,6 +182,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -179,6 +202,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -187,6 +213,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -206,6 +233,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -214,6 +244,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -243,6 +274,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -251,6 +285,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -270,6 +305,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -278,6 +316,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -308,6 +347,8 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(aEmail);
+        Mockito.verify(roleGateway, Mockito.never())
+                .findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -327,6 +368,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -335,6 +379,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -354,6 +399,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -362,6 +410,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -391,6 +440,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -399,6 +451,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -418,6 +471,9 @@ public class CreateAccountUseCaseTest {
         final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
 
         // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
         final var aNotification = useCase.execute(aCommand).getLeft();
 
         // then
@@ -426,6 +482,7 @@ public class CreateAccountUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).findDefaultRole();
         Mockito.verify(accountGateway, Mockito.never())
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
@@ -439,5 +496,36 @@ public class CreateAccountUseCaseTest {
         final var aOutput = CreateAccountOutput.from(aAccountId.getValue(), null, null);
 
         Assertions.assertEquals(aAccountId.getValue(), aOutput.id());
+    }
+
+    @Test
+    void givenAValidValuesButNotExistsDefaultRole_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "teste";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "Role with id default was not found";
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.empty());
+
+        final var aNotification = Assertions.assertThrows(NotFoundException.class,
+                () -> useCase.execute(aCommand));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getMessage());
+
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1))
+                .findDefaultRole();
+        Mockito.verify(accountGateway, Mockito.never())
+                .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
     }
 }

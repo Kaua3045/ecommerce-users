@@ -8,10 +8,7 @@ import com.kaua.ecommerce.users.application.account.retrieve.get.DefaultGetAccou
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
 import com.kaua.ecommerce.users.application.account.update.avatar.DefaultUpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
-import com.kaua.ecommerce.users.application.gateways.AccountGateway;
-import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
-import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
-import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
+import com.kaua.ecommerce.users.application.gateways.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,22 +19,25 @@ public class AccountUseCaseConfig {
     private final EncrypterGateway encrypterGateway;
     private final AccountMailGateway accountMailGateway;
     private final AvatarGateway avatarGateway;
+    private final RoleGateway roleGateway;
 
     public AccountUseCaseConfig(
             final AccountGateway accountGateway,
             final EncrypterGateway encrypterGateway,
             final AccountMailGateway accountMailGateway,
-            final AvatarGateway avatarGateway
+            final AvatarGateway avatarGateway,
+            final RoleGateway roleGateway
     ) {
         this.accountGateway = accountGateway;
         this.encrypterGateway = encrypterGateway;
         this.accountMailGateway = accountMailGateway;
         this.avatarGateway = avatarGateway;
+        this.roleGateway = roleGateway;
     }
 
     @Bean
     public CreateAccountUseCase createAccountUseCase() {
-        return new DefaultCreateAccountUseCase(accountGateway, encrypterGateway);
+        return new DefaultCreateAccountUseCase(accountGateway, encrypterGateway, roleGateway);
     }
 
     @Bean

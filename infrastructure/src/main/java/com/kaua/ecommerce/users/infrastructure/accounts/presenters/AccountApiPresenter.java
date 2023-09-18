@@ -15,6 +15,7 @@ public final class AccountApiPresenter {
                 aOutput.email(),
                 aOutput.avatarUrl(),
                 aOutput.mailStatus(),
+                aOutput.roleId(),
                 aOutput.createdAt(),
                 aOutput.updatedAt()
         );

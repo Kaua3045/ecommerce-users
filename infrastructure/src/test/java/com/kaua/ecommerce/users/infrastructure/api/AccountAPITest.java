@@ -15,6 +15,8 @@ import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUs
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
@@ -456,7 +458,8 @@ public class AccountAPITest {
                 "testes",
                 "teste",
                 "teste@testes.com",
-                "1234567Ab"
+                "1234567Ab",
+                null
         );
         final var aId = aAccount.getId().getValue();
 
@@ -498,7 +501,8 @@ public class AccountAPITest {
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                Role.newRole("CEO", null, RoleTypes.EMPLOYEES, false)
         );
         final var aId = aAccount.getId().getValue();
 
@@ -554,7 +558,8 @@ public class AccountAPITest {
                 "teste",
                 "testes",
                 "teste@teste.com",
-                "teste123A"
+                "teste123A",
+                null
         );
         final var aId = aAccount.getId().getValue();
 
@@ -596,7 +601,8 @@ public class AccountAPITest {
                 "teste",
                 "testes",
                 "teste@teste.com",
-                "teste123A"
+                "teste123A",
+                null
         );
         final var aId = aAccount.getId().getValue();
         final var aImage = new MockMultipartFile(
@@ -631,7 +637,8 @@ public class AccountAPITest {
                 "teste",
                 "testes",
                 "teste@teste.com",
-                "teste123A"
+                "teste123A",
+                null
         );
         final var aId = aAccount.getId().getValue();
         final var aImage = new MockMultipartFile(

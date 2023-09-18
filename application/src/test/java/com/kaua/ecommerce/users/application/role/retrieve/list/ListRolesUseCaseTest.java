@@ -32,8 +32,8 @@ public class ListRolesUseCaseTest {
 
     @Test
     void givenAValidQuery_whenCallListRoles_thenShouldReturnRoles() {
-        final var roles = List.of(Role.newRole("admin", null, RoleTypes.EMPLOYEES),
-                Role.newRole("User", "Common user", RoleTypes.COMMON));
+        final var roles = List.of(Role.newRole("admin", null, RoleTypes.EMPLOYEES, false),
+                Role.newRole("User", "Common user", RoleTypes.COMMON, true));
 
         final var page = 0;
         final var perPage = 10;

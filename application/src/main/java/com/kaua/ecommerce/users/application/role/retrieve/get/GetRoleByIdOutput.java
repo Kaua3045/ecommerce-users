@@ -7,6 +7,7 @@ public record GetRoleByIdOutput(
         String name,
         String description,
         String roleType,
+        boolean isDefault,
         String createdAt,
         String updatedAt
 ) {
@@ -17,6 +18,7 @@ public record GetRoleByIdOutput(
                 aRole.getName(),
                 aRole.getDescription(),
                 aRole.getRoleType().name(),
+                aRole.isDefault(),
                 aRole.getCreatedAt().toString(),
                 aRole.getUpdatedAt().toString()
         );

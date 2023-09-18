@@ -9,6 +9,7 @@ public record GetAccountByIdOutput(
         String email,
         String avatarUrl,
         String mailStatus,
+        String roleId,
         String createdAt,
         String updatedAt
 ) {
@@ -21,6 +22,7 @@ public record GetAccountByIdOutput(
                 aAccount.getEmail(),
                 aAccount.getAvatarUrl(),
                 aAccount.getMailStatus().name(),
+                aAccount.getRole().getId().getValue(),
                 aAccount.getCreatedAt().toString(),
                 aAccount.getUpdatedAt().toString()
         );

@@ -11,6 +11,7 @@ public record ListRolesOutput(
         String name,
         String description,
         RoleTypes type,
+        boolean isDefault,
         Instant createdAt
 ) {
 
@@ -20,6 +21,7 @@ public record ListRolesOutput(
                 aRole.getName(),
                 aRole.getDescription(),
                 aRole.getRoleType(),
+                aRole.isDefault(),
                 aRole.getCreatedAt());
     }
 }

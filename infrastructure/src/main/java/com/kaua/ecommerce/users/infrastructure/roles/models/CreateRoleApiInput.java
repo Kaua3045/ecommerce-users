@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public record CreateRoleApiInput(
         @JsonProperty("name") String name,
         @JsonProperty("description") String description,
-        @JsonProperty("role_type") String roleType
+        @JsonProperty("role_type") String roleType,
+        @JsonProperty("is_default") boolean isDefault
 ) {
 }

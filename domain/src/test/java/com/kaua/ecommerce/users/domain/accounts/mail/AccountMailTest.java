@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.domain.accounts.mail;
 
 import com.kaua.ecommerce.users.domain.TestValidationHandler;
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
@@ -21,7 +23,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+        Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
@@ -44,7 +47,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'token' should not be null or blank";
 
@@ -66,7 +70,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'token' should not be null or blank";
 
@@ -88,7 +93,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'token' should not be greater than 36";
 
@@ -110,7 +116,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'type' should not be null";
 
@@ -150,8 +157,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab"
-        );
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'account' should not be null";
 
@@ -174,7 +181,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final Instant aExpiresAt = null;
         final var expectedErrorMessage = "'expiresAt' should not be null";
 
@@ -196,7 +204,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().minus(10, ChronoUnit.MINUTES);
         final var expectedErrorMessage = "'expiresAt' should not be before now";
 
@@ -218,7 +227,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
         final var aAccountMailIdFrom = AccountMailID.from("1234");
 
@@ -239,7 +249,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
@@ -257,7 +268,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
@@ -290,7 +302,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);
@@ -307,7 +320,8 @@ public class AccountMailTest {
                 "Test",
                 "Testando",
                 "teste@teste.com",
-                "123456Ab");
+                "123456Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false));
         final var aExpiresAt = InstantUtils.now().minus(10, ChronoUnit.MINUTES);
 
         final var aAccountMail = AccountMail.newAccountMail(aToken, aType, aAccount, aExpiresAt);

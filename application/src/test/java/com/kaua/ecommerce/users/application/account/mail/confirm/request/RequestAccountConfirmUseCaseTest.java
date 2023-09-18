@@ -7,6 +7,8 @@ import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,11 +39,13 @@ public class RequestAccountConfirmUseCaseTest {
         final var aLastName = "Silveira";
         final var aEmail = "teste@teste.com";
         final var aPassword = "1234567Ab";
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 aFirstName,
                 aLastName,
                 aEmail,
-                aPassword
+                aPassword,
+                aRole
         );
 
         final var aCommand = RequestAccountConfirmCommand.with(aAccount.getId().getValue());

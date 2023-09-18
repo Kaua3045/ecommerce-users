@@ -23,7 +23,7 @@ public class DeleteRoleUseCaseTest {
     @Test
     void givenAValidCommandWithRoleId_whenCallDeleteById_shouldBeOk() {
         // given
-        final var aRole = Role.newRole("ceo", null, RoleTypes.EMPLOYEES);
+        final var aRole = Role.newRole("ceo", null, RoleTypes.EMPLOYEES, true);
         final var aId = aRole.getId().getValue();
 
         final var aCommand = DeleteRoleCommand.with(aId);

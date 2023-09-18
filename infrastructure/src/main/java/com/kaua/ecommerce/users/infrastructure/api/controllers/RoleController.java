@@ -49,7 +49,8 @@ public class RoleController implements RoleAPI {
         final var aCommand = CreateRoleCommand.with(
                 input.name(),
                 input.description(),
-                input.roleType()
+                input.roleType(),
+                input.isDefault()
         );
 
         final var aResult = this.createRoleUseCase.execute(aCommand);
@@ -65,7 +66,8 @@ public class RoleController implements RoleAPI {
                 id,
                 input.name(),
                 input.description(),
-                input.roleType()
+                input.roleType(),
+                input.isDefault()
         );
 
         final var aResult = this.updateRoleUseCase.execute(aCommand);

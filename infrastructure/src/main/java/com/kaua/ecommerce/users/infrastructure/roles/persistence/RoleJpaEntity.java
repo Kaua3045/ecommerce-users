@@ -24,6 +24,9 @@ public class RoleJpaEntity {
     @Enumerated(EnumType.STRING)
     private RoleTypes roleType;
 
+    @Column(name = "is_default", nullable = false)
+    private boolean isDefault;
+
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
@@ -37,6 +40,7 @@ public class RoleJpaEntity {
             final String name,
             final String description,
             final RoleTypes roleType,
+            final boolean isDefault,
             final Instant createdAt,
             final Instant updatedAt
     ) {
@@ -44,6 +48,7 @@ public class RoleJpaEntity {
         this.name = name;
         this.description = description;
         this.roleType = roleType;
+        this.isDefault = isDefault;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -54,6 +59,7 @@ public class RoleJpaEntity {
                 aRole.getName(),
                 aRole.getDescription(),
                 aRole.getRoleType(),
+                aRole.isDefault(),
                 aRole.getCreatedAt(),
                 aRole.getUpdatedAt()
         );
@@ -65,6 +71,7 @@ public class RoleJpaEntity {
                 getName(),
                 getDescription(),
                 getRoleType(),
+                isDefault(),
                 getCreatedAt(),
                 getUpdatedAt()
         );
@@ -100,6 +107,10 @@ public class RoleJpaEntity {
 
     public void setRoleType(RoleTypes roleType) {
         this.roleType = roleType;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
     }
 
     public Instant getCreatedAt() {

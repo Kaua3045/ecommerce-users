@@ -4,15 +4,17 @@ public record UpdateRoleCommand(
         String id,
         String name,
         String description,
-        String roleType
+        String roleType,
+        boolean isDefault
 ) {
 
     public static UpdateRoleCommand with(
             final String aId,
             final String aName,
             final String aDescription,
-            final String aRoleType
+            final String aRoleType,
+            final boolean isDefault
     ) {
-        return new UpdateRoleCommand(aId, aName, aDescription, aRoleType);
+        return new UpdateRoleCommand(aId, aName, aDescription, aRoleType, isDefault);
     }
 }

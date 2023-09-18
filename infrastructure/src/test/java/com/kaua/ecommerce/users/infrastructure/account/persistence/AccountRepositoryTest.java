@@ -1,10 +1,13 @@
 package com.kaua.ecommerce.users.infrastructure.account.persistence;
 
 import com.kaua.ecommerce.users.IntegrationTest;
-import com.kaua.ecommerce.users.MySQLGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.hibernate.PropertyValueException;
 import org.hibernate.id.IdentifierGenerationException;
 import org.junit.jupiter.api.Assertions;
@@ -19,16 +22,24 @@ public class AccountRepositoryTest {
     @Autowired
     private AccountJpaRepository accountRepository;
 
+    @Autowired
+    private RoleJpaRepository roleRepository;
+
     @Test
     void givenAnInvalidNullFirstName_whenCallSave_shouldReturnAnException() {
         final var expectedPropertyName = "firstName";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.firstName";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setFirstName(null);
@@ -48,11 +59,16 @@ public class AccountRepositoryTest {
         final var expectedPropertyName = "lastName";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.lastName";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setLastName(null);
@@ -72,11 +88,16 @@ public class AccountRepositoryTest {
         final var expectedPropertyName = "email";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.email";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setEmail(null);
@@ -96,11 +117,16 @@ public class AccountRepositoryTest {
         final var expectedPropertyName = "password";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.password";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setPassword(null);
@@ -120,11 +146,16 @@ public class AccountRepositoryTest {
         final var expectedPropertyName = "mailStatus";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.mailStatus";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setMailStatus(null);
@@ -144,11 +175,16 @@ public class AccountRepositoryTest {
         final var expectedPropertyName = "createdAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.createdAt";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setCreatedAt(null);
@@ -168,11 +204,16 @@ public class AccountRepositoryTest {
         final var expectedPropertyName = "updatedAt";
         final var expectedErrorMessage = "not-null property references a null or transient value : com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity.updatedAt";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setUpdatedAt(null);
@@ -191,11 +232,16 @@ public class AccountRepositoryTest {
     void givenAnInvalidNullId_whenCallSave_shouldReturnAnException() {
         final var expectedErrorMessage = "ids for this class must be manually assigned before calling save(): com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity";
 
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setId(null);
@@ -211,11 +257,16 @@ public class AccountRepositoryTest {
 
     @Test
     void givenAValidAvatarUrl_whenCallSave_shouldDoesNotThrowException() {
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
         final var aAccount = Account.newAccount(
                 "Fulano",
                 "Silva",
                 "teste@teste.com",
-                "1234567Ab");
+                "1234567Ab",
+                aRole
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
         final var aEntity = AccountJpaEntity.toEntity(aAccount);
         aEntity.setAvatarUrl("http://localhost/avatar.png");

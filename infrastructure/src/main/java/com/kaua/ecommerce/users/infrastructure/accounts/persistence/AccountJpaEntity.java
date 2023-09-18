@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.accounts.persistence;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -33,6 +34,10 @@ public class AccountJpaEntity {
     @Enumerated(EnumType.STRING)
     private AccountMailStatus mailStatus;
 
+    @JoinColumn(name = "role_id", nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    private RoleJpaEntity roleJpaEntity;
+
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
 
@@ -49,6 +54,7 @@ public class AccountJpaEntity {
             final String password,
             final String avatarUrl,
             final AccountMailStatus mailStatus,
+            final RoleJpaEntity roleJpaEntity,
             final Instant createdAt,
             final Instant updatedAt
     ) {
@@ -59,6 +65,7 @@ public class AccountJpaEntity {
         this.password = password;
         this.avatarUrl = avatarUrl;
         this.mailStatus = mailStatus;
+        this.roleJpaEntity = roleJpaEntity;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
@@ -72,6 +79,7 @@ public class AccountJpaEntity {
                 aAccount.getPassword(),
                 aAccount.getAvatarUrl(),
                 aAccount.getMailStatus(),
+                RoleJpaEntity.toEntity(aAccount.getRole()),
                 aAccount.getCreatedAt(),
                 aAccount.getUpdatedAt()
         );
@@ -86,6 +94,7 @@ public class AccountJpaEntity {
                 getMailStatus(),
                 getPassword(),
                 getAvatarUrl(),
+                getRoleJpaEntity().toDomain(),
                 getCreatedAt(),
                 getUpdatedAt(),
                 null
@@ -162,5 +171,9 @@ public class AccountJpaEntity {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public RoleJpaEntity getRoleJpaEntity() {
+        return roleJpaEntity;
     }
 }

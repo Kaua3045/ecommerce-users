@@ -7,6 +7,8 @@ import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -40,10 +42,11 @@ public class ConfirmAccountMailUseCaseTest {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
-                "Fulano",
-                "Silveira",
+                "teste",
+                "testes",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567890Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpirestAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
@@ -79,7 +82,8 @@ public class ConfirmAccountMailUseCaseTest {
                                 Objects.equals(aAccount.getPassword(), account.getPassword()) &&
                                 Objects.isNull(account.getAvatarUrl()) &&
                                 Objects.nonNull(account.getCreatedAt()) &&
-                                Objects.nonNull(account.getUpdatedAt())
+                                Objects.nonNull(account.getUpdatedAt()) &&
+                                Objects.equals(aAccount.getRole(), account.getRole())
                 ));
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .deleteById(Mockito.any());
@@ -93,10 +97,11 @@ public class ConfirmAccountMailUseCaseTest {
 
         final var aToken = RandomStringUtils.generateValue(36);
         final var aAccount = Account.newAccount(
-                "Fulano",
-                "Silveira",
+                "teste",
+                "testes",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567890Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpirestAt = InstantUtils.now().minus(1, ChronoUnit.HOURS);

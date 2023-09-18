@@ -5,6 +5,8 @@ import com.kaua.ecommerce.users.application.gateways.QueueGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -42,7 +44,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
@@ -87,7 +90,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
@@ -122,7 +126,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
@@ -187,7 +192,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final AccountMailType aType = null;
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
@@ -222,7 +228,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final Instant aExpiresAt = null;
@@ -257,7 +264,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpiresAt = InstantUtils.now().minus(10, ChronoUnit.MINUTES);
@@ -292,7 +300,8 @@ public class CreateAccountMailUseCaseTest {
                 "Fulano",
                 "Silveira",
                 "teste@teste.com",
-                "1234567Ab"
+                "1234567Ab",
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
         );
         final var aType = AccountMailType.ACCOUNT_CONFIRMATION;
         final var aExpiresAt = InstantUtils.now().plus(10, ChronoUnit.MINUTES);
