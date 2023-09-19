@@ -83,6 +83,12 @@ public class Account extends AggregateRoot<AccountID> {
         return this;
     }
 
+    public Account changeRole(final Role aRole) {
+        this.role = aRole;
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
     public static Account with(
             final String aId,
             final String aFirstName,
