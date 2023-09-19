@@ -1,12 +1,11 @@
 package com.kaua.ecommerce.users.application.account.update.role;
 
-import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
-import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
+import com.kaua.ecommerce.users.domain.validation.handler.ThrowsValidationHandler;
 
 import java.util.Objects;
 
@@ -21,9 +20,8 @@ public class DefaultUpdateAccountRoleUseCase extends UpdateAccountRoleUseCase {
     }
 
     @Override
-    public Either<NotificationHandler, UpdateAccountRoleOutput> execute(UpdateAccountRoleCommand aCommand) {
-        final var notification = NotificationHandler.create();
-
+    public UpdateAccountRoleOutput execute(UpdateAccountRoleCommand aCommand) {
+        final var notification = new ThrowsValidationHandler();
         final var aAccount = this.accountGateway.findById(aCommand.id())
                 .orElseThrow(() -> NotFoundException.with(Account.class, aCommand.id()));
 
@@ -33,8 +31,6 @@ public class DefaultUpdateAccountRoleUseCase extends UpdateAccountRoleUseCase {
         final var aAccountUpdated = aAccount.changeRole(aRole);
         aAccountUpdated.validate(notification);
 
-        return notification.hasError()
-                ? Either.left(notification)
-                : Either.right(UpdateAccountRoleOutput.from(this.accountGateway.update(aAccountUpdated)));
+        return UpdateAccountRoleOutput.from(this.accountGateway.update(aAccountUpdated));
     }
 }
