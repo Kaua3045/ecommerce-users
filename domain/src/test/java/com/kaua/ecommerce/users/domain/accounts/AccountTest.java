@@ -555,6 +555,42 @@ public class AccountTest {
     }
 
     @Test
+    void givenAValidRole_whenCallsChangeRole_thenAnAccountShouldBeChangeRole() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "12345678Ab";
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword,
+                Role.newRole("User", "common user", RoleTypes.COMMON, true)
+        );
+
+        final var aAccountUpdatedAt = aAccount.getUpdatedAt();
+
+        final var aAccountUpdated = aAccount.changeRole(aRole);
+
+        //then
+        Assertions.assertDoesNotThrow(() -> aAccountUpdated.validate(new ThrowsValidationHandler()));
+        Assertions.assertEquals(aAccount.getId().getValue(), aAccountUpdated.getId().getValue());
+        Assertions.assertEquals(aAccount.getFirstName(), aAccountUpdated.getFirstName());
+        Assertions.assertEquals(aAccount.getLastName(), aAccountUpdated.getLastName());
+        Assertions.assertEquals(aAccount.getEmail(), aAccountUpdated.getEmail());
+        Assertions.assertEquals(AccountMailStatus.WAITING_CONFIRMATION, aAccountUpdated.getMailStatus());
+        Assertions.assertEquals(aAccount.getPassword(), aAccountUpdated.getPassword());
+        Assertions.assertNull(aAccountUpdated.getAvatarUrl());
+        Assertions.assertEquals(aRole, aAccountUpdated.getRole());
+        Assertions.assertEquals(aAccount.getCreatedAt(), aAccountUpdated.getCreatedAt());
+        Assertions.assertTrue(aAccountUpdated.getUpdatedAt().isAfter(aAccountUpdatedAt));
+    }
+
+    @Test
     void givenAnInvalidPassword_whenCallsChangePassword_thenAnExceptionShouldBeThrown() {
         // given
         final var aFirstName = "Kaua";
@@ -664,6 +700,36 @@ public class AccountTest {
         );
 
         final var aAccountUpdated = aAccount.changePassword(aPassword);
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnInvalidRole_whenCallsChangeRole_thenAnExceptionShouldBeThrown() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "87654321Ab*";
+        final Role aRole = null;
+        final var expectedErrorMessage = "'role' should not be null";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword,
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
+        );
+
+        final var aAccountUpdated = aAccount.changeRole(aRole);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aAccountValidator = new AccountValidator(aAccountUpdated, aTestValidationHandler);
