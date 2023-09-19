@@ -23,7 +23,7 @@ public interface AccountAPI {
     )
     GetAccountPresenter getAccount(@PathVariable String id);
 
-    @PatchMapping("{id}")
+    @PatchMapping("{id}/avatar")
     ResponseEntity<?> updateAccountAvatar(
             @PathVariable String id,
             @RequestParam("avatar") MultipartFile avatarFile
