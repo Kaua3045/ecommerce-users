@@ -99,10 +99,10 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.password", equalTo(aPassword)));
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
-                        Objects.equals(aFirstName, cmd.firstName()) &&
-                                Objects.equals(aLastName, cmd.lastName()) &&
-                                Objects.equals(aEmail, cmd.email()) &&
-                                Objects.equals(aPassword, cmd.password())
+                Objects.equals(aFirstName, cmd.firstName()) &&
+                        Objects.equals(aLastName, cmd.lastName()) &&
+                        Objects.equals(aEmail, cmd.email()) &&
+                        Objects.equals(aPassword, cmd.password())
         ));
     }
 
@@ -580,7 +580,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenReturn(UpdateAvatarOutput.from(aAccount));
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}/avatar", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -624,7 +624,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(new ImageSizeNotValidException());
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}/avatar", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -660,7 +660,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(new ImageTypeNotValidException());
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}/avatar", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -688,7 +688,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(NotFoundException.with(Account.class, aId));
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}/avatar", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -724,7 +724,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(new RuntimeException(expectedErrorMessage));
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}/avatar", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -756,7 +756,7 @@ public class AccountAPITest {
         Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
                 .thenReturn(UpdateAccountRoleOutput.from(aAccount));
 
-        final var request = MockMvcRequestBuilders.patch("/accounts/role/{id}", aAccountId)
+        final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
@@ -790,7 +790,7 @@ public class AccountAPITest {
         Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
                 .thenThrow(NotFoundException.with(Account.class, aAccountId));
 
-        final var request = MockMvcRequestBuilders.patch("/accounts/role/{id}", aAccountId)
+        final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
@@ -830,7 +830,7 @@ public class AccountAPITest {
         Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
                 .thenThrow(NotFoundException.with(Role.class, aRoleId));
 
-        final var request = MockMvcRequestBuilders.patch("/accounts/role/{id}", aAccountId)
+        final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
