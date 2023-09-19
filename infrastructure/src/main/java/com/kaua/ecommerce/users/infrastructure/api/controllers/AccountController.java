@@ -8,8 +8,11 @@ import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdC
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarCommand;
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleCommand;
+import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.GetAccountPresenter;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.UpdateAccountRoleApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.presenters.AccountApiPresenter;
 import com.kaua.ecommerce.users.infrastructure.api.AccountAPI;
 import com.kaua.ecommerce.users.infrastructure.utils.ResourceOf;
@@ -25,17 +28,20 @@ public class AccountController implements AccountAPI {
     private final DeleteAccountUseCase deleteAccountUseCase;
     private final GetAccountByIdUseCase getAccountByIdUseCase;
     private final UpdateAvatarUseCase updateAvatarUseCase;
+    private final UpdateAccountRoleUseCase updateAccountRoleUseCase;
 
     public AccountController(
             final CreateAccountUseCase createAccountUseCase,
             final DeleteAccountUseCase deleteAccountUseCase,
             final GetAccountByIdUseCase getAccountByIdUseCase,
-            final UpdateAvatarUseCase updateAvatarUseCase
+            final UpdateAvatarUseCase updateAvatarUseCase,
+            final UpdateAccountRoleUseCase updateAccountRoleUseCase
     ) {
         this.createAccountUseCase = createAccountUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
         this.getAccountByIdUseCase = getAccountByIdUseCase;
         this.updateAvatarUseCase = updateAvatarUseCase;
+        this.updateAccountRoleUseCase = updateAccountRoleUseCase;
     }
 
     @Override
@@ -65,6 +71,13 @@ public class AccountController implements AccountAPI {
         return ResponseEntity.status(HttpStatus.OK).body(
                 this.updateAvatarUseCase.execute(UpdateAvatarCommand.with(
                         id, ResourceOf.with(avatarFile))));
+    }
+
+    @Override
+    public ResponseEntity<?> updateAccountRole(String id, UpdateAccountRoleApiInput input) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+                this.updateAccountRoleUseCase.execute(UpdateAccountRoleCommand.with(
+                        id, input.roleId())));
     }
 
     @Override
