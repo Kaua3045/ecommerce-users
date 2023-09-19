@@ -29,7 +29,7 @@ public interface AccountAPI {
             @RequestParam("avatar") MultipartFile avatarFile
     );
 
-    @PatchMapping("/role/{id}")
+    @PatchMapping("{id}/role")
     ResponseEntity<?> updateAccountRole(
             @PathVariable String id,
             @RequestBody UpdateAccountRoleApiInput input
