@@ -8,6 +8,8 @@ import com.kaua.ecommerce.users.application.account.retrieve.get.DefaultGetAccou
 import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
 import com.kaua.ecommerce.users.application.account.update.avatar.DefaultUpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.account.update.role.DefaultUpdateAccountRoleUseCase;
+import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.application.gateways.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -48,6 +50,11 @@ public class AccountUseCaseConfig {
     @Bean
     public UpdateAvatarUseCase updateAvatarUseCase() {
         return new DefaultUpdateAvatarUseCase(avatarGateway, accountGateway);
+    }
+
+    @Bean
+    public UpdateAccountRoleUseCase updateAccountRoleUseCase() {
+        return new DefaultUpdateAccountRoleUseCase(accountGateway, roleGateway);
     }
 
     @Bean
