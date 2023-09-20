@@ -12,6 +12,9 @@ import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdU
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarCommand;
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarOutput;
 import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleCommand;
+import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleOutput;
+import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -21,6 +24,7 @@ import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.UpdateAccountRoleApiInput;
 import com.kaua.ecommerce.users.infrastructure.exceptions.ImageSizeNotValidException;
 import com.kaua.ecommerce.users.infrastructure.exceptions.ImageTypeNotValidException;
 import org.junit.jupiter.api.Assertions;
@@ -64,6 +68,9 @@ public class AccountAPITest {
     @MockBean
     private UpdateAvatarUseCase updateAvatarUseCase;
 
+    @MockBean
+    private UpdateAccountRoleUseCase updateAccountRoleUseCase;
+
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
         // given
@@ -92,10 +99,10 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.password", equalTo(aPassword)));
 
         Mockito.verify(createAccountUseCase, Mockito.times(1)).execute(argThat(cmd ->
-                        Objects.equals(aFirstName, cmd.firstName()) &&
-                                Objects.equals(aLastName, cmd.lastName()) &&
-                                Objects.equals(aEmail, cmd.email()) &&
-                                Objects.equals(aPassword, cmd.password())
+                Objects.equals(aFirstName, cmd.firstName()) &&
+                        Objects.equals(aLastName, cmd.lastName()) &&
+                        Objects.equals(aEmail, cmd.email()) &&
+                        Objects.equals(aPassword, cmd.password())
         ));
     }
 
@@ -573,7 +580,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenReturn(UpdateAvatarOutput.from(aAccount));
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -617,7 +624,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(new ImageSizeNotValidException());
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -653,7 +660,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(new ImageTypeNotValidException());
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -681,7 +688,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(NotFoundException.with(Account.class, aId));
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -717,7 +724,7 @@ public class AccountAPITest {
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
                 .thenThrow(new RuntimeException(expectedErrorMessage));
 
-        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH,"/accounts/{id}", aId)
+        final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
@@ -728,5 +735,118 @@ public class AccountAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
 
         Mockito.verify(updateAvatarUseCase, Mockito.times(1)).execute(Mockito.any());
+    }
+
+    @Test
+    void givenAValidIdAndRoleId_whenCallUpdateAccountRole_thenShouldReturnOkAndAccountId() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "teste123A",
+                Role.newRole("CEO", null, RoleTypes.EMPLOYEES, false)
+        );
+        final var aRole = Role.newRole("User", "common user", RoleTypes.COMMON, true);
+        final var aAccountId = aAccount.getId().getValue();
+        final var aRoleId = aRole.getId().getValue();
+
+        final var aInput = new UpdateAccountRoleApiInput(aRoleId);
+
+        Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
+                .thenReturn(UpdateAccountRoleOutput.from(aAccount));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aAccountId)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateAccountRoleCommand.class);
+
+        Mockito.verify(updateAccountRoleUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aAccountId, actualCmd.id());
+        Assertions.assertEquals(aRoleId, actualCmd.roleId());
+    }
+
+    @Test
+    void givenAnInvalidAccountId_whenCallUpdateAccountRole_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var aRole = Role.newRole("User", "common user", RoleTypes.COMMON, true);
+        final var aAccountId = "123";
+        final var aRoleId = aRole.getId().getValue();
+
+        final var expectedErrorMessage = "Account with id 123 was not found";
+
+        final var aInput = new UpdateAccountRoleApiInput(aRoleId);
+
+        Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
+                .thenThrow(NotFoundException.with(Account.class, aAccountId));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateAccountRoleCommand.class);
+
+        Mockito.verify(updateAccountRoleUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aAccountId, actualCmd.id());
+        Assertions.assertEquals(aRoleId, actualCmd.roleId());
+    }
+
+    @Test
+    void givenAnInvalidRoleId_whenCallUpdateAccountRole_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "teste123A",
+                Role.newRole("CEO", null, RoleTypes.EMPLOYEES, false)
+        );
+        final var aAccountId = aAccount.getId().getValue();
+        final var aRoleId = "123";
+
+        final var expectedErrorMessage = "Role with id 123 was not found";
+
+        final var aInput = new UpdateAccountRoleApiInput(aRoleId);
+
+        Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
+                .thenThrow(NotFoundException.with(Role.class, aRoleId));
+
+        final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdateAccountRoleCommand.class);
+
+        Mockito.verify(updateAccountRoleUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aAccountId, actualCmd.id());
+        Assertions.assertEquals(aRoleId, actualCmd.roleId());
     }
 }
