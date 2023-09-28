@@ -30,7 +30,7 @@ public class Permission extends AggregateRoot<PermissionID> {
 
     @Override
     public void validate(ValidationHandler handler) {
-
+        new PermissionValidator(handler, this).validate();
     }
 
     public static Permission newPermission(final String aName, final String aDescription) {
