@@ -26,7 +26,7 @@ public class PermissionValidator extends Validator {
     }
 
     private void checkConstraintsName() {
-        if (this.permission.getName().isBlank() || this.permission.getName() == null) {
+        if (this.permission.getName() == null || this.permission.getName().isBlank()) {
             this.validationHandler().append(new Error(commonNullOrBlankErrorMessage("name")));
             return;
         }
