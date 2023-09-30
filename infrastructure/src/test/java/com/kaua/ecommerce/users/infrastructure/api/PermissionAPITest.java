@@ -6,6 +6,8 @@ import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.permission.create.CreatePermissionCommand;
 import com.kaua.ecommerce.users.application.permission.create.CreatePermissionOutput;
 import com.kaua.ecommerce.users.application.permission.create.CreatePermissionUseCase;
+import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUseCase;
+import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
@@ -37,6 +39,9 @@ public class PermissionAPITest {
 
     @MockBean
     private CreatePermissionUseCase createPermissionUseCase;
+
+    @MockBean
+    private DeletePermissionUseCase deletePermissionUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreatePermission_thenShouldReturnAnPermissionId() throws Exception {
@@ -261,5 +266,38 @@ public class PermissionAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description())
         ));
+    }
+
+    @Test
+    void givenAValidCommandWithPermissionId_whenCallDeletePermission_thenShouldReturnOk() throws Exception {
+        // given
+        final var aPermission = Permission.newPermission("create-role", "Create a new role");
+        final var aId = aPermission.getId().getValue();
+
+        final var request = MockMvcRequestBuilders.delete("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(deletePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAnInvalidPermissionId_whenCallDeletePermission_thenShouldReturnOk() throws Exception {
+        // given
+        final var aId = "invalid";
+
+        final var request = MockMvcRequestBuilders.delete("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        Mockito.verify(deletePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
     }
 }
