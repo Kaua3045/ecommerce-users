@@ -96,4 +96,29 @@ public class PermissionMySQLGatewayTest {
 
         Assertions.assertTrue(permissionGateway.existsByName(aName));
     }
+
+    @Test
+    void givenAPrePersistedPermission_whenCallDeleteById_shouldBeOk() {
+        final var aPermission = Permission.newPermission("create-role", "Create a new role");
+        final var aId = aPermission.getId().getValue();
+
+        permissionRepository.saveAndFlush(PermissionJpaEntity.toEntity(aPermission));
+
+        Assertions.assertEquals(1, permissionRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> permissionGateway.deleteById(aId));
+
+        Assertions.assertEquals(0, permissionRepository.count());
+    }
+
+    @Test
+    void givenAnNotPrePersistedPermission_whenCallDeleteById_shouldBeOk() {
+        final var aId = "123";
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> permissionGateway.deleteById(aId));
+
+        Assertions.assertEquals(0, permissionRepository.count());
+    }
 }
