@@ -5,6 +5,7 @@ import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
+import java.util.Objects;
 
 public class Role extends AggregateRoot<RoleID> {
 
@@ -29,8 +30,8 @@ public class Role extends AggregateRoot<RoleID> {
         this.description = aDescription;
         this.roleType = aRoleType;
         this.isDefault = isDefault;
-        this.createdAt = aCreatedAt;
-        this.updatedAt = aUpdatedAt;
+        this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' must not be null");
+        this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' must not be null");
     }
 
     @Override
