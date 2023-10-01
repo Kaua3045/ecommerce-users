@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.permission;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
+import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.infrastructure.permissions.PermissionMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
@@ -120,5 +121,36 @@ public class PermissionMySQLGatewayTest {
         Assertions.assertDoesNotThrow(() -> permissionGateway.deleteById(aId));
 
         Assertions.assertEquals(0, permissionRepository.count());
+    }
+
+    @Test
+    void givenAPrePersistedPermissionAndValidPermissionId_whenCallFindById_shouldReturnPermission() {
+        final var aName = "create-role";
+        final var aDescription = "Create a new role";
+
+        Permission aPermission = Permission.newPermission(aName, aDescription);
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        permissionRepository.save(PermissionJpaEntity.toEntity(aPermission));
+
+        Assertions.assertEquals(1, permissionRepository.count());
+
+        final var actualPermission = permissionGateway.findById(aPermission.getId().getValue()).get();
+
+        Assertions.assertEquals(aPermission.getId(), actualPermission.getId());
+        Assertions.assertEquals(aPermission.getName(), actualPermission.getName());
+        Assertions.assertEquals(aPermission.getDescription(), actualPermission.getDescription());
+        Assertions.assertEquals(aPermission.getCreatedAt(), actualPermission.getCreatedAt());
+        Assertions.assertEquals(aPermission.getUpdatedAt(), actualPermission.getUpdatedAt());
+    }
+
+    @Test
+    void givenAValidPermissionIdButNotStored_whenCallFindById_shouldReturnEmpty() {
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        final var actualPermission = permissionGateway.findById(PermissionID.from("empty").getValue());
+
+        Assertions.assertTrue(actualPermission.isEmpty());
     }
 }
