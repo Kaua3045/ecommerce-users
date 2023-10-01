@@ -7,4 +7,6 @@ public interface PermissionGateway {
     Permission create(Permission aPermission);
 
     boolean existsByName(String aName);
+
+    void deleteById(String aId);
 }

@@ -26,4 +26,11 @@ public class PermissionMySQLGateway implements PermissionGateway {
     public boolean existsByName(String aName) {
         return this.permissionRepository.existsByName(aName);
     }
+
+    @Override
+    public void deleteById(String aId) {
+        if (this.permissionRepository.existsById(aId)) {
+            this.permissionRepository.deleteById(aId);
+        }
+    }
 }

@@ -3,9 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.api;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.CreatePermissionApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping(value = "permissions")
 public interface PermissionAPI {
@@ -15,4 +13,7 @@ public interface PermissionAPI {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     ResponseEntity<?> createPermission(@RequestBody CreatePermissionApiInput input);
+
+    @DeleteMapping("{id}")
+    ResponseEntity<?> deletePermission(@PathVariable String id);
 }
