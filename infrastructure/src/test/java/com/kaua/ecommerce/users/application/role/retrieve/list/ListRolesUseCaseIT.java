@@ -2,7 +2,7 @@ package com.kaua.ecommerce.users.application.role.retrieve.list;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.roles.Role;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
@@ -46,7 +46,7 @@ public class ListRolesUseCaseIT {
         final var aTotalItems = 0;
         final var aTotalPage = 0;
 
-        final var aQuery = new RoleSearchQuery(
+        final var aQuery = new SearchQuery(
                 aPage,
                 aPerPage,
                 aTerm,
@@ -81,7 +81,7 @@ public class ListRolesUseCaseIT {
         final var aSort = "name";
         final var aDirection = "asc";
 
-        final var aQuery = new RoleSearchQuery(
+        final var aQuery = new SearchQuery(
                 aPage,
                 aPerPage,
                 aTerms,
@@ -120,7 +120,7 @@ public class ListRolesUseCaseIT {
     ) {
         final var aTerms = "";
 
-        final var aQuery = new RoleSearchQuery(
+        final var aQuery = new SearchQuery(
                 aPage,
                 aPerPage,
                 aTerms,
@@ -156,7 +156,7 @@ public class ListRolesUseCaseIT {
         final var aDirection = "asc";
         final var aTerms = "";
 
-        final var aQuery = new RoleSearchQuery(
+        final var aQuery = new SearchQuery(
                 aPage,
                 aPerPage,
                 aTerms,

@@ -2,8 +2,7 @@ package com.kaua.ecommerce.users.application.gateways;
 
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.Role;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
-import com.kaua.ecommerce.users.domain.roles.RoleTypes;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 
 import java.util.Optional;
 
@@ -17,7 +16,7 @@ public interface RoleGateway {
 
     Optional<Role> findDefaultRole();
 
-    Pagination<Role> findAll(RoleSearchQuery aQuery);
+    Pagination<Role> findAll(SearchQuery aQuery);
 
     Role update(Role aRole);
 

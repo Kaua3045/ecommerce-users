@@ -3,7 +3,7 @@ package com.kaua.ecommerce.users.application.role.retrieve.list;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.Role;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -42,7 +42,7 @@ public class ListRolesUseCaseTest {
         final var sort = "createdAt";
         final var direction = "asc";
 
-        final var aQuery = new RoleSearchQuery(page, perPage, terms, sort, direction);
+        final var aQuery = new SearchQuery(page, perPage, terms, sort, direction);
         final var pagination = new Pagination<>(page, perPage, totalPages, roles.size(), roles);
 
         final var itemsCount = 2;
@@ -71,7 +71,7 @@ public class ListRolesUseCaseTest {
         final var sort = "createdAt";
         final var direction = "asc";
 
-        final var aQuery = new RoleSearchQuery(page, perPage, terms, sort, direction);
+        final var aQuery = new SearchQuery(page, perPage, terms, sort, direction);
         final var pagination = new Pagination<>(page, perPage, totalPages, roles.size(), roles);
 
         final var itemsCount = 0;

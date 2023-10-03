@@ -2,7 +2,7 @@ package com.kaua.ecommerce.users.application.role.retrieve.list;
 
 import com.kaua.ecommerce.users.application.UseCase;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 
-public abstract class ListRolesUseCase extends UseCase<RoleSearchQuery, Pagination<ListRolesOutput>> {
+public abstract class ListRolesUseCase extends UseCase<SearchQuery, Pagination<ListRolesOutput>> {
 }
