@@ -39,8 +39,7 @@ public class Permission extends AggregateRoot<PermissionID> {
         return new Permission(aId, aName, aDescription, aNow, aNow);
     }
 
-    public Permission update(final String aName, final String aDescription) {
-        this.name = aName;
+    public Permission update(final String aDescription) {
         this.description = aDescription;
         this.updatedAt = InstantUtils.now();
         return this;

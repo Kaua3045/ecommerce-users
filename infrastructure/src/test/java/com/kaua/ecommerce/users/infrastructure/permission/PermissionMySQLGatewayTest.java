@@ -153,4 +153,38 @@ public class PermissionMySQLGatewayTest {
 
         Assertions.assertTrue(actualPermission.isEmpty());
     }
+
+    @Test
+    void givenAValidPermission_whenCallUpdate_shouldReturnAUpdatedPermission() {
+        final var aName = "create-role";
+        final var aDescription = "Create a new role";
+
+        final var aPermission = Permission.newPermission(aName, null);
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        permissionRepository.save(PermissionJpaEntity.toEntity(aPermission));
+
+        Assertions.assertEquals(1, permissionRepository.count());
+
+        final var aPermissionUpdatedDate = aPermission.getUpdatedAt();
+
+        final var aPermissionUpdated = aPermission.update(aDescription);
+
+        final var actualPermission = this.permissionGateway.update(aPermissionUpdated);
+
+        Assertions.assertEquals(aPermission.getId(), actualPermission.getId());
+        Assertions.assertEquals(aName, actualPermission.getName());
+        Assertions.assertEquals(aDescription, actualPermission.getDescription());
+        Assertions.assertEquals(aPermission.getCreatedAt(), actualPermission.getCreatedAt());
+        Assertions.assertTrue(actualPermission.getUpdatedAt().isAfter(aPermissionUpdatedDate));
+
+        final var actualEntity = permissionRepository.findById(actualPermission.getId().getValue()).get();
+
+        Assertions.assertEquals(aPermission.getId().getValue(), actualEntity.getId());
+        Assertions.assertEquals(aName, actualEntity.getName());
+        Assertions.assertEquals(aDescription, actualEntity.getDescription());
+        Assertions.assertEquals(aPermission.getCreatedAt(), actualEntity.getCreatedAt());
+        Assertions.assertTrue(actualEntity.getUpdatedAt().isAfter(aPermissionUpdatedDate));
+    }
 }

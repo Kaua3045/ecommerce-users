@@ -34,6 +34,11 @@ public class PermissionMySQLGateway implements PermissionGateway {
     }
 
     @Override
+    public Permission update(Permission aPermission) {
+        return this.permissionRepository.save(PermissionJpaEntity.toEntity(aPermission)).toDomain();
+    }
+
+    @Override
     public void deleteById(String aId) {
         if (this.permissionRepository.existsById(aId)) {
             this.permissionRepository.deleteById(aId);
