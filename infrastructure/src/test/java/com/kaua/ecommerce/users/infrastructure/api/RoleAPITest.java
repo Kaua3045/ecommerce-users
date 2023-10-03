@@ -837,7 +837,7 @@ public class RoleAPITest {
     }
 
     @Test
-    void givenAnInvalidId_whenCallGetAccount_thenShouldThrowNotFoundException() throws Exception {
+    void givenAnInvalidId_whenCallGetRole_thenShouldThrowNotFoundException() throws Exception {
         // given
         final var expectedErrorMessage = "Role with id 123 was not found";
         final var aId = "123";

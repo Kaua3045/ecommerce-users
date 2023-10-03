@@ -7,6 +7,7 @@ import com.kaua.ecommerce.users.infrastructure.permissions.persistence.Permissio
 import org.springframework.stereotype.Component;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 public class PermissionMySQLGateway implements PermissionGateway {
@@ -25,6 +26,11 @@ public class PermissionMySQLGateway implements PermissionGateway {
     @Override
     public boolean existsByName(String aName) {
         return this.permissionRepository.existsByName(aName);
+    }
+
+    @Override
+    public Optional<Permission> findById(String aId) {
+        return this.permissionRepository.findById(aId).map(PermissionJpaEntity::toDomain);
     }
 
     @Override

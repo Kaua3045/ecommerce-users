@@ -7,6 +7,10 @@ import com.kaua.ecommerce.users.application.permission.create.CreatePermissionCo
 import com.kaua.ecommerce.users.application.permission.create.CreatePermissionOutput;
 import com.kaua.ecommerce.users.application.permission.create.CreatePermissionUseCase;
 import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUseCase;
+import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdCommand;
+import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdOutput;
+import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -42,6 +46,9 @@ public class PermissionAPITest {
 
     @MockBean
     private DeletePermissionUseCase deletePermissionUseCase;
+
+    @MockBean
+    private GetPermissionByIdUseCase getPermissionByIdUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreatePermission_thenShouldReturnAnPermissionId() throws Exception {
@@ -298,6 +305,56 @@ public class PermissionAPITest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         Mockito.verify(deletePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAValidCommand_whenCallGetPermission_thenShouldReturneAnPermission() throws Exception {
+        // given
+        final var aName = "create-admin-role";
+        final var aDescription = "Create a new admin role";
+        final var aPermission = Permission.newPermission(aName, aDescription);
+        final var aId = aPermission.getId().getValue();
+
+        Mockito.when(getPermissionByIdUseCase.execute(Mockito.any(GetPermissionByIdCommand.class)))
+                .thenReturn(GetPermissionByIdOutput.from(aPermission));
+
+        final var request = MockMvcRequestBuilders.get("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.name", equalTo(aName)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.description", equalTo(aDescription)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aPermission.getCreatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aPermission.getUpdatedAt().toString())));
+
+        Mockito.verify(getPermissionByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAnInvalidId_whenCallGetPermission_thenShouldThrowNotFoundException() throws Exception {
+        // given
+        final var expectedErrorMessage = "Permission with id 123 was not found";
+        final var aId = "123";
+
+        Mockito.when(getPermissionByIdUseCase.execute(Mockito.any(GetPermissionByIdCommand.class)))
+                .thenThrow(NotFoundException.with(Permission.class, aId));
+
+        final var request = MockMvcRequestBuilders.get("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(getPermissionByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
     }
 }
