@@ -12,5 +12,7 @@ public interface PermissionGateway {
 
     Optional<Permission> findById(String aId);
 
+    Permission update(Permission aPermission);
+
     void deleteById(String aId);
 }
