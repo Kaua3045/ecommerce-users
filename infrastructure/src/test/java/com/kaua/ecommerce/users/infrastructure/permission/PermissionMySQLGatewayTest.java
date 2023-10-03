@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.permission;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.infrastructure.permissions.PermissionMySQLGateway;
@@ -9,6 +10,8 @@ import com.kaua.ecommerce.users.infrastructure.permissions.persistence.Permissio
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @IntegrationTest
 public class PermissionMySQLGatewayTest {
@@ -186,5 +189,152 @@ public class PermissionMySQLGatewayTest {
         Assertions.assertEquals(aDescription, actualEntity.getDescription());
         Assertions.assertEquals(aPermission.getCreatedAt(), actualEntity.getCreatedAt());
         Assertions.assertTrue(actualEntity.getUpdatedAt().isAfter(aPermissionUpdatedDate));
+    }
+
+    @Test
+    void givenPrePersistedPermission_whenCallFindAll_shouldReturnPaginated() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 3;
+        final var aTotalPages = 3;
+
+        final var aCustomerPermission = Permission.newPermission("customer-all", "Customer all");
+        final var aAdminPermission = Permission.newPermission("admin-all", "Admin all");
+        final var aCeoPermission = Permission.newPermission("ceo-all", null);
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        permissionRepository.saveAllAndFlush(List.of(
+                PermissionJpaEntity.toEntity(aCustomerPermission),
+                PermissionJpaEntity.toEntity(aAdminPermission),
+                PermissionJpaEntity.toEntity(aCeoPermission)
+        ));
+
+        Assertions.assertEquals(3, permissionRepository.count());
+
+        final var aQuery = new SearchQuery(0, 1, "", "name", "asc");
+        final var aResult = permissionGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAdminPermission.getId(), aResult.items().get(0).getId());
+    }
+
+    @Test
+    void givenEmptyPermissionsTable_whenCallFindAll_shouldReturnEmptyPage() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 0;
+        final var aTotalPages = 0;
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        final var aQuery = new SearchQuery(0, 1, "", "name", "asc");
+        final var aResult = permissionGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(0, aResult.items().size());
+    }
+
+    @Test
+    void givenFollowPagination_whenCallFindAllWithPageOne_shouldReturnPaginated() {
+        var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 3;
+        final var aTotalPages = 3;
+
+        final var aCustomerPermission = Permission.newPermission("customer-all", "Customer all");
+        final var aAdminPermission = Permission.newPermission("admin-all", "Admin all");
+        final var aCeoPermission = Permission.newPermission("ceo-all", null);
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        permissionRepository.saveAllAndFlush(List.of(
+                PermissionJpaEntity.toEntity(aCustomerPermission),
+                PermissionJpaEntity.toEntity(aAdminPermission),
+                PermissionJpaEntity.toEntity(aCeoPermission)
+        ));
+
+        Assertions.assertEquals(3, permissionRepository.count());
+
+        // Page 0
+        var aQuery = new SearchQuery(0, 1, "", "name", "asc");
+        var aResult = permissionGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAdminPermission.getId(), aResult.items().get(0).getId());
+
+        // Page 1
+        aPage = 1;
+
+        aQuery = new SearchQuery(1, 1, "", "name", "asc");
+        aResult = permissionGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aCeoPermission.getId(), aResult.items().get(0).getId());
+
+        // Page 2
+        aPage = 2;
+
+        aQuery = new SearchQuery(2, 1, "", "name", "asc");
+        aResult = permissionGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aCustomerPermission.getId(), aResult.items().get(0).getId());
+    }
+
+    @Test
+    void givenPrePersistedPermissionsAndCustAsTerm_whenCallFindAll_shouldReturnPaginated() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 1;
+        final var aTotalPages = 1;
+
+        final var aCustomerPermission = Permission.newPermission("customer-all", "Customer all");
+        final var aAdminPermission = Permission.newPermission("admin-all", "Admin all");
+        final var aCeoPermission = Permission.newPermission("ceo-all", null);
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        permissionRepository.saveAllAndFlush(List.of(
+                PermissionJpaEntity.toEntity(aCustomerPermission),
+                PermissionJpaEntity.toEntity(aAdminPermission),
+                PermissionJpaEntity.toEntity(aCeoPermission)
+        ));
+
+        Assertions.assertEquals(3, permissionRepository.count());
+
+        final var aQuery = new SearchQuery(0, 1, "cust", "name", "asc");
+        final var aResult = permissionGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aCustomerPermission.getId(), aResult.items().get(0).getId());
     }
 }
