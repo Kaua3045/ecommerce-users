@@ -10,13 +10,19 @@ import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUs
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdCommand;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdOutput;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionCommand;
+import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionOutput;
+import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.CreatePermissionApiInput;
+import com.kaua.ecommerce.users.infrastructure.permissions.models.UpdatePermissionApiInput;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -49,6 +55,9 @@ public class PermissionAPITest {
 
     @MockBean
     private GetPermissionByIdUseCase getPermissionByIdUseCase;
+
+    @MockBean
+    private UpdatePermissionUseCase updatePermissionUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreatePermission_thenShouldReturnAnPermissionId() throws Exception {
@@ -356,5 +365,125 @@ public class PermissionAPITest {
 
         Mockito.verify(getPermissionByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
+    }
+
+    @Test
+    void givenAValidValues_whenCallUpdatePermission_thenShouldReturnOkAndPermissionId() throws Exception {
+        // given
+        final var aName = "create-an-admin-role";
+        final var aDescription = "Create a new admin role";
+        final var aPermission = Permission.newPermission(aName, null);
+        final var aId = aPermission.getId().getValue();
+
+        final var aInput = new UpdatePermissionApiInput(aDescription);
+
+        Mockito.when(updatePermissionUseCase.execute(Mockito.any(UpdatePermissionCommand.class)))
+                .thenReturn(Either.right(UpdatePermissionOutput.from(aPermission)));
+
+        final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdatePermissionCommand.class);
+
+        Mockito.verify(updatePermissionUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aId, actualCmd.id());
+        Assertions.assertEquals(aDescription, actualCmd.description());
+    }
+
+    @Test
+    void givenAValidValuesWithNullDescription_whenCallUpdatePermission_thenShouldReturnOkAndPermissionId() throws Exception {
+        // given
+        final var aName = "create-an-admin-role";
+        final String aDescription = null;
+        final var aPermission = Permission.newPermission(aName, "Create a new admin role");
+        final var aId = aPermission.getId().getValue();
+
+        final var aInput = new UpdatePermissionApiInput(aDescription);
+
+        Mockito.when(updatePermissionUseCase.execute(Mockito.any(UpdatePermissionCommand.class)))
+                .thenReturn(Either.right(UpdatePermissionOutput.from(aPermission)));
+
+        final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", equalTo(aId)));
+
+        final var cmdCaptor = ArgumentCaptor.forClass(UpdatePermissionCommand.class);
+
+        Mockito.verify(updatePermissionUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aId, actualCmd.id());
+        Assertions.assertEquals(aDescription, actualCmd.description());
+    }
+
+    @Test
+    void givenAnInvalidCommandNotExistsPermission_whenCallUpdatePermission_thenShouldReturnNotFoundException() throws Exception {
+        final var aId = "123";
+        final var aName = "create-an-admin-role";
+        final var aDescription = "Create a new admin role";
+        final var expectedErrorMessage = "Permission with id 123 was not found";
+
+        final var aInput = new UpdatePermissionApiInput(aDescription);
+
+        Mockito.when(updatePermissionUseCase.execute(Mockito.any(UpdatePermissionCommand.class)))
+                .thenThrow(NotFoundException.with(Permission.class, aId));
+
+        final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(updatePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                        Objects.equals(aDescription, cmd.description())
+        ));
+    }
+
+    @Test
+    void givenAnInvalidCommandDescriptionLengthMoreThan255_whenCallUpdatePermission_thenShouldReturnDomainException() throws Exception {
+        final var aName = "create-an-admin-role";
+        final var aDescription = RandomStringUtils.generateValue(256);
+        final var aPermission = Permission.newPermission(aName, null);
+        final var aId = aPermission.getId().getValue();
+        final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
+
+        final var aInput = new UpdatePermissionApiInput(aDescription);
+
+        Mockito.when(updatePermissionUseCase.execute(Mockito.any(UpdatePermissionCommand.class)))
+                .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
+
+        final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("errors", hasSize(1)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0].message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(updatePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                        Objects.equals(aDescription, cmd.description())
+        ));
     }
 }
