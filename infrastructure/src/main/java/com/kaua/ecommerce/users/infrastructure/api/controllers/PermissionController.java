@@ -6,11 +6,15 @@ import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionCo
 import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUseCase;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdCommand;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.permission.retrieve.list.ListPermissionsUseCase;
 import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionCommand;
 import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionUseCase;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.infrastructure.api.PermissionAPI;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.CreatePermissionApiInput;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.GetPermissionResponse;
+import com.kaua.ecommerce.users.infrastructure.permissions.models.ListPermissionResponse;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.UpdatePermissionApiInput;
 import com.kaua.ecommerce.users.infrastructure.permissions.presenters.PermissionApiPresenter;
 import org.springframework.http.HttpStatus;
@@ -24,17 +28,20 @@ public class PermissionController implements PermissionAPI {
     private final DeletePermissionUseCase deletePermissionUseCase;
     private final GetPermissionByIdUseCase getPermissionByIdUseCase;
     private final UpdatePermissionUseCase updatePermissionUseCase;
+    private final ListPermissionsUseCase listPermissionsUseCase;
 
     public PermissionController(
             final CreatePermissionUseCase createPermissionUseCase,
             final DeletePermissionUseCase deletePermissionUseCase,
             final GetPermissionByIdUseCase getPermissionByIdUseCase,
-            final UpdatePermissionUseCase updatePermissionUseCase
+            final UpdatePermissionUseCase updatePermissionUseCase,
+            final ListPermissionsUseCase listPermissionsUseCase
     ) {
         this.createPermissionUseCase = createPermissionUseCase;
         this.deletePermissionUseCase = deletePermissionUseCase;
         this.getPermissionByIdUseCase = getPermissionByIdUseCase;
         this.updatePermissionUseCase = updatePermissionUseCase;
+        this.listPermissionsUseCase = listPermissionsUseCase;
     }
 
     @Override
@@ -52,6 +59,19 @@ public class PermissionController implements PermissionAPI {
     public GetPermissionResponse getPermission(String id) {
         return PermissionApiPresenter.present(this.getPermissionByIdUseCase
                 .execute(GetPermissionByIdCommand.with(id)));
+    }
+
+    @Override
+    public Pagination<ListPermissionResponse> listPermissions(
+            String search,
+            int page,
+            int perPage,
+            String sort,
+            String direction
+    ) {
+        return this.listPermissionsUseCase
+                .execute(new SearchQuery(page, perPage, search, sort, direction))
+                .map(PermissionApiPresenter::present);
     }
 
     @Override
