@@ -7,6 +7,8 @@ import com.kaua.ecommerce.users.application.permission.delete.DefaultDeletePermi
 import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUseCase;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.DefaultGetPermissionByIdUseCase;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.permission.update.DefaultUpdatePermissionUseCase;
+import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,6 +31,11 @@ public class PermissionUseCaseConfig {
     @Bean
     public GetPermissionByIdUseCase getPermissionByIdUseCase() {
         return new DefaultGetPermissionByIdUseCase(permissionGateway);
+    }
+
+    @Bean
+    public UpdatePermissionUseCase updatePermissionUseCase() {
+        return new DefaultUpdatePermissionUseCase(permissionGateway);
     }
 
     @Bean
