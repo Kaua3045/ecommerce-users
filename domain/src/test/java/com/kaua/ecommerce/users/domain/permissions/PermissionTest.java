@@ -180,15 +180,15 @@ public class PermissionTest {
     }
 
     @Test
-    void givenAValidValuesWithDescription_whenCallUpdatePermission_shouldReturnAnPermissionUpdated() {
+    void givenAValidValues_whenCallUpdatePermission_shouldReturnAnPermissionUpdated() {
         final var aName = "create-role";
         final var aDescription = "Permission to create a role";
 
-        final var aPermission = Permission.newPermission("delete-role", null);
+        final var aPermission = Permission.newPermission(aName, null);
 
         final var aPermissionUpdatedAt = aPermission.getUpdatedAt();
 
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
+        final var aPermissionUpdated = aPermission.update(aDescription);
 
         // then
         Assertions.assertEquals(aPermission.getId().getValue(), aPermissionUpdated.getId().getValue());
@@ -201,15 +201,15 @@ public class PermissionTest {
     }
 
     @Test
-    void givenAValidValuesWithNullDescription_whenCallUpdatePermission_shouldReturnAnPermissionUpdated() {
+    void givenAValidNullDescription_whenCallUpdatePermission_shouldReturnAnPermissionUpdated() {
         final var aName = "create-role";
         final String aDescription = null;
 
-        final var aPermission = Permission.newPermission("delete-role", "Permission to delete a role");
+        final var aPermission = Permission.newPermission(aName, "Permission to delete a role");
 
         final var aPermissionUpdatedAt = aPermission.getUpdatedAt();
 
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
+        final var aPermissionUpdated = aPermission.update(aDescription);
 
         // then
         Assertions.assertEquals(aPermission.getId().getValue(), aPermissionUpdated.getId().getValue());
@@ -222,90 +222,6 @@ public class PermissionTest {
     }
 
     @Test
-    void givenAnInvalidNameNull_whenCallUpdatePermission_shouldReturnADomainException() {
-        final String aName = null;
-        final var aDescription = "Permission to create a role";
-
-        final var expectedErrorMessage = "'name' should not be null or blank";
-        final var expectedErrorCount = 1;
-
-        final var aPermission = Permission.newPermission("delete-role", null);
-
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
-
-        final var aTestValidationHandler = new TestValidationHandler();
-        final var aPermissionValidator = new PermissionValidator(aTestValidationHandler, aPermissionUpdated);
-
-        aPermissionValidator.validate();
-
-        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
-        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
-    }
-
-    @Test
-    void givenAnInvalidNameBlank_whenCallUpdatePermission_shouldReturnADomainException() {
-        final var aName = "";
-        final var aDescription = "Permission to create a role";
-
-        final var expectedErrorMessage = "'name' should not be null or blank";
-        final var expectedErrorCount = 1;
-
-        final var aPermission = Permission.newPermission("delete-role", null);
-
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
-
-        final var aTestValidationHandler = new TestValidationHandler();
-        final var aPermissionValidator = new PermissionValidator(aTestValidationHandler, aPermissionUpdated);
-
-        aPermissionValidator.validate();
-
-        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
-        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
-    }
-
-    @Test
-    void givenAnInvalidNameLengthLessThan3_whenCallUpdatePermission_shouldReturnADomainException() {
-        final var aName = "cr";
-        final var aDescription = "Permission to create a role";
-
-        final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
-        final var expectedErrorCount = 1;
-
-        final var aPermission = Permission.newPermission("delete-role", null);
-
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
-
-        final var aTestValidationHandler = new TestValidationHandler();
-        final var aPermissionValidator = new PermissionValidator(aTestValidationHandler, aPermissionUpdated);
-
-        aPermissionValidator.validate();
-
-        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
-        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
-    }
-
-    @Test
-    void givenAnInvalidNameLengthMoreThan50_whenCallUpdatePermission_shouldReturnADomainException() {
-        final var aName = RandomStringUtils.generateValue(51);
-        final var aDescription = "Permission to create a role";
-
-        final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
-        final var expectedErrorCount = 1;
-
-        final var aPermission = Permission.newPermission("delete-role", null);
-
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
-
-        final var aTestValidationHandler = new TestValidationHandler();
-        final var aPermissionValidator = new PermissionValidator(aTestValidationHandler, aPermissionUpdated);
-
-        aPermissionValidator.validate();
-
-        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
-        Assertions.assertEquals(expectedErrorCount, aTestValidationHandler.getErrors().size());
-    }
-
-    @Test
     void givenAnInvalidDescriptionLengthMoreThan255_whenCallUpdatePermission_shouldReturnADomainException() {
         final var aName = "create-role";
         final var aDescription = RandomStringUtils.generateValue(256);
@@ -313,9 +229,9 @@ public class PermissionTest {
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
 
-        final var aPermission = Permission.newPermission("delete-role", null);
+        final var aPermission = Permission.newPermission(aName, null);
 
-        final var aPermissionUpdated = aPermission.update(aName, aDescription);
+        final var aPermissionUpdated = aPermission.update(aDescription);
 
         final var aTestValidationHandler = new TestValidationHandler();
         final var aPermissionValidator = new PermissionValidator(aTestValidationHandler, aPermissionUpdated);
