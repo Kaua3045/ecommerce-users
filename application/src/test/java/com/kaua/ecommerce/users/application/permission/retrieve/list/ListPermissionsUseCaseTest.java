@@ -1,10 +1,9 @@
-package com.kaua.ecommerce.users.application.role.retrieve.list;
+package com.kaua.ecommerce.users.application.permission.retrieve.list;
 
-import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
-import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
-import com.kaua.ecommerce.users.domain.roles.RoleTypes;
+import com.kaua.ecommerce.users.domain.permissions.Permission;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,23 +16,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class ListRolesUseCaseTest {
+public class ListPermissionsUseCaseTest {
 
     @InjectMocks
-    private DefaultListRolesUseCase useCase;
+    private DefaultListPermissionsUseCase useCase;
 
     @Mock
-    private RoleGateway roleGateway;
+    private PermissionGateway permissionGateway;
 
     @BeforeEach
     void cleanUp() {
-        Mockito.reset(roleGateway);
+        Mockito.reset(permissionGateway);
     }
 
     @Test
-    void givenAValidQuery_whenCallListRoles_thenShouldReturnRoles() {
-        final var roles = List.of(Role.newRole("admin", null, RoleTypes.EMPLOYEES, false),
-                Role.newRole("User", "Common user", RoleTypes.COMMON, true));
+    void givenAValidQuery_whenCallListPermission_thenShouldReturnPermissions() {
+        final var permissions = List.of(Permission.newPermission("create-an-admin-user", null),
+                Permission.newPermission("create-a-customer-user", "Create a customer user"));
 
         final var page = 0;
         final var perPage = 10;
@@ -43,26 +42,26 @@ public class ListRolesUseCaseTest {
         final var direction = "asc";
 
         final var aQuery = new SearchQuery(page, perPage, terms, sort, direction);
-        final var pagination = new Pagination<>(page, perPage, totalPages, roles.size(), roles);
+        final var pagination = new Pagination<>(page, perPage, totalPages, permissions.size(), permissions);
 
         final var itemsCount = 2;
-        final var resultItems = pagination.map(ListRolesOutput::from);
+        final var resultItemsAfterCallUseCase = pagination.map(ListPermissionsOutput::from);
 
-        Mockito.when(roleGateway.findAll(aQuery)).thenReturn(pagination);
+        Mockito.when(permissionGateway.findAll(aQuery)).thenReturn(pagination);
 
         final var actualResult = useCase.execute(aQuery);
 
         Assertions.assertEquals(itemsCount, actualResult.totalItems());
-        Assertions.assertEquals(resultItems, actualResult);
+        Assertions.assertEquals(resultItemsAfterCallUseCase, actualResult);
         Assertions.assertEquals(page, actualResult.currentPage());
         Assertions.assertEquals(perPage, actualResult.perPage());
         Assertions.assertEquals(totalPages, actualResult.totalPages());
-        Assertions.assertEquals(roles.size(), actualResult.items().size());
+        Assertions.assertEquals(permissions.size(), actualResult.items().size());
     }
 
     @Test
-    void givenAValidQuery_whenHasNoResult_thenShouldReturnEmptyRoles() {
-        final var roles = List.<Role>of();
+    void givenAValidQuery_whenHasNoResult_thenShouldReturnEmptyPermissions() {
+        final var permissions = List.<Permission>of();
 
         final var page = 0;
         final var perPage = 10;
@@ -72,20 +71,20 @@ public class ListRolesUseCaseTest {
         final var direction = "asc";
 
         final var aQuery = new SearchQuery(page, perPage, terms, sort, direction);
-        final var pagination = new Pagination<>(page, perPage, totalPages, roles.size(), roles);
+        final var pagination = new Pagination<>(page, perPage, totalPages, permissions.size(), permissions);
 
         final var itemsCount = 0;
-        final var resultItems = pagination.map(ListRolesOutput::from);
+        final var resultItemsAfterCallUseCase = pagination.map(ListPermissionsOutput::from);
 
-        Mockito.when(roleGateway.findAll(aQuery)).thenReturn(pagination);
+        Mockito.when(permissionGateway.findAll(aQuery)).thenReturn(pagination);
 
         final var actualResult = useCase.execute(aQuery);
 
         Assertions.assertEquals(itemsCount, actualResult.totalItems());
-        Assertions.assertEquals(resultItems, actualResult);
+        Assertions.assertEquals(resultItemsAfterCallUseCase, actualResult);
         Assertions.assertEquals(page, actualResult.currentPage());
         Assertions.assertEquals(perPage, actualResult.perPage());
         Assertions.assertEquals(totalPages, actualResult.totalPages());
-        Assertions.assertEquals(roles.size(), actualResult.items().size());
+        Assertions.assertEquals(permissions.size(), actualResult.items().size());
     }
 }

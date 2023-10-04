@@ -1,11 +1,10 @@
-package com.kaua.ecommerce.users.application.role.retrieve.list;
+package com.kaua.ecommerce.users.application.permission.retrieve.list;
 
 import com.kaua.ecommerce.users.IntegrationTest;
-import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
-import com.kaua.ecommerce.users.domain.roles.RoleTypes;
-import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
-import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
+import com.kaua.ecommerce.users.domain.permissions.Permission;
+import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,23 +15,23 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @IntegrationTest
-public class ListRolesUseCaseIT {
+public class ListPermissionsUseCaseIT {
 
     @Autowired
-    private ListRolesUseCase listRolesUseCase;
+    private ListPermissionsUseCase listPermissionsUseCase;
 
     @Autowired
-    private RoleJpaRepository roleRepository;
+    private PermissionJpaRepository permissionRepository;
 
     @BeforeEach
     void mockUp() {
-        final var roles = List.of(
-                RoleJpaEntity.toEntity(Role.newRole("User", null, RoleTypes.COMMON, true)),
-                RoleJpaEntity.toEntity(Role.newRole("Admin", null, RoleTypes.EMPLOYEES, false)),
-                RoleJpaEntity.toEntity(Role.newRole("ceo", "Chief Executive Officer", RoleTypes.EMPLOYEES, false))
+        final var permissions = List.of(
+                PermissionJpaEntity.toEntity(Permission.newPermission("customer-all", "Customer all")),
+                PermissionJpaEntity.toEntity(Permission.newPermission("admin-all", "Admin all")),
+                PermissionJpaEntity.toEntity(Permission.newPermission("ceo", null))
         );
 
-        roleRepository.saveAllAndFlush(roles);
+        permissionRepository.saveAllAndFlush(permissions);
     }
 
     @Test
@@ -54,7 +53,7 @@ public class ListRolesUseCaseIT {
                 aDirection
         );
 
-        final var actualResult = this.listRolesUseCase.execute(aQuery);
+        final var actualResult = this.listPermissionsUseCase.execute(aQuery);
 
         Assertions.assertEquals(aItemsCount, actualResult.items().size());
         Assertions.assertEquals(aTotalItems, actualResult.totalItems());
@@ -65,18 +64,18 @@ public class ListRolesUseCaseIT {
 
     @ParameterizedTest
     @CsvSource({
-            "use,0,10,1,1,1,User",
-            "adm,0,10,1,1,1,Admin",
+            "cust,0,10,1,1,1,customer-all",
+            "adm,0,10,1,1,1,admin-all",
             "ce,0,10,1,1,1,ceo"
     })
-    void givenAValidTerm_whenCallListRoles_shouldReturnRolesFiltered(
+    void givenAValidTerm_whenCallListPermission_shouldReturnPermissionFiltered(
             final String aTerms,
             final int aPage,
             final int aPerPage,
             final int aItemsCount,
             final int aTotalItems,
             final int aTotalPages,
-            final String aRoleName
+            final String aPermissionName
     ) {
         final var aSort = "name";
         final var aDirection = "asc";
@@ -89,26 +88,60 @@ public class ListRolesUseCaseIT {
                 aDirection
         );
 
-        final var actualResult = this.listRolesUseCase.execute(aQuery);
+        final var actualResult = this.listPermissionsUseCase.execute(aQuery);
 
         Assertions.assertEquals(aItemsCount, actualResult.items().size());
         Assertions.assertEquals(aTotalItems, actualResult.totalItems());
         Assertions.assertEquals(aPage, actualResult.currentPage());
         Assertions.assertEquals(aPerPage, actualResult.perPage());
         Assertions.assertEquals(aTotalPages, actualResult.totalPages());
-        Assertions.assertEquals(aRoleName, actualResult.items().get(0).name());
+        Assertions.assertEquals(aPermissionName, actualResult.items().get(0).name());
     }
 
     @ParameterizedTest
     @CsvSource({
-            "name,asc,0,10,3,3,1,Admin",
-            "name,desc,0,10,3,3,1,ceo",
-            "createdAt,asc,0,10,3,3,1,User",
-            "createdAt,desc,0,10,3,3,1,ceo",
-            "roleType,asc,0,10,3,3,1,User",
-            "roleType,desc,0,10,3,3,1,Admin"
+            "0,1,1,3,3,admin-all",
+            "1,1,1,3,3,ceo",
+            "2,1,1,3,3,customer-all"
     })
-    void givenAValidSortAndDirection_whenCallListRoles_shouldReturnRolesOrdered(
+    void givenAValidPage_whenCallListPermissions_shouldReturnPermissionsPaginated(
+            final int aPage,
+            final int aPerPage,
+            final int aItemsCount,
+            final int aTotalItems,
+            final int aTotalPages,
+            final String aPermissionName
+    ) {
+        final var aSort = "name";
+        final var aDirection = "asc";
+        final var aTerms = "";
+
+        final var aQuery = new SearchQuery(
+                aPage,
+                aPerPage,
+                aTerms,
+                aSort,
+                aDirection
+        );
+
+        final var actualResult = this.listPermissionsUseCase.execute(aQuery);
+
+        Assertions.assertEquals(aItemsCount, actualResult.items().size());
+        Assertions.assertEquals(aTotalItems, actualResult.totalItems());
+        Assertions.assertEquals(aPage, actualResult.currentPage());
+        Assertions.assertEquals(aPerPage, actualResult.perPage());
+        Assertions.assertEquals(aTotalPages, actualResult.totalPages());
+        Assertions.assertEquals(aPermissionName, actualResult.items().get(0).name());
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            "name,asc,0,10,3,3,1,admin-all",
+            "name,desc,0,10,3,3,1,customer-all",
+            "createdAt,asc,0,10,3,3,1,customer-all",
+            "createdAt,desc,0,10,3,3,1,ceo"
+    })
+    void givenAValidSortAndDirection_whenCallListPermissions_shouldReturnPermissionsOrdered(
             final String aSort,
             final String aDirection,
             final int aPage,
@@ -116,7 +149,7 @@ public class ListRolesUseCaseIT {
             final int aItemsCount,
             final int aTotalItems,
             final int aTotalPages,
-            final String aRoleName
+            final String aPermissionName
     ) {
         final var aTerms = "";
 
@@ -128,49 +161,13 @@ public class ListRolesUseCaseIT {
                 aDirection
         );
 
-        final var actualResult = this.listRolesUseCase.execute(aQuery);
+        final var actualResult = this.listPermissionsUseCase.execute(aQuery);
 
         Assertions.assertEquals(aItemsCount, actualResult.items().size());
         Assertions.assertEquals(aTotalItems, actualResult.totalItems());
         Assertions.assertEquals(aPage, actualResult.currentPage());
         Assertions.assertEquals(aPerPage, actualResult.perPage());
         Assertions.assertEquals(aTotalPages, actualResult.totalPages());
-        Assertions.assertEquals(aRoleName, actualResult.items().get(0).name());
-    }
-
-    @ParameterizedTest
-    @CsvSource({
-            "0,1,1,3,3,Admin",
-            "1,1,1,3,3,User",
-            "2,1,1,3,3,ceo"
-    })
-    void givenAValidPage_whenCallListRoles_shouldReturnRolesPaginated(
-            final int aPage,
-            final int aPerPage,
-            final int aItemsCount,
-            final int aTotalItems,
-            final int aTotalPages,
-            final String aRoleName
-    ) {
-        final var aSort = "name";
-        final var aDirection = "asc";
-        final var aTerms = "";
-
-        final var aQuery = new SearchQuery(
-                aPage,
-                aPerPage,
-                aTerms,
-                aSort,
-                aDirection
-        );
-
-        final var actualResult = this.listRolesUseCase.execute(aQuery);
-
-        Assertions.assertEquals(aItemsCount, actualResult.items().size());
-        Assertions.assertEquals(aTotalItems, actualResult.totalItems());
-        Assertions.assertEquals(aPage, actualResult.currentPage());
-        Assertions.assertEquals(aPerPage, actualResult.perPage());
-        Assertions.assertEquals(aTotalPages, actualResult.totalPages());
-        Assertions.assertEquals(aRoleName, actualResult.items().get(0).name());
+        Assertions.assertEquals(aPermissionName, actualResult.items().get(0).name());
     }
 }

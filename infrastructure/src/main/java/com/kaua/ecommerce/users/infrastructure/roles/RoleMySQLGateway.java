@@ -3,7 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.roles;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.Role;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.utils.SpecificationUtils;
@@ -46,7 +46,7 @@ public class RoleMySQLGateway implements RoleGateway {
     }
 
     @Override
-    public Pagination<Role> findAll(RoleSearchQuery aQuery) {
+    public Pagination<Role> findAll(SearchQuery aQuery) {
         final var aPage = PageRequest.of(
                 aQuery.page(),
                 aQuery.perPage(),

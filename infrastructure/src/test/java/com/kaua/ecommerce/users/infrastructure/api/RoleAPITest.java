@@ -18,7 +18,7 @@ import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.roles.Role;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -871,7 +871,7 @@ public class RoleAPITest {
         final var aTotalPage = 1;
         final var aItems = List.of(ListRolesOutput.from(aRole));
 
-        Mockito.when(listRolesUseCase.execute(Mockito.any(RoleSearchQuery.class)))
+        Mockito.when(listRolesUseCase.execute(Mockito.any(SearchQuery.class)))
                 .thenReturn(new Pagination<>(
                         aPage,
                         aPerPage,

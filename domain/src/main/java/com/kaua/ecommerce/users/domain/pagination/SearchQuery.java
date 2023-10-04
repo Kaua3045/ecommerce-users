@@ -1,6 +1,6 @@
-package com.kaua.ecommerce.users.domain.roles;
+package com.kaua.ecommerce.users.domain.pagination;
 
-public record RoleSearchQuery(
+public record SearchQuery(
         int page,
         int perPage,
         String terms,

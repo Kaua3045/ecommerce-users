@@ -10,10 +10,14 @@ import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUs
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdCommand;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdOutput;
 import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.permission.retrieve.list.ListPermissionsOutput;
+import com.kaua.ecommerce.users.application.permission.retrieve.list.ListPermissionsUseCase;
 import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionCommand;
 import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionOutput;
 import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -32,6 +36,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -58,6 +63,9 @@ public class PermissionAPITest {
 
     @MockBean
     private UpdatePermissionUseCase updatePermissionUseCase;
+
+    @MockBean
+    private ListPermissionsUseCase listPermissionsUseCase;
 
     @Test
     void givenAValidCommandWithDescription_whenCallCreatePermission_thenShouldReturnAnPermissionId() throws Exception {
@@ -484,6 +492,60 @@ public class PermissionAPITest {
 
         Mockito.verify(updatePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
                         Objects.equals(aDescription, cmd.description())
+        ));
+    }
+
+    @Test
+    void givenAValidParams_whenCallListPermissions_shouldReturnPermissions() throws Exception {
+        final var aPermission = Permission.newPermission("create-role", "Create a new role");
+
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTerms = "role";
+        final var aSort = "name";
+        final var aDirection = "asc";
+        final var aTotalItems = 1;
+        final var aTotalPage = 1;
+        final var aItems = List.of(ListPermissionsOutput.from(aPermission));
+
+        Mockito.when(listPermissionsUseCase.execute(Mockito.any(SearchQuery.class)))
+                .thenReturn(new Pagination<>(
+                        aPage,
+                        aPerPage,
+                        aTotalPage,
+                        aTotalItems,
+                        aItems
+                ));
+
+        final var request = MockMvcRequestBuilders.get("/permissions")
+                .queryParam("page", String.valueOf(aPage))
+                .queryParam("perPage", String.valueOf(aPerPage))
+                .queryParam("sort", aSort)
+                .queryParam("dir", aDirection)
+                .queryParam("search", aTerms)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.currentPage", equalTo(aPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.perPage", equalTo(aPerPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages", equalTo(aTotalPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalItems", equalTo(aTotalItems)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items", hasSize(aItems.size())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].id", equalTo(aPermission.getId().getValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].name", equalTo(aPermission.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].description", equalTo(aPermission.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].created_at", equalTo(aPermission.getCreatedAt().toString())));
+
+        Mockito.verify(listPermissionsUseCase, Mockito.times(1)).execute(argThat(query ->
+                Objects.equals(aPage, query.page()) &&
+                        Objects.equals(aPerPage, query.perPage()) &&
+                        Objects.equals(aSort, query.sort()) &&
+                        Objects.equals(aDirection, query.direction()) &&
+                        Objects.equals(aTerms, query.terms())
         ));
     }
 }

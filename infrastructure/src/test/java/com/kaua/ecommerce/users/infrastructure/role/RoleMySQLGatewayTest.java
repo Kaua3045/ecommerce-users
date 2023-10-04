@@ -3,7 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.role;
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleID;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
@@ -237,7 +237,7 @@ public class RoleMySQLGatewayTest {
 
         Assertions.assertEquals(3, roleRepository.count());
 
-        final var aQuery = new RoleSearchQuery(0, 1, "", "name", "asc");
+        final var aQuery = new SearchQuery(0, 1, "", "name", "asc");
         final var aResult = roleGateway.findAll(aQuery);
 
         Assertions.assertEquals(aPage, aResult.currentPage());
@@ -258,7 +258,7 @@ public class RoleMySQLGatewayTest {
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aQuery = new RoleSearchQuery(0, 1, "", "name", "asc");
+        final var aQuery = new SearchQuery(0, 1, "", "name", "asc");
         final var aResult = roleGateway.findAll(aQuery);
 
         Assertions.assertEquals(aPage, aResult.currentPage());
@@ -290,7 +290,7 @@ public class RoleMySQLGatewayTest {
         Assertions.assertEquals(3, roleRepository.count());
 
         // Page 0
-        var aQuery = new RoleSearchQuery(0, 1, "", "name", "asc");
+        var aQuery = new SearchQuery(0, 1, "", "name", "asc");
         var aResult = roleGateway.findAll(aQuery);
 
         Assertions.assertEquals(aPage, aResult.currentPage());
@@ -304,7 +304,7 @@ public class RoleMySQLGatewayTest {
         // Page 1
         aPage = 1;
 
-        aQuery = new RoleSearchQuery(1, 1, "", "name", "asc");
+        aQuery = new SearchQuery(1, 1, "", "name", "asc");
         aResult = roleGateway.findAll(aQuery);
 
         Assertions.assertEquals(aPage, aResult.currentPage());
@@ -318,7 +318,7 @@ public class RoleMySQLGatewayTest {
         // Page 2
         aPage = 2;
 
-        aQuery = new RoleSearchQuery(2, 1, "", "name", "asc");
+        aQuery = new SearchQuery(2, 1, "", "name", "asc");
         aResult = roleGateway.findAll(aQuery);
 
         Assertions.assertEquals(aPage, aResult.currentPage());
@@ -351,7 +351,7 @@ public class RoleMySQLGatewayTest {
 
         Assertions.assertEquals(3, roleRepository.count());
 
-        final var aQuery = new RoleSearchQuery(0, 1, "ce", "name", "asc");
+        final var aQuery = new SearchQuery(0, 1, "ce", "name", "asc");
         final var aResult = roleGateway.findAll(aQuery);
 
         Assertions.assertEquals(aPage, aResult.currentPage());

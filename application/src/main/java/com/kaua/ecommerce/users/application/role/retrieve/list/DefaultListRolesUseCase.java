@@ -2,7 +2,7 @@ package com.kaua.ecommerce.users.application.role.retrieve.list;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
-import com.kaua.ecommerce.users.domain.roles.RoleSearchQuery;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 
 import java.util.Objects;
 
@@ -15,7 +15,7 @@ public class DefaultListRolesUseCase extends ListRolesUseCase {
     }
 
     @Override
-    public Pagination<ListRolesOutput> execute(RoleSearchQuery aQuery) {
+    public Pagination<ListRolesOutput> execute(SearchQuery aQuery) {
         return this.roleGateway.findAll(aQuery)
                 .map(ListRolesOutput::from);
     }
