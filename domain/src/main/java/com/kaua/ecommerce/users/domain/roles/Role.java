@@ -140,6 +140,15 @@ public class Role extends AggregateRoot<RoleID> {
         return this;
     }
 
+    public Role addPermissions(final List<RolePermission> aPermissions) {
+        if (aPermissions == null || aPermissions.isEmpty()) {
+            return this;
+        }
+        this.permissions.addAll(aPermissions);
+        this.updatedAt = InstantUtils.now();
+        return this;
+    }
+
     public Role removePermission(final RolePermission aPermission) {
         if (aPermission == null) {
             return this;
