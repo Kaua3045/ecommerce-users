@@ -1,17 +1,23 @@
 package com.kaua.ecommerce.users.infrastructure.roles.persistence;
 
+import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RolePermission;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-@Entity
+@Entity(name = "Role")
 @Table(name = "roles")
 public class RoleJpaEntity {
 
     @Id
-    @Column(name = "role_id", nullable = false, unique = true)
+    @Column(name = "id", nullable = false, unique = true)
     private String id;
 
     @Column(name = "name", nullable = false, unique = true)
@@ -26,6 +32,9 @@ public class RoleJpaEntity {
 
     @Column(name = "is_default", nullable = false)
     private boolean isDefault;
+
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<RolePermissionJpaEntity> permissions;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant createdAt;
@@ -49,12 +58,13 @@ public class RoleJpaEntity {
         this.description = description;
         this.roleType = roleType;
         this.isDefault = isDefault;
+        this.permissions = new HashSet<>();
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
     }
 
     public static RoleJpaEntity toEntity(final Role aRole) {
-        return new RoleJpaEntity(
+        final var aEntity = new RoleJpaEntity(
                 aRole.getId().getValue(),
                 aRole.getName(),
                 aRole.getDescription(),
@@ -63,6 +73,10 @@ public class RoleJpaEntity {
                 aRole.getCreatedAt(),
                 aRole.getUpdatedAt()
         );
+
+        aRole.getPermissions().forEach(aEntity::addPermission);
+
+        return aEntity;
     }
 
     public Role toDomain() {
@@ -72,9 +86,15 @@ public class RoleJpaEntity {
                 getDescription(),
                 getRoleType(),
                 isDefault(),
+                getRolePermissions(),
                 getCreatedAt(),
                 getUpdatedAt()
         );
+    }
+
+    private void addPermission(final RolePermission aPermission) {
+        final var aEntity = RolePermissionJpaEntity.from(this, aPermission);
+        this.permissions.add(aEntity);
     }
 
     public String getId() {
@@ -127,5 +147,21 @@ public class RoleJpaEntity {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<RolePermission> getRolePermissions() {
+        return getPermissions().stream()
+                .map(it -> RolePermission
+                        .newRolePermission(
+                                PermissionID.from(it.getId().getPermissionId()), it.getPermissionName()))
+                .collect(Collectors.toList());
+    }
+
+    public Set<RolePermissionJpaEntity> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<RolePermissionJpaEntity> permissions) {
+        this.permissions = permissions;
     }
 }
