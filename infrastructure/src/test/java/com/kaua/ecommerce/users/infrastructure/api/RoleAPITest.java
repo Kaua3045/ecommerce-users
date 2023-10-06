@@ -17,8 +17,8 @@ import com.kaua.ecommerce.users.application.role.update.UpdateRoleOutput;
 import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
-import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
+import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -69,15 +69,16 @@ public class RoleAPITest {
     private ListRolesUseCase listRolesUseCase;
 
     @Test
-    void givenAValidCommandWithDescription_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
+    void givenAValidCommandWithDescriptionAndPermissions_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
         // given
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
         final var aId = "123";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.right(CreateRoleOutput.from(aId)));
@@ -96,20 +97,22 @@ public class RoleAPITest {
                         Objects.equals(aName, cmd.name()) &&
                                 Objects.equals(aDescription, cmd.description()) &&
                                 Objects.equals(aRoleType, cmd.roleType()) &&
-                                Objects.equals(aIsDefault, cmd.isDefault())
+                                Objects.equals(aIsDefault, cmd.isDefault()) &&
+                                Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
     @Test
-    void givenAValidCommandWithNullDescription_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
+    void givenAValidCommandWithNullDescriptionAndNullPermissions_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
         // given
         final var aName = "ceo";
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final List<String> aPermissions = null;
         final var aId = "123";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.right(CreateRoleOutput.from(aId)));
@@ -128,7 +131,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -138,9 +142,11 @@ public class RoleAPITest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "Role already exists";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -160,7 +166,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -170,9 +177,11 @@ public class RoleAPITest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = true;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "Default role already exists";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -192,7 +201,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -202,9 +212,11 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "'name' should not be null or blank";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -224,7 +236,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -234,9 +247,11 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "'name' should not be null or blank";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -256,7 +271,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -266,9 +282,11 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -288,7 +306,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -298,9 +317,11 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -320,7 +341,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -330,9 +352,11 @@ public class RoleAPITest {
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -352,7 +376,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -362,9 +387,11 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "'roleType' should not be null";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -384,7 +411,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
@@ -394,9 +422,11 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "not-exists";
         final var aIsDefault = false;
+        final var aPermissions = List.of("456", "789");
+
         final var expectedErrorMessage = "RoleType not found, role types available: COMMON, EMPLOYEES";
 
-        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault);
+        final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(createRoleUseCase.execute(Mockito.any(CreateRoleCommand.class)))
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
@@ -416,7 +446,8 @@ public class RoleAPITest {
                 Objects.equals(aName, cmd.name()) &&
                         Objects.equals(aDescription, cmd.description()) &&
                         Objects.equals(aRoleType, cmd.roleType()) &&
-                        Objects.equals(aIsDefault, cmd.isDefault())
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(aPermissions, cmd.permissions())
         ));
     }
 
