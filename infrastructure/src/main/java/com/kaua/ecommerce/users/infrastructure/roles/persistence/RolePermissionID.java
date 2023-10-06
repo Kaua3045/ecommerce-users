@@ -4,6 +4,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Embeddable
 public class RolePermissionID implements Serializable {
@@ -23,6 +24,19 @@ public class RolePermissionID implements Serializable {
 
     public static RolePermissionID from(final String roleId, final String permissionId) {
         return new RolePermissionID(roleId, permissionId);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        final RolePermissionID that = (RolePermissionID) o;
+        return getRoleId().equals(that.getRoleId()) && getPermissionId().equals(that.getPermissionId());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getRoleId(), getPermissionId());
     }
 
     public String getRoleId() {
