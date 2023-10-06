@@ -1,5 +1,5 @@
 CREATE TABLE roles (
-    role_id VARCHAR(36) PRIMARY KEY NOT NULL,
+    id VARCHAR(36) PRIMARY KEY NOT NULL,
     name VARCHAR(50) UNIQUE NOT NULL,
     description VARCHAR(255),
     role_type VARCHAR(50) NOT NULL,

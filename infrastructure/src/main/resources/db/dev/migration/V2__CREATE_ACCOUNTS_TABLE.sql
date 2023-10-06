@@ -9,5 +9,5 @@ CREATE TABLE accounts (
     role_id VARCHAR(36) NOT NULL,
     created_at DATETIME(6) NOT NULL,
     updated_at DATETIME(6) NOT NULL,
-    CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles (role_id)
+    CONSTRAINT fk_role_id FOREIGN KEY (role_id) REFERENCES roles (id)
 );
