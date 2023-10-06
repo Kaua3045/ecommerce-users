@@ -10,7 +10,6 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity(name = "Role")
 @Table(name = "roles")
@@ -154,14 +153,10 @@ public class RoleJpaEntity {
                 .map(it -> RolePermission
                         .newRolePermission(
                                 PermissionID.from(it.getId().getPermissionId()), it.getPermissionName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public Set<RolePermissionJpaEntity> getPermissions() {
         return permissions;
-    }
-
-    public void setPermissions(Set<RolePermissionJpaEntity> permissions) {
-        this.permissions = permissions;
     }
 }
