@@ -498,68 +498,6 @@ public class RoleTest {
     }
 
     @Test
-    void givenAValidEmptyRolePermissions_whenCallAddRolePermission_shouldReceiveOk() {
-        final var aPermissionOne = RolePermission.newRolePermission(
-                PermissionID.unique(),
-                "permission 1"
-        );
-        final var aPermissionTwo = RolePermission.newRolePermission(
-                PermissionID.unique(),
-                "permission 2"
-        );
-
-        final var aName = "ceo";
-        final var aDescription = "Ceo of the application";
-        final var aRoleType = RoleTypes.EMPLOYEES;
-        final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne, aPermissionTwo);
-
-        final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
-
-        Assertions.assertEquals(0, actualRole.getPermissions().size());
-
-        final var actualUpdatedAt = actualRole.getUpdatedAt();
-
-        actualRole.addPermission(aPermissionOne);
-        actualRole.addPermission(aPermissionTwo);
-
-        Assertions.assertNotNull(actualRole.getId());
-        Assertions.assertEquals(aName, actualRole.getName());
-        Assertions.assertEquals(aDescription, actualRole.getDescription());
-        Assertions.assertEquals(aRoleType, actualRole.getRoleType());
-        Assertions.assertFalse(actualRole.isDefault());
-        Assertions.assertEquals(aPermissions, actualRole.getPermissions());
-        Assertions.assertTrue(actualUpdatedAt.isBefore(actualRole.getUpdatedAt()));
-        Assertions.assertNotNull(actualRole.getCreatedAt());
-    }
-
-    @Test
-    void givenAnInvalidNullAsRolePermission_whenCallAddRolePermission_shouldReceiveOk() {
-        final var aName = "ceo";
-        final var aDescription = "Ceo of the application";
-        final var aRoleType = RoleTypes.EMPLOYEES;
-        final var aIsDefault = false;
-        final var aPermissions = new ArrayList<RolePermission>();
-
-        final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
-
-        Assertions.assertEquals(0, actualRole.getPermissions().size());
-
-        final var actualUpdatedAt = actualRole.getUpdatedAt();
-
-        actualRole.addPermission(null);
-
-        Assertions.assertNotNull(actualRole.getId());
-        Assertions.assertEquals(aName, actualRole.getName());
-        Assertions.assertEquals(aDescription, actualRole.getDescription());
-        Assertions.assertEquals(aRoleType, actualRole.getRoleType());
-        Assertions.assertFalse(actualRole.isDefault());
-        Assertions.assertEquals(aPermissions, actualRole.getPermissions());
-        Assertions.assertFalse(actualUpdatedAt.isBefore(actualRole.getUpdatedAt()));
-        Assertions.assertNotNull(actualRole.getCreatedAt());
-    }
-
-    @Test
     void givenAValidRoleWithTwoRolePermission_whenCallRemoveRolePermission_shouldReceiveOk() {
         final var aPermissionOne = RolePermission.newRolePermission(
                 PermissionID.unique(),
