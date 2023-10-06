@@ -15,6 +15,9 @@ public interface PermissionJpaRepository extends JpaRepository<PermissionJpaEnti
 
     Page<PermissionJpaEntity> findAll(Specification<PermissionJpaEntity> whereClause, Pageable page);
 
-    @Query(value = "select p.permission_id, p.name from permissions p where p.permission_id in :ids")
+    @Query(value = "SELECT NEW com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity(" +
+            "p.id, p.name) " +
+            "FROM Permission p " +
+            "WHERE p.id IN :ids")
     List<PermissionJpaEntity> findAllByIds(@Param("ids") List<String> ids);
 }
