@@ -13,7 +13,7 @@ import java.time.Instant;
 public class PermissionJpaEntity {
 
     @Id
-    @Column(name = "permission_id", nullable = false, unique = true)
+    @Column(name = "id_permission", nullable = false, unique = true)
     private String id;
 
     @Column(name = "name", nullable = false, unique = true)
