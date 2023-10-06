@@ -10,6 +10,7 @@ public class RolePermissionIDTest {
     void testEqualsSameObject() {
         final var aRolePermissionIdOne = RolePermissionID.from("1", "2");
         Assertions.assertTrue(aRolePermissionIdOne.equals(aRolePermissionIdOne));
+        Assertions.assertNotNull(aRolePermissionIdOne.hashCode());
     }
 
     @Test
