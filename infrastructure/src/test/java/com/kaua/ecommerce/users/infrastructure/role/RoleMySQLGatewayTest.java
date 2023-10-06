@@ -1,9 +1,9 @@
 package com.kaua.ecommerce.users.infrastructure.role;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleID;
-import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
@@ -133,7 +133,7 @@ public class RoleMySQLGatewayTest {
 
         final var aRoleUpdatedDate = aRole.getUpdatedAt();
 
-        final var aRoleUpdated = aRole.update(aName, aDescription, aRoleType, aIsDefault);
+        final var aRoleUpdated = aRole.update(aName, aDescription, aRoleType, aIsDefault, null);
 
         final var actualRole = this.roleGateway.update(aRoleUpdated);
 
