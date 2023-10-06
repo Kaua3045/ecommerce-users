@@ -3,8 +3,6 @@ package com.kaua.ecommerce.users.infrastructure.roles.persistence;
 import com.kaua.ecommerce.users.domain.roles.RolePermission;
 import jakarta.persistence.*;
 
-import java.util.Objects;
-
 @Entity
 @Table(name = "roles_permissions")
 public class RolePermissionJpaEntity {
@@ -31,40 +29,15 @@ public class RolePermissionJpaEntity {
         return new RolePermissionJpaEntity(role, rolePermission);
     }
 
-    @Override
-    public boolean equals(final Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        final RolePermissionJpaEntity that = (RolePermissionJpaEntity) o;
-        return getId().equals(that.getId()) && getRole().equals(that.getRole()) && getPermissionName().equals(that.getPermissionName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId(), getRole(), getPermissionName());
-    }
-
     public RolePermissionID getId() {
         return id;
-    }
-
-    public void setId(RolePermissionID id) {
-        this.id = id;
     }
 
     public RoleJpaEntity getRole() {
         return role;
     }
 
-    public void setRole(RoleJpaEntity role) {
-        this.role = role;
-    }
-
     public String getPermissionName() {
         return permissionName;
-    }
-
-    public void setPermissionName(String permissionName) {
-        this.permissionName = permissionName;
     }
 }

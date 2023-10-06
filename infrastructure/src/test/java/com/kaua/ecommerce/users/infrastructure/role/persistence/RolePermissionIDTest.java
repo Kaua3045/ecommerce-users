@@ -46,19 +46,4 @@ public class RolePermissionIDTest {
         final var id2 = RolePermissionID.from("role2", "permission2");
         Assertions.assertFalse(id1.equals(id2));
     }
-
-//    @Test
-//    void testRolePermissionIdEquals() {
-//        final var aRolePermissionIdOne = RolePermissionID.from("1", "2");
-//        final var aRolePermissionIdTwo = RolePermissionID.from("3", "4");
-//
-//        final var aRolePermissionIdThree = RolePermissionID.from("5", "5");
-//        final var aRolePermissionIdFour = RolePermissionID.from("5", "5");
-//
-//        Assertions.assertTrue(aRolePermissionIdOne.equals(aRolePermissionIdOne));
-//        Assertions.assertFalse(aRolePermissionIdOne.equals(null));
-//        Assertions.assertFalse(aRolePermissionIdOne.equals("NotARolePermissionID"));
-//        Assertions.assertFalse(aRolePermissionIdOne.equals(aRolePermissionIdTwo));
-//        Assertions.assertTrue(aRolePermissionIdThree.equals(aRolePermissionIdFour));
-//    }
 }
