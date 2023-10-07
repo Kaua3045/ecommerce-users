@@ -140,7 +140,8 @@ public class CreateRoleUseCaseTest {
                         Objects.nonNull(cmd.getCreatedAt()) &&
                         Objects.nonNull(cmd.getUpdatedAt()) &&
                         Objects.equals(aIsDefault, cmd.isDefault()) &&
-                        Objects.equals(2, cmd.getPermissions().size())
+                        Objects.equals(2, cmd.getPermissions().size()) &&
+                        Objects.nonNull(cmd.getPermissions().stream().filter(permission -> permission.getPermissionName().equals(aPermissionOne.getName())).findFirst().get())
         ));
     }
 

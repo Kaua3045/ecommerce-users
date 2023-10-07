@@ -4,6 +4,8 @@ import com.kaua.ecommerce.users.application.role.create.CreateRoleCommand;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleCommand;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionCommand;
+import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesUseCase;
@@ -29,19 +31,22 @@ public class RoleController implements RoleAPI {
     private final DeleteRoleUseCase deleteRoleUseCase;
     private final GetRoleByIdUseCase getRoleByIdUseCase;
     private final ListRolesUseCase listRolesUseCase;
+    private final RemoveRolePermissionUseCase removeRolePermissionUseCase;
 
     public RoleController(
             final CreateRoleUseCase createRoleUseCase,
             final UpdateRoleUseCase updateRoleUseCase,
             final DeleteRoleUseCase deleteRoleUseCase,
             final GetRoleByIdUseCase getRoleByIdUseCase,
-            final ListRolesUseCase listRolesUseCase
+            final ListRolesUseCase listRolesUseCase,
+            final RemoveRolePermissionUseCase removeRolePermissionUseCase
     ) {
         this.createRoleUseCase = createRoleUseCase;
         this.updateRoleUseCase = updateRoleUseCase;
         this.deleteRoleUseCase = deleteRoleUseCase;
         this.getRoleByIdUseCase = getRoleByIdUseCase;
         this.listRolesUseCase = listRolesUseCase;
+        this.removeRolePermissionUseCase = removeRolePermissionUseCase;
     }
 
     @Override
@@ -95,6 +100,12 @@ public class RoleController implements RoleAPI {
     @Override
     public ResponseEntity<?> deleteRole(String id) {
         this.deleteRoleUseCase.execute(DeleteRoleCommand.with(id));
+        return ResponseEntity.ok().build();
+    }
+
+    @Override
+    public ResponseEntity<?> removeRolePermission(String roleId, String permissionId) {
+        this.removeRolePermissionUseCase.execute(RemoveRolePermissionCommand.with(roleId, permissionId));
         return ResponseEntity.ok().build();
     }
 }

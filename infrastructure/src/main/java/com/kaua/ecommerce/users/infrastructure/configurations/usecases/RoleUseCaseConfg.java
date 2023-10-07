@@ -6,6 +6,8 @@ import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.create.DefaultCreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.delete.DefaultDeleteRoleUseCase;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.application.role.remove.DefaultRemoveRolePermissionUseCase;
+import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.DefaultGetRoleByIdUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.list.DefaultListRolesUseCase;
@@ -51,5 +53,10 @@ public class RoleUseCaseConfg {
     @Bean
     public DeleteRoleUseCase deleteRoleUseCase() {
         return new DefaultDeleteRoleUseCase(roleGateway);
+    }
+
+    @Bean
+    public RemoveRolePermissionUseCase removeRolePermissionUseCase() {
+        return new DefaultRemoveRolePermissionUseCase(roleGateway);
     }
 }

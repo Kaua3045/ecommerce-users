@@ -601,6 +601,8 @@ public class RoleTest {
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
         Assertions.assertFalse(actualRole.isDefault());
         Assertions.assertEquals(aPermissions, actualRole.getPermissions());
+        Assertions.assertNotNull(actualRole.getPermissions().stream().filter(permission -> permission.getPermissionID().getValue().equals(aPermissionOne.getPermissionID().getValue())).findFirst().get());
+        Assertions.assertNotNull(actualRole.getPermissions().stream().filter(permission -> permission.getPermissionName().equals(aPermissionOne.getPermissionName())).findFirst().get());
         Assertions.assertTrue(actualUpdatedAt.isBefore(actualRole.getUpdatedAt()));
         Assertions.assertNotNull(actualRole.getCreatedAt());
     }

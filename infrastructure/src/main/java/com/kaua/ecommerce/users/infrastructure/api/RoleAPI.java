@@ -41,4 +41,7 @@ public interface RoleAPI {
 
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteRole(@PathVariable String id);
+
+    @PatchMapping("{roleId}/permissions/{permissionId}")
+    ResponseEntity<?> removeRolePermission(@PathVariable String roleId, @PathVariable String permissionId);
 }
