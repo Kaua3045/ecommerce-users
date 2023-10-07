@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -75,6 +76,48 @@ public class UpdateRoleUseCaseTest {
                 Objects.nonNull(cmd.getUpdatedAt()) &&
                 Objects.equals(aIsDefault, cmd.isDefault()) &&
                 Objects.equals(0, cmd.getPermissions().size())
+        ));
+    }
+
+    @Test
+    void givenAValidCommandWithNullDescriptionAndEmptyPermissions_whenCallUpdateRole_shouldReturnRoleId() {
+        // given
+        final var aName = "ceo";
+        final String aDescription = null;
+        final var aRoleType = "employees";
+        final var aIsDefault = false;
+        final List<String> aPermissions = Collections.emptyList();
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+
+        final var aCommnad = UpdateRoleCommand.with(
+                aRole.getId().getValue(),
+                aName,
+                aDescription,
+                aRoleType,
+                aIsDefault,
+                aPermissions
+        );
+
+        // when
+        Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
+        Mockito.when(roleGateway.update(Mockito.any())).thenAnswer(returnsFirstArg());
+
+        final var aResult = useCase.execute(aCommnad).getRight();
+
+        // then
+        Assertions.assertNotNull(aResult);
+        Assertions.assertNotNull(aResult.id());
+
+        Mockito.verify(roleGateway, Mockito.times(1)).findById(Mockito.anyString());
+        Mockito.verify(roleGateway, Mockito.times(1)).update(argThat(cmd ->
+                Objects.equals(aName, cmd.getName()) &&
+                        Objects.equals(aDescription, cmd.getDescription()) &&
+                        Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
+                        Objects.nonNull(cmd.getId()) &&
+                        Objects.nonNull(cmd.getCreatedAt()) &&
+                        Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(0, cmd.getPermissions().size())
         ));
     }
 
@@ -419,5 +462,39 @@ public class UpdateRoleUseCaseTest {
         Assertions.assertNotNull(aResult);
         Assertions.assertEquals(aId, aResult.id());
         Assertions.assertInstanceOf(UpdateRoleOutput.class, aResult);
+    }
+
+    @Test
+    void givenAValidCommandWithDescriptionAndWithPermissionsTwoIdsButOneNotValid_whenCallUpdateRole_shouldThrowDomainException() {
+        // given
+        final var aPermissionOne = Permission.newPermission("one", "Permission One");
+        final var aPermissionTwo = Permission.newPermission("two", null);
+
+        final var aName = "ceo";
+        final var aDescription = "Chief Executive Officer";
+        final var aRoleType = "employees";
+        final var aIsDefault = false;
+        final var aPermissions = List.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+        final var aId = aRole.getId().getValue();
+
+        final var expectedErrorMessage = "Some permissions could not be found: %s".formatted(aPermissionTwo.getId().getValue());
+
+        final var aCommnad = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType, aIsDefault, aPermissions);
+
+        // when
+        Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
+        Mockito.when(permissionGateway.findAllByIds(Mockito.any()))
+                .thenReturn(List.of(aPermissionOne));
+
+        final var aException = Assertions.assertThrows(DomainException.class,
+                () -> useCase.execute(aCommnad));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+
+        Mockito.verify(roleGateway, Mockito.times(1)).findById(Mockito.anyString());
+        Mockito.verify(permissionGateway, Mockito.times(1)).findAllByIds(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(0)).update(Mockito.any());
     }
 }
