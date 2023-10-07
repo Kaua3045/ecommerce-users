@@ -39,6 +39,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
@@ -75,7 +76,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
         final var aId = "123";
 
         final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
@@ -109,7 +110,7 @@ public class RoleAPITest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
         final var aId = "123";
 
         final var aInput = new CreateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
@@ -142,7 +143,7 @@ public class RoleAPITest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "Role already exists";
 
@@ -177,7 +178,7 @@ public class RoleAPITest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = true;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "Default role already exists";
 
@@ -212,7 +213,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "'name' should not be null or blank";
 
@@ -247,7 +248,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "'name' should not be null or blank";
 
@@ -282,7 +283,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
 
@@ -317,7 +318,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
 
@@ -352,7 +353,7 @@ public class RoleAPITest {
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
 
@@ -387,7 +388,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "'roleType' should not be null";
 
@@ -422,7 +423,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "not-exists";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var expectedErrorMessage = "RoleType not found, role types available: COMMON, EMPLOYEES";
 
@@ -460,7 +461,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of("456", "789");
+        final var aPermissions = Set.of("456", "789");
 
         final var aInput = new UpdateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
@@ -499,7 +500,7 @@ public class RoleAPITest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aInput = new UpdateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
@@ -536,7 +537,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
@@ -573,7 +574,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
 
@@ -611,7 +612,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
 
@@ -649,7 +650,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
 
@@ -687,7 +688,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
 
@@ -725,7 +726,7 @@ public class RoleAPITest {
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
 
@@ -763,7 +764,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "'roleType' should not be null";
 
@@ -801,7 +802,7 @@ public class RoleAPITest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "not-exists";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "RoleType not found, role types available: COMMON, EMPLOYEES";
 

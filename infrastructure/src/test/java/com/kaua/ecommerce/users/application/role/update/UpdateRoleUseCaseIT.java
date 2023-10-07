@@ -17,7 +17,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
-import java.util.List;
+import java.util.Set;
 
 @IntegrationTest
 public class UpdateRoleUseCaseIT {
@@ -46,7 +46,7 @@ public class UpdateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = true;
-        final var aPermissions = List.of(aPermission.getId().getValue());
+        final var aPermissions = Set.of(aPermission.getId().getValue());
         final var aId = aRole.getId().getValue();
 
         final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
@@ -81,7 +81,7 @@ public class UpdateRoleUseCaseIT {
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
         final var aId = aRole.getId().getValue();
 
         final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
@@ -116,7 +116,7 @@ public class UpdateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
         final var aId = aRole.getId().getValue();
 
         final var expectedErrorMessage = "'name' should not be null or blank";
@@ -140,7 +140,7 @@ public class UpdateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
         final var aId = RoleID.from("123").getValue();
 
         final var expectedErrorMessage = "Role with id 123 was not found";

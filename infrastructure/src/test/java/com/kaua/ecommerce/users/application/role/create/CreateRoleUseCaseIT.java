@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.List;
+import java.util.Set;
 
 @IntegrationTest
 public class CreateRoleUseCaseIT {
@@ -41,7 +42,7 @@ public class CreateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
+        final var aPermissions = Set.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -73,7 +74,7 @@ public class CreateRoleUseCaseIT {
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         Assertions.assertEquals(0, roleRepository.count());
 
@@ -105,7 +106,7 @@ public class CreateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 

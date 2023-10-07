@@ -8,8 +8,8 @@ import jakarta.persistence.*;
 
 import java.time.Instant;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity(name = "Role")
 @Table(name = "roles")
@@ -148,12 +148,12 @@ public class RoleJpaEntity {
         this.updatedAt = updatedAt;
     }
 
-    public List<RolePermission> getRolePermissions() {
+    public Set<RolePermission> getRolePermissions() {
         return getPermissions().stream()
                 .map(it -> RolePermission
                         .newRolePermission(
                                 PermissionID.from(it.getId().getPermissionId()), it.getPermissionName()))
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     public Set<RolePermissionJpaEntity> getPermissions() {
