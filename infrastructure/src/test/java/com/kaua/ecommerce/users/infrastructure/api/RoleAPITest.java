@@ -995,7 +995,7 @@ public class RoleAPITest {
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
-        final var request = MockMvcRequestBuilders.delete("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
+        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -1024,7 +1024,7 @@ public class RoleAPITest {
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
-        final var request = MockMvcRequestBuilders.delete("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
+        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -1054,7 +1054,7 @@ public class RoleAPITest {
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
-        final var request = MockMvcRequestBuilders.delete("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
+        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)

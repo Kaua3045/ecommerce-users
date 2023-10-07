@@ -104,7 +104,7 @@ public class RoleController implements RoleAPI {
     }
 
     @Override
-    public ResponseEntity<?> deleteRolePermission(String roleId, String permissionId) {
+    public ResponseEntity<?> removeRolePermission(String roleId, String permissionId) {
         this.removeRolePermissionUseCase.execute(RemoveRolePermissionCommand.with(roleId, permissionId));
         return ResponseEntity.ok().build();
     }
