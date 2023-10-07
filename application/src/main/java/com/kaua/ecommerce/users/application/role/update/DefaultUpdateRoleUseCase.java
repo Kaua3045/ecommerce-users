@@ -12,7 +12,6 @@ import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
 
@@ -58,29 +57,19 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
                                 Arrays.toString(RoleTypes.values()))));
     }
 
-    private List<RolePermission> toRolePermission(final List<String> permissions, final List<RolePermission> aOldRolePermissions) {
+    private Set<RolePermission> toRolePermission(final Set<String> permissions, final Set<RolePermission> aOldRolePermissions) {
         if (permissions == null || permissions.isEmpty()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         final var retrievedPermissions = this.permissionGateway.findAllByIds(permissions);
 
-        if (retrievedPermissions.size() != permissions.size()) {
-            final var missingPermissions = new ArrayList<>(permissions);
-            missingPermissions.removeAll(retrievedPermissions
-                    .stream()
-                    .map(permission -> permission.getId().getValue())
-                    .toList());
+        final var newRolePermissions = new HashSet<>(aOldRolePermissions);
 
-            final var missingPermissionsMessage = String.join(", ", missingPermissions);
-
-            throw DomainException.with(new Error("Some permissions could not be found: %s".formatted(missingPermissionsMessage)));
-        }
-
-        final var newRolePermissions = retrievedPermissions.stream()
-                .map(permission -> RolePermission.newRolePermission(permission.getId(), permission.getName()))
-                .collect(Collectors.toList());
-        newRolePermissions.addAll(aOldRolePermissions);
+        retrievedPermissions.forEach(permission -> {
+            final var rolePermission = RolePermission.newRolePermission(permission.getId(), permission.getName());
+            newRolePermissions.add(rolePermission);
+        });
 
         return newRolePermissions;
     }

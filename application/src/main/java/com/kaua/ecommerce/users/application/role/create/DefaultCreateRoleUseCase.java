@@ -10,7 +10,11 @@ import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
 
@@ -54,32 +58,20 @@ public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
                                 Arrays.toString(RoleTypes.values()))));
     }
 
-    private Role create(final Role aRole, final List<String> aPermissions) {
+    private Role create(final Role aRole, final Set<String> aPermissions) {
         aRole.addPermissions(toRolePermission(aPermissions));
         return this.roleGateway.create(aRole);
     }
 
-    private List<RolePermission> toRolePermission(final List<String> permissions) {
+    private Set<RolePermission> toRolePermission(final Set<String> permissions) {
         if (permissions == null || permissions.isEmpty()) {
-            return Collections.emptyList();
+            return Collections.emptySet();
         }
 
         final var retrievedPermissions = this.permissionGateway.findAllByIds(permissions);
 
-        if (retrievedPermissions.size() != permissions.size()) {
-            final var missingPermissions = new ArrayList<>(permissions);
-            missingPermissions.removeAll(retrievedPermissions
-                    .stream()
-                    .map(permission -> permission.getId().getValue())
-                    .toList());
-
-            final var missingPermissionsMessage = String.join(", ", missingPermissions);
-
-            throw DomainException.with(new Error("Some permissions could not be found: %s".formatted(missingPermissionsMessage)));
-        }
-
         return retrievedPermissions.stream()
                 .map(permission -> RolePermission.newRolePermission(permission.getId(), permission.getName()))
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

@@ -18,9 +18,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -44,7 +44,7 @@ public class UpdateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var aCommnad = UpdateRoleCommand.with(
@@ -86,7 +86,7 @@ public class UpdateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = Collections.emptyList();
+        final Set<String> aPermissions = Collections.emptySet();
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var aCommnad = UpdateRoleCommand.with(
@@ -131,7 +131,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = true;
-        final var aPermissions = List.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
+        final var aPermissions = Set.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, false);
 
@@ -148,7 +148,7 @@ public class UpdateRoleUseCaseTest {
         Mockito.when(roleGateway.findDefaultRole()).thenReturn(Optional.empty());
         Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
         Mockito.when(permissionGateway.findAllByIds(Mockito.any()))
-                        .thenReturn(List.of(aPermissionOne, aPermissionTwo));
+                        .thenReturn(Set.of(aPermissionOne, aPermissionTwo));
         Mockito.when(roleGateway.update(Mockito.any())).thenAnswer(returnsFirstArg());
 
         final var aResult = useCase.execute(aCommnad).getRight();
@@ -180,7 +180,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(36);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
@@ -208,7 +208,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(36);
         final var aRoleType = "employees";
         final var aIsDefault = true;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
@@ -237,7 +237,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
@@ -274,7 +274,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
@@ -311,7 +311,7 @@ public class UpdateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
@@ -348,7 +348,7 @@ public class UpdateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
@@ -385,7 +385,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
@@ -422,7 +422,7 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
         final var aIsDefault = false;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, aIsDefault);
 
@@ -474,27 +474,43 @@ public class UpdateRoleUseCaseTest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
+        final var aPermissions = Set.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
         final var aId = aRole.getId().getValue();
 
-        final var expectedErrorMessage = "Some permissions could not be found: %s".formatted(aPermissionTwo.getId().getValue());
-
-        final var aCommnad = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType, aIsDefault, aPermissions);
+        final var aCommnad = UpdateRoleCommand.with(
+                aId,
+                aName,
+                aDescription,
+                aRoleType,
+                aIsDefault,
+                aPermissions
+        );
 
         // when
         Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
         Mockito.when(permissionGateway.findAllByIds(Mockito.any()))
-                .thenReturn(List.of(aPermissionOne));
+                .thenReturn(Set.of(aPermissionOne));
+        Mockito.when(roleGateway.update(Mockito.any())).thenAnswer(returnsFirstArg());
 
-        final var aException = Assertions.assertThrows(DomainException.class,
-                () -> useCase.execute(aCommnad));
+        final var aResult = useCase.execute(aCommnad).getRight();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertNotNull(aResult);
+        Assertions.assertNotNull(aResult.id());
 
+        Mockito.verify(roleGateway, Mockito.times(0)).findDefaultRole();
         Mockito.verify(roleGateway, Mockito.times(1)).findById(Mockito.anyString());
         Mockito.verify(permissionGateway, Mockito.times(1)).findAllByIds(Mockito.any());
-        Mockito.verify(roleGateway, Mockito.times(0)).update(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).update(argThat(cmd ->
+                Objects.equals(aName, cmd.getName()) &&
+                        Objects.equals(aDescription, cmd.getDescription()) &&
+                        Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
+                        Objects.nonNull(cmd.getId()) &&
+                        Objects.nonNull(cmd.getCreatedAt()) &&
+                        Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(1, cmd.getPermissions().size())
+        ));
     }
 }

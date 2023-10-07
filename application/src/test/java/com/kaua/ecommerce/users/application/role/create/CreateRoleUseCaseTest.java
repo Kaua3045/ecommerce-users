@@ -17,9 +17,9 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
 import static org.mockito.ArgumentMatchers.argThat;
@@ -43,7 +43,7 @@ public class CreateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = true;
-        final List<String> aPermissions = null;
+        final Set<String> aPermissions = null;
 
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
@@ -77,7 +77,7 @@ public class CreateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = true;
-        final List<String> aPermissions = Collections.emptyList();
+        final Set<String> aPermissions = Collections.emptySet();
 
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
@@ -114,14 +114,14 @@ public class CreateRoleUseCaseTest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
+        final var aPermissions = Set.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
 
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
         Mockito.when(permissionGateway.findAllByIds(Mockito.any()))
-                .thenReturn(List.of(aPermissionOne, aPermissionTwo));
+                .thenReturn(Set.of(aPermissionOne, aPermissionTwo));
         Mockito.when(roleGateway.create(Mockito.any())).thenAnswer(returnsFirstArg());
 
         final var aResult = useCase.execute(aCommnad).getRight();
@@ -151,7 +151,7 @@ public class CreateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(36);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "Role already exists";
         final var expectedErrorCount = 1;
 
@@ -178,7 +178,7 @@ public class CreateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(36);
         final var aRoleType = "employees";
         final var aIsDefault = true;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var aDefaultRole = Role.newRole("User", null, RoleTypes.COMMON, true);
         final var expectedErrorMessage = "Default role already exists";
         final var expectedErrorCount = 1;
@@ -208,7 +208,7 @@ public class CreateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
@@ -233,7 +233,7 @@ public class CreateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(100);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
@@ -258,7 +258,7 @@ public class CreateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
@@ -284,7 +284,7 @@ public class CreateRoleUseCaseTest {
         final String aDescription = null;
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
 
@@ -310,7 +310,7 @@ public class CreateRoleUseCaseTest {
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
 
@@ -336,7 +336,7 @@ public class CreateRoleUseCaseTest {
         final var aDescription = "Chief Executive Officer";
         final String aRoleType = null;
         final var aIsDefault = false;
-        final var aPermissions = List.<String>of();
+        final var aPermissions = Set.<String>of();
         final var expectedErrorMessage = "RoleType not found, role types available: [COMMON, EMPLOYEES]";
         final var expectedErrorCount = 1;
 
@@ -378,24 +378,33 @@ public class CreateRoleUseCaseTest {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = "employees";
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
-        final var expectedErrorMessage = "Some permissions could not be found: %s".formatted(aPermissionTwo.getId().getValue());
+        final var aPermissions = Set.of(aPermissionOne.getId().getValue(), aPermissionTwo.getId().getValue());
 
         final var aCommnad = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         // when
         Mockito.when(roleGateway.existsByName(Mockito.anyString())).thenReturn(false);
         Mockito.when(permissionGateway.findAllByIds(Mockito.any()))
-                .thenReturn(List.of(aPermissionOne));
+                .thenReturn(Set.of(aPermissionOne));
+        Mockito.when(roleGateway.create(Mockito.any())).thenAnswer(returnsFirstArg());
 
-        final var aException = Assertions.assertThrows(DomainException.class,
-                () -> useCase.execute(aCommnad));
+        final var aResult = useCase.execute(aCommnad).getRight();
 
         // then
-        Assertions.assertEquals(expectedErrorMessage, aException.getErrors().get(0).message());
+        Assertions.assertNotNull(aResult);
+        Assertions.assertNotNull(aResult.id());
 
         Mockito.verify(roleGateway, Mockito.times(1)).existsByName(Mockito.anyString());
         Mockito.verify(permissionGateway, Mockito.times(1)).findAllByIds(Mockito.any());
-        Mockito.verify(roleGateway, Mockito.times(0)).create(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).create(argThat(cmd ->
+                Objects.equals(aName, cmd.getName()) &&
+                        Objects.equals(aDescription, cmd.getDescription()) &&
+                        Objects.equals(aRoleType, cmd.getRoleType().name().toLowerCase()) &&
+                        Objects.nonNull(cmd.getId()) &&
+                        Objects.nonNull(cmd.getCreatedAt()) &&
+                        Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(1, cmd.getPermissions().size())
+        ));
     }
 }

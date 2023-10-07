@@ -12,9 +12,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class PermissionMySQLGateway implements PermissionGateway {
@@ -77,9 +78,9 @@ public class PermissionMySQLGateway implements PermissionGateway {
     }
 
     @Override
-    public List<Permission> findAllByIds(List<String> permissions) {
+    public Set<Permission> findAllByIds(Set<String> permissions) {
         return this.permissionRepository.findAllByIds(permissions).stream()
                 .map(PermissionJpaEntity::toDomain)
-                .toList();
+                .collect(Collectors.toSet());
     }
 }

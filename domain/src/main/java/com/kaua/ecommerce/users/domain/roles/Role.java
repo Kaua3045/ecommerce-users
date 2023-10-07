@@ -5,10 +5,10 @@ import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class Role extends AggregateRoot<RoleID> {
 
@@ -16,7 +16,7 @@ public class Role extends AggregateRoot<RoleID> {
     private String description;
     private RoleTypes roleType;
     private boolean isDefault;
-    private List<RolePermission> permissions;
+    private Set<RolePermission> permissions;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -26,7 +26,7 @@ public class Role extends AggregateRoot<RoleID> {
             final String aDescription,
             final RoleTypes aRoleType,
             final boolean isDefault,
-            final List<RolePermission> aPermissions,
+            final Set<RolePermission> aPermissions,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
     ) {
@@ -59,7 +59,7 @@ public class Role extends AggregateRoot<RoleID> {
                 aDescription,
                 aRoleType,
                 isDefault,
-                new ArrayList<>(),
+                new HashSet<>(),
                 aNow,
                 aNow
         );
@@ -71,7 +71,7 @@ public class Role extends AggregateRoot<RoleID> {
             final String aDescription,
             final RoleTypes aRoleType,
             final boolean isDefault,
-            final List<RolePermission> aPermissions,
+            final Set<RolePermission> aPermissions,
             final Instant aCreatedAt,
             final Instant aUpdatedAt
     ) {
@@ -81,7 +81,7 @@ public class Role extends AggregateRoot<RoleID> {
                 aDescription,
                 aRoleType,
                 isDefault,
-                new ArrayList<>(aPermissions),
+                new HashSet<>(aPermissions),
                 aCreatedAt,
                 aUpdatedAt
         );
@@ -92,13 +92,13 @@ public class Role extends AggregateRoot<RoleID> {
             final String aDescription,
             final RoleTypes aRoleType,
             final boolean isDefault,
-            final List<RolePermission> aPermissions
+            final Set<RolePermission> aPermissions
     ) {
         this.name = aName;
         this.description = aDescription;
         this.roleType = aRoleType;
         this.isDefault = isDefault;
-        this.permissions = new ArrayList<>(aPermissions != null ? aPermissions : Collections.emptyList());
+        this.permissions = new HashSet<>(aPermissions != null ? aPermissions : Collections.emptySet());
         this.updatedAt = InstantUtils.now();
         return this;
     }
@@ -119,8 +119,8 @@ public class Role extends AggregateRoot<RoleID> {
         return isDefault;
     }
 
-    public List<RolePermission> getPermissions() {
-        return Collections.unmodifiableList(permissions);
+    public Set<RolePermission> getPermissions() {
+        return Collections.unmodifiableSet(permissions);
     }
 
     public Instant getCreatedAt() {
@@ -131,7 +131,7 @@ public class Role extends AggregateRoot<RoleID> {
         return updatedAt;
     }
 
-    public Role addPermissions(final List<RolePermission> aPermissions) {
+    public Role addPermissions(final Set<RolePermission> aPermissions) {
         if (aPermissions == null || aPermissions.isEmpty()) {
             return this;
         }

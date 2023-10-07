@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Set;
 
 @IntegrationTest
 public class PermissionMySQLGatewayTest {
@@ -351,9 +352,9 @@ public class PermissionMySQLGatewayTest {
 
         Assertions.assertEquals(1, permissionRepository.count());
 
-        final var actualPermission = permissionGateway.findAllByIds(List.of(aId, "123"));
+        final var actualPermission = permissionGateway.findAllByIds(Set.of(aId, "123"));
 
         Assertions.assertEquals(aTotal, actualPermission.size());
-        Assertions.assertEquals(aPermission.getId(), actualPermission.get(0).getId());
+        Assertions.assertTrue(actualPermission.contains(aPermission));
     }
 }

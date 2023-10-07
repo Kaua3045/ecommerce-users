@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import java.util.Set;
 
 public interface PermissionJpaRepository extends JpaRepository<PermissionJpaEntity, String> {
 
@@ -19,5 +19,5 @@ public interface PermissionJpaRepository extends JpaRepository<PermissionJpaEnti
             "p.id, p.name) " +
             "FROM Permission p " +
             "WHERE p.id IN :ids")
-    List<PermissionJpaEntity> findAllByIds(@Param("ids") List<String> ids);
+    Set<PermissionJpaEntity> findAllByIds(@Param("ids") Set<String> ids);
 }
