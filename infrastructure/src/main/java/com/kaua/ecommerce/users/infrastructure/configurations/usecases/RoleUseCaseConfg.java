@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
+import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.create.DefaultCreateRoleUseCase;
@@ -20,14 +21,16 @@ import java.util.Objects;
 public class RoleUseCaseConfg {
 
     private final RoleGateway roleGateway;
+    private final PermissionGateway permissionGateway;
 
-    public RoleUseCaseConfg(final RoleGateway roleGateway) {
+    public RoleUseCaseConfg(final RoleGateway roleGateway, final PermissionGateway permissionGateway) {
         this.roleGateway = Objects.requireNonNull(roleGateway);
+        this.permissionGateway = Objects.requireNonNull(permissionGateway);
     }
 
     @Bean
     public CreateRoleUseCase createRoleUseCase() {
-        return new DefaultCreateRoleUseCase(roleGateway);
+        return new DefaultCreateRoleUseCase(roleGateway, permissionGateway);
     }
 
     @Bean

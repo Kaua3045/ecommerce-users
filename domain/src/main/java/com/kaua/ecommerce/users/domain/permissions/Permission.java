@@ -5,7 +5,6 @@ import com.kaua.ecommerce.users.domain.utils.InstantUtils;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
-import java.util.Objects;
 
 public class Permission extends AggregateRoot<PermissionID> {
 
@@ -24,8 +23,8 @@ public class Permission extends AggregateRoot<PermissionID> {
         super(aPermissionID);
         this.name = aName;
         this.description = aDescription;
-        this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' must not be null");
-        this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' must not be null");
+        this.createdAt = aCreatedAt;
+        this.updatedAt = aUpdatedAt;
     }
 
     @Override

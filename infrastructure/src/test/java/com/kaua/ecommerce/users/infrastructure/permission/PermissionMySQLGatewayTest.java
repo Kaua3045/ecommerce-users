@@ -337,4 +337,23 @@ public class PermissionMySQLGatewayTest {
 
         Assertions.assertEquals(aCustomerPermission.getId(), aResult.items().get(0).getId());
     }
+
+    @Test
+    void givenTwoPermissionsAndOnePersisted_whenCallFindAllByIds_shouldReturnPersistedPermission() {
+        final var aPermission = Permission.newPermission("customer-all", "Customer all");
+
+        final var aTotal = 1;
+        final var aId = aPermission.getId().getValue();
+
+        Assertions.assertEquals(0, permissionRepository.count());
+
+        permissionRepository.saveAndFlush(PermissionJpaEntity.toEntity(aPermission));
+
+        Assertions.assertEquals(1, permissionRepository.count());
+
+        final var actualPermission = permissionGateway.findAllByIds(List.of(aId, "123"));
+
+        Assertions.assertEquals(aTotal, actualPermission.size());
+        Assertions.assertEquals(aPermission.getId(), actualPermission.get(0).getId());
+    }
 }

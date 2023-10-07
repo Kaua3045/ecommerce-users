@@ -8,12 +8,12 @@ import jakarta.persistence.Table;
 
 import java.time.Instant;
 
-@Entity
+@Entity(name = "Permission")
 @Table(name = "permissions")
 public class PermissionJpaEntity {
 
     @Id
-    @Column(name = "permission_id", nullable = false, unique = true)
+    @Column(name = "id_permission", nullable = false, unique = true)
     private String id;
 
     @Column(name = "name", nullable = false, unique = true)
@@ -42,6 +42,11 @@ public class PermissionJpaEntity {
         this.description = description;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+    }
+
+    public PermissionJpaEntity(final String id, final String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public static PermissionJpaEntity toEntity(final Permission aPermission) {

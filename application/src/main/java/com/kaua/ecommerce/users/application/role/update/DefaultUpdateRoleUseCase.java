@@ -31,11 +31,14 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
         final var aRole = this.roleGateway.findById(aCommand.id())
                 .orElseThrow(() -> NotFoundException.with(Role.class, aCommand.id()));
 
+        // TODO: add the permissions on update role
+
         final var aRoleUpdated = aRole.update(
                 aCommand.name(),
                 aCommand.description(),
                 getRoleType(aCommand.roleType()),
-                aCommand.isDefault()
+                aCommand.isDefault(),
+                aRole.getPermissions()
         );
         aRoleUpdated.validate(aNotification);
 

@@ -73,7 +73,7 @@ public class PermissionTest {
 
     @Test
     void givenAnInvalidNameBlank_whenCallNewPermission_shouldReturnADomainException() {
-        final String aName = null;
+        final String aName = "";
         final var aDescription = "Permission to create a role";
 
         final var expectedErrorMessage = "'name' should not be null or blank";

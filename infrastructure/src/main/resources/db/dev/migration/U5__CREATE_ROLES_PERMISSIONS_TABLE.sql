@@ -1,0 +1,1 @@
+DROP TABLE roles_permissions;

@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface PermissionGateway {
@@ -19,4 +20,6 @@ public interface PermissionGateway {
     Permission update(Permission aPermission);
 
     void deleteById(String aId);
+
+    List<Permission> findAllByIds(List<String> permissions);
 }

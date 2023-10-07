@@ -1,5 +1,5 @@
 CREATE TABLE permissions (
-    permission_id VARCHAR(36) PRIMARY KEY NOT NULL,
+    id_permission VARCHAR(36) PRIMARY KEY NOT NULL,
     name VARCHAR(50) UNIQUE NOT NULL,
     description VARCHAR(255),
     created_at DATETIME(6) NOT NULL,
