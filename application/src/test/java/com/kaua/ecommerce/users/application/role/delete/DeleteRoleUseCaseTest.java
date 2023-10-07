@@ -39,7 +39,7 @@ public class DeleteRoleUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandWithAccountIdNotExists_whenCallDeleteById_shouldBeOk() {
+    void givenAnInvalidCommandWithRoleIdNotExists_whenCallDeleteById_shouldBeOk() {
         // given
         final var aId = "123";
 
