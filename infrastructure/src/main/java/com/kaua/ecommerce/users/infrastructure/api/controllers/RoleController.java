@@ -68,7 +68,8 @@ public class RoleController implements RoleAPI {
                 input.name(),
                 input.description(),
                 input.roleType(),
-                input.isDefault()
+                input.isDefault(),
+                input.permissions()
         );
 
         final var aResult = this.updateRoleUseCase.execute(aCommand);

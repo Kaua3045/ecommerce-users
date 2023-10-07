@@ -35,7 +35,7 @@ public class RoleUseCaseConfg {
 
     @Bean
     public UpdateRoleUseCase updateRoleUseCase() {
-        return new DefaultUpdateRoleUseCase(roleGateway);
+        return new DefaultUpdateRoleUseCase(roleGateway, permissionGateway);
     }
 
     @Bean
