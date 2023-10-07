@@ -7,6 +7,8 @@ import com.kaua.ecommerce.users.application.role.create.CreateRoleCommand;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleOutput;
 import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionCommand;
+import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionUseCase;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdOutput;
 import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
@@ -18,7 +20,9 @@ import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
+import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RolePermission;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
@@ -68,6 +72,9 @@ public class RoleAPITest {
 
     @MockBean
     private ListRolesUseCase listRolesUseCase;
+
+    @MockBean
+    private RemoveRolePermissionUseCase removeRolePermissionUseCase;
 
     @Test
     void givenAValidCommandWithDescriptionAndPermissions_whenCallCreateRole_thenShouldReturneAnRoleId() throws Exception {
@@ -971,6 +978,94 @@ public class RoleAPITest {
                         Objects.equals(aSort, query.sort()) &&
                         Objects.equals(aDirection, query.direction()) &&
                         Objects.equals(aTerms, query.terms())
+        ));
+    }
+
+    @Test
+    void givenAValidIds_whenCallRemoveRolePermission_thenShouldReturnOk() throws Exception {
+        // given
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+        final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "teste");
+        aRole.addPermissions(Set.of(aRolePermission));
+
+        final var aId = aRole.getId().getValue();
+        final var aRolePermissionId = aRolePermission.getPermissionID().getValue();
+
+        Mockito.doNothing()
+                .when(removeRolePermissionUseCase)
+                .execute(Mockito.any(RemoveRolePermissionCommand.class));
+
+        final var request = MockMvcRequestBuilders.delete("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        final var cmdCaptor = ArgumentCaptor.forClass(RemoveRolePermissionCommand.class);
+
+        Mockito.verify(removeRolePermissionUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aId, actualCmd.id());
+        Assertions.assertEquals(aRolePermissionId, actualCmd.permissionId());
+    }
+
+    @Test
+    void givenAValidRoleIdAndNotExistsPermissionId_whenCallRemoveRolePermission_thenShouldReturnOk() throws Exception {
+        // given
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+
+        final var aId = aRole.getId().getValue();
+        final var aRolePermissionId = "123";
+
+        Mockito.doNothing()
+                .when(removeRolePermissionUseCase)
+                .execute(Mockito.any(RemoveRolePermissionCommand.class));
+
+        final var request = MockMvcRequestBuilders.delete("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        final var cmdCaptor = ArgumentCaptor.forClass(RemoveRolePermissionCommand.class);
+
+        Mockito.verify(removeRolePermissionUseCase, Mockito.times(1)).execute(cmdCaptor.capture());
+
+        final var actualCmd = cmdCaptor.getValue();
+
+        Assertions.assertEquals(aId, actualCmd.id());
+        Assertions.assertEquals(aRolePermissionId, actualCmd.permissionId());
+    }
+
+    @Test
+    void givenAnInvalidRoleId_whenCallRemoveRolePermission_thenShouldReturnNotFoundException() throws Exception {
+        final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "teste");
+
+        final var aId = "123";
+        final var aRolePermissionId = aRolePermission.getPermissionID().getValue();
+
+        final var expectedErrorMessage = "Role with id 123 was not found";
+
+        Mockito.doThrow(NotFoundException.with(Role.class, aId))
+                .when(removeRolePermissionUseCase)
+                .execute(Mockito.any(RemoveRolePermissionCommand.class));
+
+        final var request = MockMvcRequestBuilders.delete("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message", equalTo(expectedErrorMessage)));
+
+        Mockito.verify(removeRolePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
+                Objects.equals(aId, cmd.id()) &&
+                        Objects.equals(aRolePermissionId, cmd.permissionId())
         ));
     }
 }
