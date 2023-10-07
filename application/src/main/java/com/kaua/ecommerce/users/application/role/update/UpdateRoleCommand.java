@@ -1,6 +1,6 @@
 package com.kaua.ecommerce.users.application.role.update;
 
-import java.util.List;
+import java.util.Set;
 
 public record UpdateRoleCommand(
         String id,
@@ -8,7 +8,7 @@ public record UpdateRoleCommand(
         String description,
         String roleType,
         boolean isDefault,
-        List<String> permissions
+        Set<String> permissions
 ) {
 
     public static UpdateRoleCommand with(
@@ -17,7 +17,7 @@ public record UpdateRoleCommand(
             final String aDescription,
             final String aRoleType,
             final boolean isDefault,
-            final List<String> aPermissions
+            final Set<String> aPermissions
     ) {
         return new UpdateRoleCommand(aId, aName, aDescription, aRoleType, isDefault, aPermissions);
     }

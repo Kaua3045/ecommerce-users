@@ -7,8 +7,8 @@ import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class RoleTest {
 
@@ -248,7 +248,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = true;
-        final var aPermissions = List.of(
+        final var aPermissions = Set.of(
                 RolePermission.newRolePermission(
                         PermissionID.unique(),
                         "permission 1"
@@ -290,7 +290,7 @@ public class RoleTest {
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var aRole = Role.newRole("User", "aaaaaaaaaa", RoleTypes.COMMON, true);
 
@@ -323,7 +323,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
@@ -353,7 +353,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
@@ -383,7 +383,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
@@ -413,7 +413,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var expectedErrorMessage = "'name' must be between 3 and 50 characters";
         final var expectedErrorCount = 1;
@@ -443,7 +443,7 @@ public class RoleTest {
         final var aDescription = RandomStringUtils.generateValue(256);
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var expectedErrorMessage = "'description' must be between 0 and 255 characters";
         final var expectedErrorCount = 1;
@@ -473,7 +473,7 @@ public class RoleTest {
         final String aDescription = null;
         final RoleTypes aRoleType = null;
         final var aIsDefault = false;
-        final List<RolePermission> aPermissions = null;
+        final Set<RolePermission> aPermissions = null;
 
         final var expectedErrorMessage = "'roleType' must not be null";
         final var expectedErrorCount = 1;
@@ -512,10 +512,10 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionTwo);
+        final var aPermissions = Set.of(aPermissionTwo);
 
         final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
-        actualRole.update(aName, aDescription, aRoleType, aIsDefault, List.of(aPermissionOne, aPermissionTwo));
+        actualRole.update(aName, aDescription, aRoleType, aIsDefault, Set.of(aPermissionOne, aPermissionTwo));
 
         Assertions.assertEquals(2, actualRole.getPermissions().size());
 
@@ -529,8 +529,7 @@ public class RoleTest {
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
         Assertions.assertFalse(actualRole.isDefault());
         Assertions.assertEquals(aPermissions, actualRole.getPermissions());
-        Assertions.assertEquals(aPermissionTwo.getPermissionID(), actualRole.getPermissions().get(0).getPermissionID());
-        Assertions.assertEquals(aPermissionTwo.getPermissionName(), actualRole.getPermissions().get(0).getPermissionName());
+        Assertions.assertTrue(actualRole.getPermissions().containsAll(aPermissions));
         Assertions.assertTrue(actualUpdatedAt.isBefore(actualRole.getUpdatedAt()));
         Assertions.assertNotNull(actualRole.getCreatedAt());
     }
@@ -550,7 +549,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne, aPermissionTwo);
+        final var aPermissions = Set.of(aPermissionOne, aPermissionTwo);
 
         final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
         actualRole.update(aName, aDescription, aRoleType, aIsDefault, aPermissions);
@@ -586,7 +585,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final var aPermissions = List.of(aPermissionOne, aPermissionTwo);
+        final var aPermissions = Set.of(aPermissionOne, aPermissionTwo);
 
         final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
@@ -612,7 +611,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final var aPermissions = new ArrayList<RolePermission>();
+        final var aPermissions = new HashSet<RolePermission>();
 
         final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 
@@ -638,7 +637,7 @@ public class RoleTest {
         final var aDescription = "Ceo of the application";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
-        final var aPermissions = new ArrayList<RolePermission>();
+        final var aPermissions = new HashSet<RolePermission>();
 
         final var actualRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
 

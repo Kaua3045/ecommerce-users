@@ -1,13 +1,13 @@
 package com.kaua.ecommerce.users.application.role.create;
 
-import java.util.List;
+import java.util.Set;
 
 public record CreateRoleCommand(
         String name,
         String description,
         String roleType,
         boolean isDefault,
-        List<String> permissions
+        Set<String> permissions
 ) {
 
     public static CreateRoleCommand with(
@@ -15,7 +15,7 @@ public record CreateRoleCommand(
             final String aDescription,
             final String aRoleType,
             final boolean isDefault,
-            final List<String> aPermissions
+            final Set<String> aPermissions
     ) {
         return new CreateRoleCommand(aName, aDescription, aRoleType, isDefault, aPermissions);
     }
