@@ -1,3 +1,6 @@
+# 0.3.0
+- Adiconado o relacionamento entre role e permission, agora uma role pode ter N permissions
+
 # 0.2.0
 - Adicionado o endpoint para criar uma permissão
 - Adicionado o endpoint para pegar uma permissão pelo id
