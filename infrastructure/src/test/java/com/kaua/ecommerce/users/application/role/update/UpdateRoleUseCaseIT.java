@@ -3,9 +3,12 @@ package com.kaua.ecommerce.users.application.role.update;
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
+import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
+
+import java.util.List;
 
 @IntegrationTest
 public class UpdateRoleUseCaseIT {
@@ -23,22 +28,28 @@ public class UpdateRoleUseCaseIT {
     @Autowired
     private RoleJpaRepository roleRepository;
 
+    @Autowired
+    private PermissionJpaRepository permissionRepository;
+
     @SpyBean
     private RoleGateway roleGateway;
 
     @Test
-    void givenAValidCommandWithDescription_whenCallUpdateRole_shouldReturnRoleId() {
+    void givenAValidCommandWithDescriptionAndPermissions_whenCallUpdateRole_shouldReturnRoleId() {
+        final var aPermission = Permission.newPermission("create-user", "Create User");
         final var aRole = Role.newRole("user", null, RoleTypes.COMMON, false);
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
+        permissionRepository.saveAndFlush(PermissionJpaEntity.toEntity(aPermission));
 
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = true;
+        final var aPermissions = List.of(aPermission.getId().getValue());
         final var aId = aRole.getId().getValue();
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -55,6 +66,7 @@ public class UpdateRoleUseCaseIT {
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
         Assertions.assertEquals(aIsDefault, actualRole.isDefault());
+        Assertions.assertEquals(1, actualRole.getPermissions().size());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertTrue(aRole.getUpdatedAt().isBefore(actualRole.getUpdatedAt()));
     }
@@ -69,9 +81,10 @@ public class UpdateRoleUseCaseIT {
         final String aDescription = null;
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
+        final List<String> aPermissions = null;
         final var aId = aRole.getId().getValue();
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -88,6 +101,7 @@ public class UpdateRoleUseCaseIT {
         Assertions.assertEquals(aDescription, actualRole.getDescription());
         Assertions.assertEquals(aRoleType, actualRole.getRoleType());
         Assertions.assertEquals(aIsDefault, actualRole.isDefault());
+        Assertions.assertEquals(0, actualRole.getPermissions().size());
         Assertions.assertEquals(aRole.getCreatedAt(), actualRole.getCreatedAt());
         Assertions.assertTrue(aRole.getUpdatedAt().isBefore(actualRole.getUpdatedAt()));
     }
@@ -102,12 +116,13 @@ public class UpdateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
+        final List<String> aPermissions = null;
         final var aId = aRole.getId().getValue();
 
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -125,11 +140,12 @@ public class UpdateRoleUseCaseIT {
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
+        final List<String> aPermissions = null;
         final var aId = RoleID.from("123").getValue();
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault);
+        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         final var actualException = Assertions.assertThrows(NotFoundException.class,
                 () -> this.updateRoleUseCase.execute(aCommand));
