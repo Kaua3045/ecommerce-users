@@ -11,7 +11,6 @@ import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
 
@@ -81,6 +80,6 @@ public class DefaultCreateRoleUseCase extends CreateRoleUseCase {
 
         return retrievedPermissions.stream()
                 .map(permission -> RolePermission.newRolePermission(permission.getId(), permission.getName()))
-                .collect(Collectors.toList());
+                .toList();
     }
 }
