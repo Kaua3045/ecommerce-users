@@ -12,6 +12,7 @@ import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
 
@@ -34,7 +35,7 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
         final var aRole = this.roleGateway.findById(aCommand.id())
                 .orElseThrow(() -> NotFoundException.with(Role.class, aCommand.id()));
 
-        final var aRolePermissions = toRolePermission(aCommand.permissions());
+        final var aRolePermissions = toRolePermission(aCommand.permissions(), aRole.getPermissions());
 
         final var aRoleUpdated = aRole.update(
                 aCommand.name(),
@@ -57,7 +58,7 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
                                 Arrays.toString(RoleTypes.values()))));
     }
 
-    private List<RolePermission> toRolePermission(final List<String> permissions) {
+    private List<RolePermission> toRolePermission(final List<String> permissions, final List<RolePermission> aOldRolePermissions) {
         if (permissions == null || permissions.isEmpty()) {
             return Collections.emptyList();
         }
@@ -76,8 +77,11 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
             throw DomainException.with(new Error("Some permissions could not be found: %s".formatted(missingPermissionsMessage)));
         }
 
-        return retrievedPermissions.stream()
+        final var newRolePermissions = retrievedPermissions.stream()
                 .map(permission -> RolePermission.newRolePermission(permission.getId(), permission.getName()))
-                .toList();
+                .collect(Collectors.toList());
+        newRolePermissions.addAll(aOldRolePermissions);
+
+        return newRolePermissions;
     }
 }
