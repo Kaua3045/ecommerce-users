@@ -17,7 +17,8 @@ public final class RoleApiPresenter {
                 aOutput.roleType(),
                 aOutput.isDefault(),
                 aOutput.createdAt(),
-                aOutput.updatedAt()
+                aOutput.updatedAt(),
+                aOutput.permissions()
         );
     }
 
