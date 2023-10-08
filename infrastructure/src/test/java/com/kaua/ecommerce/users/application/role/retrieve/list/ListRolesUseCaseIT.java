@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.role.retrieve.list;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.ListRolesUseCase;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;

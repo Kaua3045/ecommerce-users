@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.application.permission.create;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
+import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionUseCase;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

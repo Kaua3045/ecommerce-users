@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.permission.retrieve.list;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.ListPermissionsUseCase;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;

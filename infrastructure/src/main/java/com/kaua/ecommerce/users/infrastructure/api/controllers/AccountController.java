@@ -1,15 +1,15 @@
 package com.kaua.ecommerce.users.infrastructure.api.controllers;
 
-import com.kaua.ecommerce.users.application.account.create.CreateAccountCommand;
-import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
-import com.kaua.ecommerce.users.application.account.delete.DeleteAccountCommand;
-import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdCommand;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
-import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarCommand;
-import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
-import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleCommand;
-import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountCommand;
+import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccountCommand;
+import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdCommand;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarCommand;
+import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleCommand;
+import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.GetAccountPresenter;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.UpdateAccountRoleApiInput;

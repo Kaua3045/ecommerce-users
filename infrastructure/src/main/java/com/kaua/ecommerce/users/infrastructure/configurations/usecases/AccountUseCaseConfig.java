@@ -1,15 +1,15 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
-import com.kaua.ecommerce.users.application.account.create.CreateAccountUseCase;
-import com.kaua.ecommerce.users.application.account.create.DefaultCreateAccountUseCase;
-import com.kaua.ecommerce.users.application.account.delete.DefaultDeleteAccountUseCase;
-import com.kaua.ecommerce.users.application.account.delete.DeleteAccountUseCase;
-import com.kaua.ecommerce.users.application.account.retrieve.get.DefaultGetAccountByIdUseCase;
-import com.kaua.ecommerce.users.application.account.retrieve.get.GetAccountByIdUseCase;
-import com.kaua.ecommerce.users.application.account.update.avatar.DefaultUpdateAvatarUseCase;
-import com.kaua.ecommerce.users.application.account.update.avatar.UpdateAvatarUseCase;
-import com.kaua.ecommerce.users.application.account.update.role.DefaultUpdateAccountRoleUseCase;
-import com.kaua.ecommerce.users.application.account.update.role.UpdateAccountRoleUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.create.DefaultCreateAccountUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.delete.DefaultDeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccountUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.DefaultGetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.avatar.DefaultUpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.role.DefaultUpdateAccountRoleUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.application.gateways.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

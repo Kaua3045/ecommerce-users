@@ -1,3 +1,6 @@
+# 0.5.0
+- Os usecases foram movido agora para a pasta usecases na application layer
+
 # 0.4.0
 - Adicionado o endpoit para remover uma permissão de uma role
 - Adicionado o nome das permissões no endpoit de busca de uma role pelo id

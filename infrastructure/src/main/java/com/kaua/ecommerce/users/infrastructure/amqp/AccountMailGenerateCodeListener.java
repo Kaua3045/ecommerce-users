@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.amqp;
 
-import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailCommand;
-import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailCommand;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountCreatedEvent;

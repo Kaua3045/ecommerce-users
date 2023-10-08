@@ -1,15 +1,15 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
-import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
-import com.kaua.ecommerce.users.application.account.mail.confirm.DefaultConfirmAccountMailUseCase;
-import com.kaua.ecommerce.users.application.account.mail.confirm.request.DefaultRequestAccountConfirmUseCase;
-import com.kaua.ecommerce.users.application.account.mail.confirm.request.RequestAccountConfirmUseCase;
-import com.kaua.ecommerce.users.application.account.mail.create.CreateAccountMailUseCase;
-import com.kaua.ecommerce.users.application.account.mail.create.DefaultCreateAccountMailUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.DefaultRequestResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.reset.DefaultResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.DefaultConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.DefaultRequestAccountConfirmUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.RequestAccountConfirmUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.DefaultCreateAccountMailUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.DefaultRequestResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.DefaultResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;

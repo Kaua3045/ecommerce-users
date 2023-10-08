@@ -1,13 +1,13 @@
 package com.kaua.ecommerce.users.infrastructure.api.controllers;
 
-import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailCommand;
-import com.kaua.ecommerce.users.application.account.mail.confirm.ConfirmAccountMailUseCase;
-import com.kaua.ecommerce.users.application.account.mail.confirm.request.RequestAccountConfirmCommand;
-import com.kaua.ecommerce.users.application.account.mail.confirm.request.RequestAccountConfirmUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordCommand;
-import com.kaua.ecommerce.users.application.account.update.password.RequestResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordCommand;
-import com.kaua.ecommerce.users.application.account.update.password.reset.ResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailCommand;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.RequestAccountConfirmCommand;
+import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.RequestAccountConfirmUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordCommand;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordCommand;
+import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordUseCase;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.RequestResetPasswordApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.ResetPasswordApiInput;
 import com.kaua.ecommerce.users.infrastructure.api.AccountMailAPI;

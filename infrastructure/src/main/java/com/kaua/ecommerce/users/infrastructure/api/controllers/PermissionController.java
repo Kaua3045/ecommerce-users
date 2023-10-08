@@ -1,14 +1,14 @@
 package com.kaua.ecommerce.users.infrastructure.api.controllers;
 
-import com.kaua.ecommerce.users.application.permission.create.CreatePermissionCommand;
-import com.kaua.ecommerce.users.application.permission.create.CreatePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionCommand;
-import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdCommand;
-import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
-import com.kaua.ecommerce.users.application.permission.retrieve.list.ListPermissionsUseCase;
-import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionCommand;
-import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.delete.DeletePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.delete.DeletePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.GetPermissionByIdCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.ListPermissionsUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionUseCase;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.infrastructure.api.PermissionAPI;
