@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.application.role.create;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.application.usecases.role.create.CreateRoleCommand;
+import com.kaua.ecommerce.users.application.usecases.role.create.CreateRoleUseCase;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;

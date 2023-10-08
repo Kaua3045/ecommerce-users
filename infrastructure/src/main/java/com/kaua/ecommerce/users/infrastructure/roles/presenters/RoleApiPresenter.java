@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.roles.presenters;
 
-import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdOutput;
-import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesOutput;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.GetRoleByIdOutput;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.ListRolesOutput;
 import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleResponse;
 import com.kaua.ecommerce.users.infrastructure.roles.models.ListRoleResponse;
 

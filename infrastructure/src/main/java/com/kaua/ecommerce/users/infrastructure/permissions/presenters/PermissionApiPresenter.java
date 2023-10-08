@@ -1,7 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.permissions.presenters;
 
-import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdOutput;
-import com.kaua.ecommerce.users.application.permission.retrieve.list.ListPermissionsOutput;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.GetPermissionByIdOutput;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.ListPermissionsOutput;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.GetPermissionResponse;
 import com.kaua.ecommerce.users.infrastructure.permissions.models.ListPermissionResponse;
 

@@ -2,6 +2,8 @@ package com.kaua.ecommerce.users.application.role.update;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
+import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;

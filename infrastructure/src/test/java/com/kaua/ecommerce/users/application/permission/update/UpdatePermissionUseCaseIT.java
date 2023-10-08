@@ -1,6 +1,8 @@
 package com.kaua.ecommerce.users.application.permission.update;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;

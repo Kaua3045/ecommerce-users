@@ -1,6 +1,8 @@
 package com.kaua.ecommerce.users.application.role.remove;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.usecases.role.remove.RemoveRolePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.role.remove.RemoveRolePermissionUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;

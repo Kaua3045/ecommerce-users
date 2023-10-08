@@ -1,16 +1,16 @@
 package com.kaua.ecommerce.users.infrastructure.api.controllers;
 
-import com.kaua.ecommerce.users.application.role.create.CreateRoleCommand;
-import com.kaua.ecommerce.users.application.role.create.CreateRoleUseCase;
-import com.kaua.ecommerce.users.application.role.delete.DeleteRoleCommand;
-import com.kaua.ecommerce.users.application.role.delete.DeleteRoleUseCase;
-import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionCommand;
-import com.kaua.ecommerce.users.application.role.remove.RemoveRolePermissionUseCase;
-import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdCommand;
-import com.kaua.ecommerce.users.application.role.retrieve.get.GetRoleByIdUseCase;
-import com.kaua.ecommerce.users.application.role.retrieve.list.ListRolesUseCase;
-import com.kaua.ecommerce.users.application.role.update.UpdateRoleCommand;
-import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
+import com.kaua.ecommerce.users.application.usecases.role.create.CreateRoleCommand;
+import com.kaua.ecommerce.users.application.usecases.role.create.CreateRoleUseCase;
+import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleCommand;
+import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.application.usecases.role.remove.RemoveRolePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.role.remove.RemoveRolePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.GetRoleByIdCommand;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.GetRoleByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.ListRolesUseCase;
+import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
+import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.infrastructure.api.RoleAPI;

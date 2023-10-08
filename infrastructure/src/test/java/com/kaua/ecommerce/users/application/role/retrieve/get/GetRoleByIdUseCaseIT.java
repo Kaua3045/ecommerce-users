@@ -1,6 +1,8 @@
 package com.kaua.ecommerce.users.application.role.retrieve.get;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.GetRoleByIdCommand;
+import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.GetRoleByIdUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;

@@ -1,16 +1,16 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
-import com.kaua.ecommerce.users.application.permission.create.CreatePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.create.DefaultCreatePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.delete.DefaultDeletePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.delete.DeletePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.retrieve.get.DefaultGetPermissionByIdUseCase;
-import com.kaua.ecommerce.users.application.permission.retrieve.get.GetPermissionByIdUseCase;
-import com.kaua.ecommerce.users.application.permission.retrieve.list.DefaultListPermissionsUseCase;
-import com.kaua.ecommerce.users.application.permission.retrieve.list.ListPermissionsUseCase;
-import com.kaua.ecommerce.users.application.permission.update.DefaultUpdatePermissionUseCase;
-import com.kaua.ecommerce.users.application.permission.update.UpdatePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.create.DefaultCreatePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.delete.DefaultDeletePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.delete.DeletePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.DefaultGetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.GetPermissionByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.DefaultListPermissionsUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.ListPermissionsUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.update.DefaultUpdatePermissionUseCase;
+import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
