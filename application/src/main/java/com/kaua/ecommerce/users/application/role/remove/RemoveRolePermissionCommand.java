@@ -1,8 +1,8 @@
 package com.kaua.ecommerce.users.application.role.remove;
 
-public record RemoveRolePermissionCommand(String id, String permissionId) {
+public record RemoveRolePermissionCommand(String id, String permissionName) {
 
-    public static RemoveRolePermissionCommand with(final String aId, final String aPermissionId) {
-        return new RemoveRolePermissionCommand(aId, aPermissionId);
+    public static RemoveRolePermissionCommand with(final String aId, final String aPermissionName) {
+        return new RemoveRolePermissionCommand(aId, aPermissionName);
     }
 }
