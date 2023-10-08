@@ -39,9 +39,9 @@ public class RemoveRolePermissionUseCaseTest {
         aRole.addPermissions(Set.of(aRolePermissionOne, aRolePermissionTwo));
 
         final var aId = aRole.getId().getValue();
-        final var aRolePermissionId = aRolePermissionOne.getPermissionID().getValue();
+        final var aRolePermissionName = aRolePermissionOne.getPermissionName();
 
-        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionId);
+        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionName);
 
         // when
         Mockito.when(roleGateway.findById(aId)).thenReturn(Optional.of(aRole));
@@ -69,9 +69,9 @@ public class RemoveRolePermissionUseCaseTest {
         aRole.addPermissions(Set.of(aRolePermissionOne));
 
         final var aId = aRole.getId().getValue();
-        final var aRolePermissionId = "123";
+        final var aRolePermissionName = "create-user";
 
-        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionId);
+        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionName);
 
         // when
         Mockito.when(roleGateway.findById(aId)).thenReturn(Optional.of(aRole));
@@ -95,12 +95,12 @@ public class RemoveRolePermissionUseCaseTest {
     void givenAnInvalidRoleId_whenCallRemovePermission_shouldReturnNotFoundException() {
         // given
         final var aRolePermissionOne = RolePermission.newRolePermission(PermissionID.unique(), "teste");
-        final var aRolePermissionId = aRolePermissionOne.getPermissionID().getValue();
+        final var aRolePermissionName = aRolePermissionOne.getPermissionName();
         final var aId = "123";
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        final var aCommnad = RemoveRolePermissionCommand.with(aId, aRolePermissionId);
+        final var aCommnad = RemoveRolePermissionCommand.with(aId, aRolePermissionName);
 
         // when
         Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.empty());
