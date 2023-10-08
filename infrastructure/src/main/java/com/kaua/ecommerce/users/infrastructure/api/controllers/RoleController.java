@@ -14,10 +14,7 @@ import com.kaua.ecommerce.users.application.role.update.UpdateRoleUseCase;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.infrastructure.api.RoleAPI;
-import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
-import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleResponse;
-import com.kaua.ecommerce.users.infrastructure.roles.models.ListRoleResponse;
-import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.*;
 import com.kaua.ecommerce.users.infrastructure.roles.presenters.RoleApiPresenter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -104,8 +101,8 @@ public class RoleController implements RoleAPI {
     }
 
     @Override
-    public ResponseEntity<?> removeRolePermission(String roleId, String permissionId) {
-        this.removeRolePermissionUseCase.execute(RemoveRolePermissionCommand.with(roleId, permissionId));
+    public ResponseEntity<?> removeRolePermission(String roleId, RemoveRolePermissionApiInput input) {
+        this.removeRolePermissionUseCase.execute(RemoveRolePermissionCommand.with(roleId, input.permissionName()));
         return ResponseEntity.ok().build();
     }
 }
