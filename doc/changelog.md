@@ -1,3 +1,7 @@
+# 0.4.0
+- Adicionado o endpoit para remover uma permissão de uma role
+- Adicionado o nome das permissões no endpoit de busca de uma role pelo id
+
 # 0.3.0
 - Adiconado o relacionamento entre role e permission, agora uma role pode ter N permissions
 
