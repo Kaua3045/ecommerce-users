@@ -1,6 +1,8 @@
 package com.kaua.ecommerce.users.application.permission.delete;
 
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.application.usecases.permission.delete.DeletePermissionCommand;
+import com.kaua.ecommerce.users.application.usecases.permission.delete.DeletePermissionUseCase;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
