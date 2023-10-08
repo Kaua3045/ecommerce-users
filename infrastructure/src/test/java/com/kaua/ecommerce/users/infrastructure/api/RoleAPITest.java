@@ -874,11 +874,15 @@ public class RoleAPITest {
     @Test
     void givenAValidCommand_whenCallGetRole_thenShouldReturneAnRole() throws Exception {
         // given
+        final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "create-user");
+
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
         final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
+        aRole.addPermissions(Set.of(aRolePermission));
+
         final var aId = aRole.getId().getValue();
 
         Mockito.when(getRoleByIdUseCase.execute(Mockito.any(GetRoleByIdCommand.class)))
@@ -897,7 +901,8 @@ public class RoleAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.role_type", equalTo(aRoleType.name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.is_default", equalTo(aIsDefault)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aRole.getCreatedAt().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aRole.getUpdatedAt().toString())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aRole.getUpdatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.permissions[0]", equalTo(aRole.getPermissions().iterator().next().getPermissionName())));
 
         Mockito.verify(getRoleByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
