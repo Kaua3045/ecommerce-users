@@ -49,9 +49,9 @@ public class RemoveRolePermissionUseCaseIT {
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
 
         final var aId = aRole.getId().getValue();
-        final var aRolePermissionId = aRolePermissionOne.getPermissionID().getValue();
+        final var aRolePermissionName = aRolePermissionOne.getPermissionName();
 
-        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionId);
+        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionName);
 
         // when
         Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
@@ -75,9 +75,9 @@ public class RemoveRolePermissionUseCaseIT {
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
 
         final var aId = aRole.getId().getValue();
-        final var aRolePermissionId = "123";
+        final var aRolePermissionName = "create-user-admin";
 
-        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionId);
+        final var aCommand = RemoveRolePermissionCommand.with(aId, aRolePermissionName);
 
         // when
         Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
@@ -92,12 +92,12 @@ public class RemoveRolePermissionUseCaseIT {
     void givenAnInvalidRoleId_whenCallRemovePermission_shouldReturnNotFoundException() {
         // given
         final var aRolePermissionOne = RolePermission.newRolePermission(PermissionID.unique(), "teste");
-        final var aRolePermissionId = aRolePermissionOne.getPermissionID().getValue();
+        final var aRolePermissionName = aRolePermissionOne.getPermissionName();
         final var aId = "123";
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        final var aCommnad = RemoveRolePermissionCommand.with(aId, aRolePermissionId);
+        final var aCommnad = RemoveRolePermissionCommand.with(aId, aRolePermissionName);
 
         // when
         final var aResult = Assertions.assertThrows(NotFoundException.class,
