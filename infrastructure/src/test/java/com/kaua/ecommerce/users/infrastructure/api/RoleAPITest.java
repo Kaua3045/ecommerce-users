@@ -28,6 +28,7 @@ import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.handler.NotificationHandler;
 import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.RemoveRolePermissionApiInput;
 import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -874,11 +875,15 @@ public class RoleAPITest {
     @Test
     void givenAValidCommand_whenCallGetRole_thenShouldReturneAnRole() throws Exception {
         // given
+        final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "create-user");
+
         final var aName = "ceo";
         final var aDescription = "Chief Executive Officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
         final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
+        aRole.addPermissions(Set.of(aRolePermission));
+
         final var aId = aRole.getId().getValue();
 
         Mockito.when(getRoleByIdUseCase.execute(Mockito.any(GetRoleByIdCommand.class)))
@@ -897,7 +902,8 @@ public class RoleAPITest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.role_type", equalTo(aRoleType.name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.is_default", equalTo(aIsDefault)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.created_at", equalTo(aRole.getCreatedAt().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aRole.getUpdatedAt().toString())));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.updated_at", equalTo(aRole.getUpdatedAt().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.permissions[0]", equalTo(aRole.getPermissions().iterator().next().getPermissionName())));
 
         Mockito.verify(getRoleByIdUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id())));
@@ -989,14 +995,17 @@ public class RoleAPITest {
         aRole.addPermissions(Set.of(aRolePermission));
 
         final var aId = aRole.getId().getValue();
-        final var aRolePermissionId = aRolePermission.getPermissionID().getValue();
+        final var aRolePermissionName = aRolePermission.getPermissionName();
+
+        final var aInput = new RemoveRolePermissionApiInput(aRolePermissionName);
 
         Mockito.doNothing()
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
-        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
-                .contentType(MediaType.APPLICATION_JSON);
+        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -1009,7 +1018,7 @@ public class RoleAPITest {
         final var actualCmd = cmdCaptor.getValue();
 
         Assertions.assertEquals(aId, actualCmd.id());
-        Assertions.assertEquals(aRolePermissionId, actualCmd.permissionId());
+        Assertions.assertEquals(aRolePermissionName, actualCmd.permissionName());
     }
 
     @Test
@@ -1018,14 +1027,17 @@ public class RoleAPITest {
         final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
 
         final var aId = aRole.getId().getValue();
-        final var aRolePermissionId = "123";
+        final var aRolePermissionName = "create-user-admin";
+
+        final var aInput = new RemoveRolePermissionApiInput(aRolePermissionName);
 
         Mockito.doNothing()
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
-        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
-                .contentType(MediaType.APPLICATION_JSON);
+        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -1038,7 +1050,7 @@ public class RoleAPITest {
         final var actualCmd = cmdCaptor.getValue();
 
         Assertions.assertEquals(aId, actualCmd.id());
-        Assertions.assertEquals(aRolePermissionId, actualCmd.permissionId());
+        Assertions.assertEquals(aRolePermissionName, actualCmd.permissionName());
     }
 
     @Test
@@ -1046,7 +1058,9 @@ public class RoleAPITest {
         final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "teste");
 
         final var aId = "123";
-        final var aRolePermissionId = aRolePermission.getPermissionID().getValue();
+        final var aRolePermissionName = aRolePermission.getPermissionName();
+
+        final var aInput = new RemoveRolePermissionApiInput(aRolePermissionName);
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
@@ -1054,8 +1068,9 @@ public class RoleAPITest {
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
-        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions/{permissionId}", aId, aRolePermissionId)
-                .contentType(MediaType.APPLICATION_JSON);
+        final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions", aId)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(this.mapper.writeValueAsString(aInput));
 
         this.mvc.perform(request)
                 .andDo(MockMvcResultHandlers.print())
@@ -1065,7 +1080,7 @@ public class RoleAPITest {
 
         Mockito.verify(removeRolePermissionUseCase, Mockito.times(1)).execute(argThat(cmd ->
                 Objects.equals(aId, cmd.id()) &&
-                        Objects.equals(aRolePermissionId, cmd.permissionId())
+                        Objects.equals(aRolePermissionName, cmd.permissionName())
         ));
     }
 }

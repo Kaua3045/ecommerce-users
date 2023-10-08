@@ -2,7 +2,9 @@ package com.kaua.ecommerce.users.application.role.retrieve.get;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RolePermission;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -13,6 +15,7 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 public class GetRoleByIdUseCaseTest {
@@ -26,11 +29,16 @@ public class GetRoleByIdUseCaseTest {
     @Test
     void givenAValidCommand_whenCallGetRoleById_thenShouldReturneAnRole() {
         // given
+        final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "create-user");
+
         final var aName = "Ceo";
         final var aDescription = "Chief executive officer";
         final var aRoleType = RoleTypes.EMPLOYEES;
         final var aIsDefault = false;
+        final var aPermissions = Set.of(aRolePermission);
+
         final var aRole = Role.newRole(aName, aDescription, aRoleType, aIsDefault);
+        aRole.addPermissions(aPermissions);
 
         final var aCommand = GetRoleByIdCommand.with(aRole.getId().getValue());
 
@@ -49,6 +57,7 @@ public class GetRoleByIdUseCaseTest {
         Assertions.assertEquals(aOutput.isDefault(), aRole.isDefault());
         Assertions.assertEquals(aOutput.createdAt(), aRole.getCreatedAt().toString());
         Assertions.assertEquals(aOutput.updatedAt(), aRole.getUpdatedAt().toString());
+        Assertions.assertEquals(1, aOutput.permissions().size());
 
         Mockito.verify(roleGateway, Mockito.times(1))
                 .findById(aRole.getId().getValue());

@@ -1,10 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
-import com.kaua.ecommerce.users.infrastructure.roles.models.CreateRoleApiInput;
-import com.kaua.ecommerce.users.infrastructure.roles.models.GetRoleResponse;
-import com.kaua.ecommerce.users.infrastructure.roles.models.ListRoleResponse;
-import com.kaua.ecommerce.users.infrastructure.roles.models.UpdateRoleApiInput;
+import com.kaua.ecommerce.users.infrastructure.roles.models.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,6 +39,6 @@ public interface RoleAPI {
     @DeleteMapping("{id}")
     ResponseEntity<?> deleteRole(@PathVariable String id);
 
-    @PatchMapping("{roleId}/permissions/{permissionId}")
-    ResponseEntity<?> removeRolePermission(@PathVariable String roleId, @PathVariable String permissionId);
+    @PatchMapping("{roleId}/permissions")
+    ResponseEntity<?> removeRolePermission(@PathVariable String roleId, @RequestBody RemoveRolePermissionApiInput input);
 }
