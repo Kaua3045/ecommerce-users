@@ -21,7 +21,7 @@ public class DefaultRemoveRolePermissionUseCase extends RemoveRolePermissionUseC
 
         aRole.getPermissions()
                 .stream()
-                .filter(permission -> permission.getPermissionID().getValue().equals(input.permissionId()))
+                .filter(permission -> permission.getPermissionName().equals(input.permissionName()))
                 .findFirst()
                 .ifPresent(aRole::removePermission);
 
