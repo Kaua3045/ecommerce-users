@@ -2,8 +2,6 @@ package com.kaua.ecommerce.users.application.usecases.account.update.avatar;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
-import com.kaua.ecommerce.users.application.usecases.account.update.avatar.DefaultUpdateAvatarUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarCommand;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -124,7 +122,7 @@ public class UpdateAvatarUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommand_whenCallUpdate_shouldThrowNotFoundException() {
+    void givenAnInvalidAccountId_whenCallUpdate_shouldThrowNotFoundException() {
         // given
         final var aId = "123";
         final var aResource = Resource.with(

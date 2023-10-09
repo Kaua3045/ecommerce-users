@@ -2,8 +2,6 @@ package com.kaua.ecommerce.users.application.usecases.account.update.role;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.account.update.role.DefaultUpdateAccountRoleUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleCommand;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -82,7 +80,7 @@ public class UpdateAccountRoleUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandAccountId_whenCallUpdateRole_thenShouldThrowsNotFoundException() {
+    void givenAnInvalidAccountId_whenCallUpdateRole_thenShouldThrowsNotFoundException() {
         // given
         final var aRole = Role.newRole("User", "Common user", RoleTypes.COMMON, true);
         final var expectedErrorMessage = "Account with id 123 was not found";
@@ -108,7 +106,7 @@ public class UpdateAccountRoleUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandRoleId_whenCallUpdateRole_thenShouldThrowsNotFoundException() {
+    void givenAnInvalidRoleId_whenCallUpdateRole_thenShouldThrowsNotFoundException() {
         // given
         final var aAccount = Account.newAccount(
                 "Fulano",

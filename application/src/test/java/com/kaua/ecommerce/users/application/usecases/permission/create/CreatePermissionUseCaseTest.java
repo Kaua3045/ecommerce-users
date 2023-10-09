@@ -1,9 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.permission.create;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
-import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionCommand;
-import com.kaua.ecommerce.users.application.usecases.permission.create.CreatePermissionOutput;
-import com.kaua.ecommerce.users.application.usecases.permission.create.DefaultCreatePermissionUseCase;
 import com.kaua.ecommerce.users.domain.utils.IdUtils;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import org.junit.jupiter.api.Assertions;
@@ -199,7 +196,6 @@ public class CreatePermissionUseCaseTest {
 
     @Test
     void givenAnInvalidDescriptionLengthMoreThan255_whenCallCreatePermission_shouldReturnDomainException() {
-        // given
         // given
         final var aName = "create-role";
         final var aDescription = RandomStringUtils.generateValue(256);

@@ -1,9 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.permission.update;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
-import com.kaua.ecommerce.users.application.usecases.permission.update.DefaultUpdatePermissionUseCase;
-import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionCommand;
-import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionOutput;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
@@ -98,7 +95,6 @@ public class UpdatePermissionUseCaseTest {
     void givenAnInvalidPermissionId_whenCallUpdatePermission_shouldReturnNotFoundException() {
         // given
         final var aId = "123";
-        final var aName = "create-role";
         final var aDescription = "Create a new role";
 
         final var expectedErrorMessage = "Permission with id 123 was not found";

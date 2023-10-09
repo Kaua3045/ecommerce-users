@@ -3,8 +3,6 @@ package com.kaua.ecommerce.users.application.usecases.account.delete;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
-import com.kaua.ecommerce.users.application.usecases.account.delete.DefaultDeleteAccountUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccountCommand;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
@@ -79,7 +77,7 @@ public class DeleteAccountUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandWithAccountIdNotExists_whenCallDeleteById_shouldBeOk() {
+    void givenAnInvalidAccountId_whenCallDeleteById_shouldBeOk() {
         // given
         final var aId = "123";
 

@@ -2,8 +2,6 @@ package com.kaua.ecommerce.users.application.usecases.account.mail.create;
 
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.QueueGateway;
-import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailCommand;
-import com.kaua.ecommerce.users.application.usecases.account.mail.create.DefaultCreateAccountMailUseCase;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;

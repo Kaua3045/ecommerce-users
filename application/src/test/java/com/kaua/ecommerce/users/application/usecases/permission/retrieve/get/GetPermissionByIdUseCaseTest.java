@@ -1,8 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.permission.retrieve.get;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
-import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.DefaultGetPermissionByIdUseCase;
-import com.kaua.ecommerce.users.application.usecases.permission.retrieve.get.GetPermissionByIdCommand;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import org.junit.jupiter.api.Assertions;

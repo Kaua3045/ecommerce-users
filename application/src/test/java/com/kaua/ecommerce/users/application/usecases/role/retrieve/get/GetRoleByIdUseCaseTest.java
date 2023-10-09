@@ -1,8 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.role.retrieve.get;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.DefaultGetRoleByIdUseCase;
-import com.kaua.ecommerce.users.application.usecases.role.retrieve.get.GetRoleByIdCommand;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.domain.roles.Role;

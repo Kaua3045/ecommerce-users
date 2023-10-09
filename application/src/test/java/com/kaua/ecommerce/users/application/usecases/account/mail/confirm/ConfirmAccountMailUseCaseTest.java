@@ -2,8 +2,6 @@ package com.kaua.ecommerce.users.application.usecases.account.mail.confirm;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
-import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailCommand;
-import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.DefaultConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;

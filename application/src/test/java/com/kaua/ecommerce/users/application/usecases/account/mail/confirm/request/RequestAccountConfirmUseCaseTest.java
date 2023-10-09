@@ -1,11 +1,9 @@
 package com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request;
 
-import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.DefaultRequestAccountConfirmUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.RequestAccountConfirmCommand;
-import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailOutput;
-import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailOutput;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;

@@ -3,8 +3,6 @@ package com.kaua.ecommerce.users.application.usecases.account.update.password.re
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
-import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.DefaultResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordCommand;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;

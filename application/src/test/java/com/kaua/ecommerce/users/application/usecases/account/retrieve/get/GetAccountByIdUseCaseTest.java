@@ -1,8 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.account.retrieve.get;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
-import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.DefaultGetAccountByIdUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdCommand;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
