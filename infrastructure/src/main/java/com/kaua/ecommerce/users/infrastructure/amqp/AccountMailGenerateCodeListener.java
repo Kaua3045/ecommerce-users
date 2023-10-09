@@ -40,7 +40,7 @@ public class AccountMailGenerateCodeListener {
         final var aResult = Json.readValue(message, AccountCreatedEvent.class);
 
         final var aAccount = this.accountGateway.findById(aResult.id())
-                .orElseThrow(() -> NotFoundException.with(Account.class, aResult.id()));
+                .orElseThrow(NotFoundException.with(Account.class, aResult.id()));
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount,
