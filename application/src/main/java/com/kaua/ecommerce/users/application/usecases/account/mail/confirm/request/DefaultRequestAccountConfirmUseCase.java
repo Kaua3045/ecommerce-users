@@ -31,7 +31,7 @@ public class DefaultRequestAccountConfirmUseCase extends RequestAccountConfirmUs
     @Override
     public Either<NotificationHandler, CreateAccountMailOutput> execute(RequestAccountConfirmCommand input) {
         final var aAccount = accountGateway.findById(input.id())
-                .orElseThrow(() -> NotFoundException.with(Account.class, input.id()));
+                .orElseThrow(NotFoundException.with(Account.class, input.id()));
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount,

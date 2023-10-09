@@ -23,10 +23,10 @@ public class DefaultUpdateAccountRoleUseCase extends UpdateAccountRoleUseCase {
     public UpdateAccountRoleOutput execute(UpdateAccountRoleCommand aCommand) {
         final var notification = new ThrowsValidationHandler();
         final var aAccount = this.accountGateway.findById(aCommand.id())
-                .orElseThrow(() -> NotFoundException.with(Account.class, aCommand.id()));
+                .orElseThrow(NotFoundException.with(Account.class, aCommand.id()));
 
         final var aRole = this.roleGateway.findById(aCommand.roleId())
-                .orElseThrow(() -> NotFoundException.with(Role.class, aCommand.roleId()));
+                .orElseThrow(NotFoundException.with(Role.class, aCommand.roleId()));
 
         final var aAccountUpdated = aAccount.changeRole(aRole);
         aAccountUpdated.validate(notification);

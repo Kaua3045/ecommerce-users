@@ -20,7 +20,7 @@ public class DefaultUpdateAvatarUseCase extends UpdateAvatarUseCase {
     @Override
     public UpdateAvatarOutput execute(UpdateAvatarCommand aCommand) {
         final var aAccount = this.accountGateway.findById(aCommand.accountId())
-                .orElseThrow(() -> NotFoundException.with(Account.class, aCommand.accountId()));
+                .orElseThrow(NotFoundException.with(Account.class, aCommand.accountId()));
 
         final var avatarUrlStored = aCommand.resource() == null
                 ? aAccount.getAvatarUrl()

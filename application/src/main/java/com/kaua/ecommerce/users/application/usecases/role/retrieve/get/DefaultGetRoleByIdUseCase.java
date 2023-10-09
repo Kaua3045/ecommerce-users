@@ -18,6 +18,6 @@ public class DefaultGetRoleByIdUseCase extends GetRoleByIdUseCase {
     public GetRoleByIdOutput execute(GetRoleByIdCommand aCommand) {
         return this.roleGateway.findById(aCommand.id())
                 .map(GetRoleByIdOutput::from)
-                .orElseThrow(() -> NotFoundException.with(Role.class, aCommand.id()));
+                .orElseThrow(NotFoundException.with(Role.class, aCommand.id()));
     }
 }

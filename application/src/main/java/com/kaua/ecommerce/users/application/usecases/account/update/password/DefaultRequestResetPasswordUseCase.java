@@ -31,7 +31,7 @@ public class DefaultRequestResetPasswordUseCase extends RequestResetPasswordUseC
     @Override
     public Either<NotificationHandler, CreateAccountMailOutput> execute(RequestResetPasswordCommand input) {
         final var aAccount = accountGateway.findByEmail(input.email())
-                .orElseThrow(() -> NotFoundException.with(Account.class, input.email()));
+                .orElseThrow(NotFoundException.with(Account.class, input.email()));
 
         final var aCommand = CreateAccountMailCommand.with(
                 aAccount,

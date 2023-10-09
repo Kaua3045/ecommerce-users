@@ -18,6 +18,6 @@ public class DefaultGetPermissionByIdUseCase extends GetPermissionByIdUseCase {
     public GetPermissionByIdOutput execute(GetPermissionByIdCommand aCommand) {
         return this.permissionGateway.findById(aCommand.id())
                 .map(GetPermissionByIdOutput::from)
-                .orElseThrow(() -> NotFoundException.with(Permission.class, aCommand.id()));
+                .orElseThrow(NotFoundException.with(Permission.class, aCommand.id()));
     }
 }

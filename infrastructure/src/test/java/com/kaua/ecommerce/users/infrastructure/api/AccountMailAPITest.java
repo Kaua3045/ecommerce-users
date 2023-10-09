@@ -212,7 +212,7 @@ public class AccountMailAPITest {
         final var expectedErrorMessage = "Account with id 8d24aaa1-c759-4b2a-82d1-51e592f14585 was not found";
 
         Mockito.when(requestAccountConfirmUseCase.execute(Mockito.any()))
-                .thenThrow(NotFoundException.with(Account.class, aAccount));
+                .thenThrow(NotFoundException.with(Account.class, aAccount).get());
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -261,7 +261,7 @@ public class AccountMailAPITest {
         final var aInput = new RequestResetPasswordApiInput(aEmail);
 
         Mockito.when(requestResetPasswordUseCase.execute(Mockito.any()))
-                .thenThrow(NotFoundException.with(Account.class, aEmail));
+                .thenThrow(NotFoundException.with(Account.class, aEmail).get());
 
         final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
                 .contentType(MediaType.APPLICATION_JSON)

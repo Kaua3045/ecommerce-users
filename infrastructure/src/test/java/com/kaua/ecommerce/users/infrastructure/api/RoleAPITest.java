@@ -552,7 +552,7 @@ public class RoleAPITest {
         final var aInput = new UpdateRoleApiInput(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         Mockito.when(updateRoleUseCase.execute(Mockito.any(UpdateRoleCommand.class)))
-                .thenThrow(NotFoundException.with(Role.class, aId));
+                .thenThrow(NotFoundException.with(Role.class, aId).get());
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
                 .contentType(MediaType.APPLICATION_JSON)
@@ -916,7 +916,7 @@ public class RoleAPITest {
         final var aId = "123";
 
         Mockito.when(getRoleByIdUseCase.execute(Mockito.any(GetRoleByIdCommand.class)))
-                .thenThrow(NotFoundException.with(Role.class, aId));
+                .thenThrow(NotFoundException.with(Role.class, aId).get());
 
         final var request = MockMvcRequestBuilders.get("/roles/{id}", aId)
                 .contentType(MediaType.APPLICATION_JSON);
@@ -1064,7 +1064,7 @@ public class RoleAPITest {
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        Mockito.doThrow(NotFoundException.with(Role.class, aId))
+        Mockito.doThrow(NotFoundException.with(Role.class, aId).get())
                 .when(removeRolePermissionUseCase)
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 

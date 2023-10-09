@@ -5,6 +5,7 @@ import com.kaua.ecommerce.users.domain.validation.Error;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
 
 public class NotFoundException extends DomainException {
 
@@ -12,12 +13,12 @@ public class NotFoundException extends DomainException {
         super(aMessage, aErrors);
     }
 
-    public static NotFoundException with(
+    public static Supplier<NotFoundException> with(
             final Class<? extends AggregateRoot<?>> anAggregate,
             final String id
     ) {
         final var aError = "%s with id %s was not found".formatted(anAggregate.getSimpleName(), id);
 
-        return new NotFoundException(aError, Collections.emptyList());
+        return () -> new NotFoundException(aError, Collections.emptyList());
     }
 }
