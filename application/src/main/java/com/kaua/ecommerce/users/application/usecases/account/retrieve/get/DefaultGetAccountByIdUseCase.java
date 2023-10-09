@@ -18,6 +18,6 @@ public class DefaultGetAccountByIdUseCase extends GetAccountByIdUseCase {
     public GetAccountByIdOutput execute(GetAccountByIdCommand aCommand) {
         return this.accountGateway.findById(aCommand.id())
                 .map(GetAccountByIdOutput::from)
-                .orElseThrow(() -> NotFoundException.with(Account.class, aCommand.id()));
+                .orElseThrow(NotFoundException.with(Account.class, aCommand.id()));
     }
 }

@@ -28,7 +28,7 @@ public class DefaultConfirmAccountMailUseCase extends ConfirmAccountMailUseCase 
         final var notification = NotificationHandler.create();
 
         final var aAccountMail = this.accountMailGateway.findByToken(aCommand.token())
-                .orElseThrow(() -> NotFoundException.with(AccountMail.class, aCommand.token()));
+                .orElseThrow(NotFoundException.with(AccountMail.class, aCommand.token()));
 
         if (aAccountMail.isExpired()) {
             return Either.left(notification.append(new Error("Token expired")));

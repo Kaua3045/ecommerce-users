@@ -33,7 +33,7 @@ public class DefaultResetPasswordUseCase extends ResetPasswordUseCase {
         final var notification = NotificationHandler.create();
 
         final var aAccountMail = this.accountMailGateway.findByToken(input.token())
-                .orElseThrow(() -> NotFoundException.with(AccountMail.class, input.token()));
+                .orElseThrow(NotFoundException.with(AccountMail.class, input.token()));
 
         if (aAccountMail.isExpired()) {
             return Either.left(notification.append(new Error("Token expired")));

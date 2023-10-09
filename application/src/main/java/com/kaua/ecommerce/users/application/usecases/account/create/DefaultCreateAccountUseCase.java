@@ -38,7 +38,7 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
         }
 
         final var aRoleDefault = this.roleGateway.findDefaultRole()
-                .orElseThrow(() -> NotFoundException.with(Role.class, "default"));
+                .orElseThrow(NotFoundException.with(Role.class, "default"));
 
         final var aAccount = Account.newAccount(
                 aCommand.firstName(),

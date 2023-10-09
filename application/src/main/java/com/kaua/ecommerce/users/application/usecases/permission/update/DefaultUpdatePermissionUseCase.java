@@ -20,7 +20,7 @@ public class DefaultUpdatePermissionUseCase extends UpdatePermissionUseCase {
     public Either<NotificationHandler, UpdatePermissionOutput> execute(UpdatePermissionCommand aCommand) {
         final var notification = NotificationHandler.create();
         final var aPermission = this.permissionGateway.findById(aCommand.id())
-                .orElseThrow(() -> NotFoundException.with(Permission.class, aCommand.id()));
+                .orElseThrow(NotFoundException.with(Permission.class, aCommand.id()));
 
         final var aPermissionUpdated = aPermission.update(aCommand.description());
         aPermissionUpdated.validate(notification);

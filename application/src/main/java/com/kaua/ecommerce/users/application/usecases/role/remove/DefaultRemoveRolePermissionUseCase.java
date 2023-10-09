@@ -17,7 +17,7 @@ public class DefaultRemoveRolePermissionUseCase extends RemoveRolePermissionUseC
     @Override
     public void execute(RemoveRolePermissionCommand input) {
         final var aRole = this.roleGateway.findById(input.id())
-                .orElseThrow(() -> NotFoundException.with(Role.class, input.id()));
+                .orElseThrow(NotFoundException.with(Role.class, input.id()));
 
         aRole.getPermissions()
                 .stream()

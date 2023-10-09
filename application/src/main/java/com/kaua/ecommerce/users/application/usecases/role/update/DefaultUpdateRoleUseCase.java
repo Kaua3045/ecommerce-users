@@ -32,7 +32,7 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
         }
 
         final var aRole = this.roleGateway.findById(aCommand.id())
-                .orElseThrow(() -> NotFoundException.with(Role.class, aCommand.id()));
+                .orElseThrow(NotFoundException.with(Role.class, aCommand.id()));
 
         final var aRolePermissions = toRolePermission(aCommand.permissions(), aRole.getPermissions());
 
