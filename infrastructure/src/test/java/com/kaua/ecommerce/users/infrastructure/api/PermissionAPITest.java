@@ -360,7 +360,7 @@ public class PermissionAPITest {
         final var aId = "123";
 
         Mockito.when(getPermissionByIdUseCase.execute(Mockito.any(GetPermissionByIdCommand.class)))
-                .thenThrow(NotFoundException.with(Permission.class, aId));
+                .thenThrow(NotFoundException.with(Permission.class, aId).get());
 
         final var request = MockMvcRequestBuilders.get("/permissions/{id}", aId)
                 .contentType(MediaType.APPLICATION_JSON);
@@ -449,7 +449,7 @@ public class PermissionAPITest {
         final var aInput = new UpdatePermissionApiInput(aDescription);
 
         Mockito.when(updatePermissionUseCase.execute(Mockito.any(UpdatePermissionCommand.class)))
-                .thenThrow(NotFoundException.with(Permission.class, aId));
+                .thenThrow(NotFoundException.with(Permission.class, aId).get());
 
         final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
                 .contentType(MediaType.APPLICATION_JSON)

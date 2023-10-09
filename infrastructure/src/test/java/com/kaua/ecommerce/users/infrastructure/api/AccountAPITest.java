@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaua.ecommerce.users.ControllerTest;
+import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountCommand;
 import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountOutput;
 import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountUseCase;
@@ -15,7 +16,6 @@ import com.kaua.ecommerce.users.application.usecases.account.update.avatar.Updat
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleOutput;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
-import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -543,7 +543,7 @@ public class AccountAPITest {
         final var aId = "123";
 
         Mockito.when(getAccountByIdUseCase.execute(Mockito.any(GetAccountByIdCommand.class)))
-                .thenThrow(NotFoundException.with(Account.class, aId));
+                .thenThrow(NotFoundException.with(Account.class, aId).get());
 
         final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
                 .contentType(MediaType.APPLICATION_JSON);
@@ -686,7 +686,7 @@ public class AccountAPITest {
         final var expectedErrorMessage = "Account with id 123 was not found";
 
         Mockito.when(updateAvatarUseCase.execute(Mockito.any(UpdateAvatarCommand.class)))
-                .thenThrow(NotFoundException.with(Account.class, aId));
+                .thenThrow(NotFoundException.with(Account.class, aId).get());
 
         final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
@@ -788,7 +788,7 @@ public class AccountAPITest {
         final var aInput = new UpdateAccountRoleApiInput(aRoleId);
 
         Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
-                .thenThrow(NotFoundException.with(Account.class, aAccountId));
+                .thenThrow(NotFoundException.with(Account.class, aAccountId).get());
 
         final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
                 .accept(MediaType.APPLICATION_JSON)
@@ -828,7 +828,7 @@ public class AccountAPITest {
         final var aInput = new UpdateAccountRoleApiInput(aRoleId);
 
         Mockito.when(updateAccountRoleUseCase.execute(Mockito.any(UpdateAccountRoleCommand.class)))
-                .thenThrow(NotFoundException.with(Role.class, aRoleId));
+                .thenThrow(NotFoundException.with(Role.class, aRoleId).get());
 
         final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
                 .accept(MediaType.APPLICATION_JSON)
