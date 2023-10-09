@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users.infrastructure.service;
+package com.kaua.ecommerce.users.infrastructure.service.impl;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.infrastructure.services.impl.BcryptService;

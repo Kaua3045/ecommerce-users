@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.infrastructure.api;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.kaua.ecommerce.users.ControllerTest;
+import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailCommand;
 import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.RequestAccountConfirmUseCase;
@@ -9,7 +10,6 @@ import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateA
 import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;

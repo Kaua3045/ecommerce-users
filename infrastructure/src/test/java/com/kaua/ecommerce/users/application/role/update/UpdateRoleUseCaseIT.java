@@ -51,7 +51,7 @@ public class UpdateRoleUseCaseIT {
         final var aPermissions = Set.of(aPermission.getId().getValue());
         final var aId = aRole.getId().getValue();
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
+        final var aCommand = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -86,7 +86,7 @@ public class UpdateRoleUseCaseIT {
         final Set<String> aPermissions = null;
         final var aId = aRole.getId().getValue();
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
+        final var aCommand = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -124,7 +124,7 @@ public class UpdateRoleUseCaseIT {
         final var expectedErrorMessage = "'name' should not be null or blank";
         final var expectedErrorCount = 1;
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
+        final var aCommand = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
@@ -147,7 +147,7 @@ public class UpdateRoleUseCaseIT {
 
         final var expectedErrorMessage = "Role with id 123 was not found";
 
-        final var aCommand = new UpdateRoleCommand(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
+        final var aCommand = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         final var actualException = Assertions.assertThrows(NotFoundException.class,
                 () -> this.updateRoleUseCase.execute(aCommand));
