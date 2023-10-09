@@ -16,6 +16,6 @@ public class NotFoundExceptionTest {
         // when
         final var notFoundException = NotFoundException.with(aggregate, aId);
         // then
-        Assertions.assertEquals(expectedErrorMessage, notFoundException.getMessage());
+        Assertions.assertEquals(expectedErrorMessage, notFoundException.get().getMessage());
     }
 }
