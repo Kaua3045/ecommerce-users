@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.usecases.account.update.avatar;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AvatarGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.InputStream;
@@ -33,6 +35,9 @@ public class UpdateAvatarUseCaseTest {
     @Mock
     private AccountGateway accountGateway;
 
+    @Spy
+    private CacheGateway<Account> accountCacheGateway;
+
     @Test
     void givenAValidCommand_whenCallUpdate_shouldReturnAccountId() {
         // given
@@ -50,6 +55,8 @@ public class UpdateAvatarUseCaseTest {
                 "avatar.png"
         );
         final var aFinalAvatarUrl = "http://cloud-storage.com/bucket-name/" + aId + "-avatar.png";
+
+        final var aAccountUpdatedToCallCache = aAccount.changeAvatarUrl(aFinalAvatarUrl);
 
         final var aCommand = UpdateAvatarCommand.with(aId, aResource);
 
@@ -79,6 +86,8 @@ public class UpdateAvatarUseCaseTest {
                         Objects.nonNull(cmd.getUpdatedAt()) &&
                         Objects.equals(aAccount.getRole(), cmd.getRole())
         ));
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .save(aAccountUpdatedToCallCache.getId().getValue(), aAccountUpdatedToCallCache);
     }
 
     @Test
@@ -119,6 +128,8 @@ public class UpdateAvatarUseCaseTest {
                         Objects.nonNull(cmd.getUpdatedAt()) &&
                         Objects.equals(aAccount.getRole(), cmd.getRole())
         ));
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .save(Mockito.anyString(), Mockito.any());
     }
 
     @Test
@@ -146,5 +157,7 @@ public class UpdateAvatarUseCaseTest {
         Mockito.verify(accountGateway, Mockito.times(1)).findById(aId);
         Mockito.verify(avatarGateway, Mockito.times(0)).save(Mockito.any(), Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(0)).update(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.anyString(), Mockito.any());
     }
 }
