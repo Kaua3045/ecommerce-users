@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.usecases.account.retrieve.get;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -21,11 +22,53 @@ public class GetAccountByIdUseCaseTest {
     @Mock
     private AccountGateway accountGateway;
 
+    @Mock
+    private CacheGateway<Account> accountCacheGateway;
+
     @InjectMocks
     private DefaultGetAccountByIdUseCase useCase;
 
     @Test
-    void givenAValidCommand_whenCallGetByIdAccount_thenShouldReturneAnAccount() {
+    void givenAValidCommand_whenCallGetByIdAccount_thenShouldReturnAnAccountSavedInCache() {
+        // given
+        final var aFirstName = "Fulano";
+        final var aLastName = "Silveira";
+        final var aEmail = "teste@teste.com";
+        final var aPassword = "1234567Ab";
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword,
+                Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false)
+        );
+
+        final var aCommand = GetAccountByIdCommand.with(aAccount.getId().getValue());
+
+        // when
+        Mockito.when(accountCacheGateway.get(Mockito.any()))
+                .thenReturn(Optional.of(aAccount));
+
+        final var aOutput = Assertions.assertDoesNotThrow(() -> useCase.execute(aCommand));
+
+        // then
+        Assertions.assertNotNull(aOutput);
+        Assertions.assertEquals(aOutput.id(), aAccount.getId().getValue());
+        Assertions.assertEquals(aOutput.firstName(), aAccount.getFirstName());
+        Assertions.assertEquals(aOutput.lastName(), aAccount.getLastName());
+        Assertions.assertEquals(aOutput.email(), aAccount.getEmail());
+        Assertions.assertEquals(aOutput.mailStatus(), aAccount.getMailStatus().name());
+        Assertions.assertEquals(aOutput.avatarUrl(), aAccount.getAvatarUrl());
+        Assertions.assertEquals(aOutput.roleId(), aAccount.getRole().getId().getValue());
+        Assertions.assertEquals(aOutput.createdAt(), aAccount.getCreatedAt().toString());
+        Assertions.assertEquals(aOutput.updatedAt(), aAccount.getUpdatedAt().toString());
+
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .get(aAccount.getId().getValue());
+    }
+
+    @Test
+    void givenAValidCommand_whenCallGetByIdAccountAndSaveInCache_thenShouldReturnAnAccountInDatabase() {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -61,6 +104,8 @@ public class GetAccountByIdUseCaseTest {
 
         Mockito.verify(accountGateway, Mockito.times(1))
                 .findById(aAccount.getId().getValue());
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .save(aAccount.getId().getValue(), aAccount);
     }
 
     @Test
