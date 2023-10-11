@@ -105,7 +105,7 @@ public class GetAccountByIdUseCaseTest {
         Mockito.verify(accountGateway, Mockito.times(1))
                 .findById(aAccount.getId().getValue());
         Mockito.verify(accountCacheGateway, Mockito.times(1))
-                .save(aAccount.getId().getValue(), aAccount);
+                .save(aAccount);
     }
 
     @Test
