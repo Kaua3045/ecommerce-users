@@ -44,10 +44,10 @@ public class DefaultResetPasswordUseCase extends ResetPasswordUseCase {
 
         return notification.hasError()
                 ? Either.left(notification)
-                : Either.right(updatePassowrd(aAccount, aAccountMail.getId().getValue()));
+                : Either.right(updatePassword(aAccount, aAccountMail.getId().getValue()));
     }
 
-    private Boolean updatePassowrd(final Account aAccount, String aAccountMailId) {
+    private Boolean updatePassword(final Account aAccount, String aAccountMailId) {
         this.accountGateway.update(Account.with(
                 aAccount.getId().getValue(),
                 aAccount.getFirstName(),
