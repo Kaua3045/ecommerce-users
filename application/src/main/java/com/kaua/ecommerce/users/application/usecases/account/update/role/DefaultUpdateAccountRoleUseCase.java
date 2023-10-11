@@ -39,7 +39,7 @@ public class DefaultUpdateAccountRoleUseCase extends UpdateAccountRoleUseCase {
         aAccountUpdated.validate(notification);
 
         final var aAccountSaved = this.accountGateway.update(aAccountUpdated);
-        this.accountCacheGateway.save(aAccountSaved.getId().getValue(), aAccountSaved);
+        this.accountCacheGateway.save(aAccountSaved);
 
         return UpdateAccountRoleOutput.from(aAccountSaved);
     }

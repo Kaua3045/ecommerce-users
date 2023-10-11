@@ -36,7 +36,7 @@ public class DefaultUpdateAvatarUseCase extends UpdateAvatarUseCase {
         final var aAccountUpdated = aAccount.changeAvatarUrl(avatarUrlStored);
 
         final var aAccountSaved = this.accountGateway.update(aAccountUpdated);
-        this.accountCacheGateway.save(aAccountUpdated.getId().getValue(), aAccountUpdated);
+        this.accountCacheGateway.save(aAccountUpdated);
 
         return UpdateAvatarOutput.from(aAccountSaved);
     }

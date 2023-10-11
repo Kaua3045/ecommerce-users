@@ -87,7 +87,7 @@ public class UpdateAvatarUseCaseTest {
                         Objects.equals(aAccount.getRole(), cmd.getRole())
         ));
         Mockito.verify(accountCacheGateway, Mockito.times(1))
-                .save(aAccountUpdatedToCallCache.getId().getValue(), aAccountUpdatedToCallCache);
+                .save(aAccountUpdatedToCallCache);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class UpdateAvatarUseCaseTest {
                         Objects.equals(aAccount.getRole(), cmd.getRole())
         ));
         Mockito.verify(accountCacheGateway, Mockito.times(1))
-                .save(Mockito.anyString(), Mockito.any());
+                .save(Mockito.any());
     }
 
     @Test
@@ -158,6 +158,6 @@ public class UpdateAvatarUseCaseTest {
         Mockito.verify(avatarGateway, Mockito.times(0)).save(Mockito.any(), Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(0)).update(Mockito.any());
         Mockito.verify(accountCacheGateway, Mockito.times(0))
-                .save(Mockito.anyString(), Mockito.any());
+                .save(Mockito.any());
     }
 }

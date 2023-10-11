@@ -83,7 +83,7 @@ public class UpdateAccountRoleUseCaseTest {
                                 Objects.equals(aRole, account.getRole())
                 ));
         Mockito.verify(accountCacheGateway, Mockito.times(1))
-                .save(Mockito.any(), Mockito.any());
+                .save(Mockito.any());
     }
 
     @Test
@@ -111,7 +111,7 @@ public class UpdateAccountRoleUseCaseTest {
         Mockito.verify(accountGateway, Mockito.times(0))
                 .update(Mockito.any());
         Mockito.verify(accountCacheGateway, Mockito.times(0))
-                .save(Mockito.any(), Mockito.any());
+                .save(Mockito.any());
     }
 
     @Test
@@ -147,6 +147,6 @@ public class UpdateAccountRoleUseCaseTest {
         Mockito.verify(accountGateway, Mockito.times(0))
                 .update(Mockito.any());
         Mockito.verify(accountCacheGateway, Mockito.times(0))
-                .save(Mockito.any(), Mockito.any());
+                .save(Mockito.any());
     }
 }
