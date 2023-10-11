@@ -42,7 +42,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
     testImplementation 'org.springframework.amqp:spring-rabbit-test:2.4.14'
-    testImplementation 'it.ozimov:embedded-redis:0.7.3'
+    testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.redis:1.11.4'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
     testRuntimeOnly 'com.h2database:h2'
