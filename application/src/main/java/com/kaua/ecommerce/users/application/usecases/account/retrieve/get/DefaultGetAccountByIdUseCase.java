@@ -27,7 +27,7 @@ public class DefaultGetAccountByIdUseCase extends GetAccountByIdUseCase {
                 .orElseGet(() ->
                         this.accountGateway.findById(aCommand.id())
                         .map(account -> {
-                            this.accountCacheGateway.save(account.getId().getValue(), account);
+                            this.accountCacheGateway.save(account);
                             return GetAccountByIdOutput.from(account);
                         })
                         .orElseThrow(NotFoundException.with(Account.class, aCommand.id())));
