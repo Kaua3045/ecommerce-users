@@ -2,9 +2,6 @@ package com.kaua.ecommerce.users.application.usecases.role.create;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.role.create.CreateRoleCommand;
-import com.kaua.ecommerce.users.application.usecases.role.create.CreateRoleOutput;
-import com.kaua.ecommerce.users.application.usecases.role.create.DefaultCreateRoleUseCase;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -108,7 +105,7 @@ public class CreateRoleUseCaseTest {
     }
 
     @Test
-    void givenAValidCommandWithDescriptionAndWithPermissions_whenCallCreateRole_shouldReturnRoleId() {
+    void givenAValidCommandWithDescriptionAndPermissions_whenCallCreateRole_shouldReturnRoleId() {
         // given
         final var aPermissionOne = Permission.newPermission("one", "Permission One");
         final var aPermissionTwo = Permission.newPermission("two", null);
@@ -373,7 +370,7 @@ public class CreateRoleUseCaseTest {
     }
 
     @Test
-    void givenAValidCommandWithDescriptionAndWithPermissionsTwoIdsButOneNotValid_whenCallCreateRole_shouldThrowDomainException() {
+    void givenAValidCommandWithDescriptionAndTwoPermissionsIdsButOneNotValid_whenCallCreateRole_shouldReturnRoleWithExistingsPermissions() {
         // given
         final var aPermissionOne = Permission.newPermission("one", "Permission One");
         final var aPermissionTwo = Permission.newPermission("two", null);

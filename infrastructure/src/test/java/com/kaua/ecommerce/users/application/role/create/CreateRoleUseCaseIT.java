@@ -48,7 +48,7 @@ public class CreateRoleUseCaseIT {
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
+        final var aCommand = CreateRoleCommand.with(aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         final var actualResult = this.createRoleUseCase.execute(aCommand).getRight();
 
@@ -80,7 +80,7 @@ public class CreateRoleUseCaseIT {
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
+        final var aCommand = CreateRoleCommand.with(aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         final var actualResult = this.createRoleUseCase.execute(aCommand).getRight();
 
@@ -114,7 +114,7 @@ public class CreateRoleUseCaseIT {
 
         Assertions.assertEquals(0, roleRepository.count());
 
-        final var aCommand = new CreateRoleCommand(aName, aDescription, aRoleType, aIsDefault, aPermissions);
+        final var aCommand = CreateRoleCommand.with(aName, aDescription, aRoleType, aIsDefault, aPermissions);
 
         final var notification = this.createRoleUseCase.execute(aCommand).getLeft();
 

@@ -1,8 +1,8 @@
 package com.kaua.ecommerce.users.infrastructure.service.impl;
 
 import com.kaua.ecommerce.users.AmqpTest;
-import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateMailQueueCommand;
 import com.kaua.ecommerce.users.application.gateways.QueueGateway;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateMailQueueCommand;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.EmailQueue;

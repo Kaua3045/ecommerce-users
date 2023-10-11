@@ -1,13 +1,9 @@
 package com.kaua.ecommerce.users.infrastructure.json;
 
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
-import com.kaua.ecommerce.users.infrastructure.configurations.ObjectMapperConfig;
 import com.kaua.ecommerce.users.infrastructure.configurations.json.Json;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.json.JsonTest;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.FilterType;
 import org.springframework.test.context.ActiveProfiles;
 
 @ActiveProfiles("test")

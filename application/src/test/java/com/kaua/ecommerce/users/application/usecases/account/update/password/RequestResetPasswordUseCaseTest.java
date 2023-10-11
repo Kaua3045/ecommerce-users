@@ -1,9 +1,7 @@
 package com.kaua.ecommerce.users.application.usecases.account.update.password;
 
-import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
-import com.kaua.ecommerce.users.application.usecases.account.update.password.DefaultRequestResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordCommand;
+import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateAccountMailUseCase;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMailType;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -66,7 +64,7 @@ public class RequestResetPasswordUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommand_whenCallRequestResetPassowrd_thenShouldThrowException() {
+    void givenAnInvalidMail_whenCallRequestResetPassowrd_thenShouldThrowException() {
         // given
         final var aEmail = "teste@teste.com";
         final var expectedErrorMessage = "Account with id teste@teste.com was not found";

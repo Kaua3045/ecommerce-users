@@ -1,11 +1,9 @@
 package com.kaua.ecommerce.users.application.usecases.role.retrieve.list;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.DefaultListRolesUseCase;
-import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.ListRolesOutput;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
-import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
+import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

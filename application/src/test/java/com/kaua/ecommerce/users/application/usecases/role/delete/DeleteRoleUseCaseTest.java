@@ -1,8 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.role.delete;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.role.delete.DefaultDeleteRoleUseCase;
-import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleCommand;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import org.junit.jupiter.api.Assertions;
@@ -41,7 +39,7 @@ public class DeleteRoleUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandWithRoleIdNotExists_whenCallDeleteById_shouldBeOk() {
+    void givenAnInvalidRoleId_whenCallDeleteById_shouldBeOk() {
         // given
         final var aId = "123";
 

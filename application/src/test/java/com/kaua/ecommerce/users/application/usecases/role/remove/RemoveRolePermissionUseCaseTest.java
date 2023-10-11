@@ -1,8 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.role.remove;
 
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.role.remove.DefaultRemoveRolePermissionUseCase;
-import com.kaua.ecommerce.users.application.usecases.role.remove.RemoveRolePermissionCommand;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -64,7 +62,7 @@ public class RemoveRolePermissionUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandWithPermissionIdNotExists_whenCallRemovePermission_shouldBeOk() {
+    void givenAnInvalidPermissionName_whenCallRemovePermission_shouldBeOk() {
         // given
         final var aRole = Role.newRole("ceo", null, RoleTypes.EMPLOYEES, true);
         final var aRolePermissionOne = RolePermission.newRolePermission(PermissionID.unique(), "teste");
@@ -94,7 +92,7 @@ public class RemoveRolePermissionUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidRoleId_whenCallRemovePermission_shouldReturnNotFoundException() {
+    void givenAnInvalidRoleId_whenCallRemovePermission_shouldThrowsNotFoundException() {
         // given
         final var aRolePermissionOne = RolePermission.newRolePermission(PermissionID.unique(), "teste");
         final var aRolePermissionName = aRolePermissionOne.getPermissionName();

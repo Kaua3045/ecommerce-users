@@ -2,9 +2,6 @@ package com.kaua.ecommerce.users.application.usecases.role.update;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
-import com.kaua.ecommerce.users.application.usecases.role.update.DefaultUpdateRoleUseCase;
-import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
-import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleOutput;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
@@ -176,7 +173,7 @@ public class UpdateRoleUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidRoleId_whenCallUpdateRole_shouldReturnNotFoundException() {
+    void givenAnInvalidRoleId_whenCallUpdateRole_shouldThrowsNotFoundException() {
         // given
         final var aId = "123";
         final var aName = "ceo";

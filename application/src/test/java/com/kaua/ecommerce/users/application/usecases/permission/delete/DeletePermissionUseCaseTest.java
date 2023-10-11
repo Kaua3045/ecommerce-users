@@ -38,7 +38,7 @@ public class DeletePermissionUseCaseTest {
     }
 
     @Test
-    void givenAnInvalidCommandWithAccountIdNotExists_whenCallDeleteById_shouldBeOk() {
+    void givenAnInvalidPermissionId_whenCallDeleteById_shouldBeOk() {
         // given
         final var aId = "123";
 

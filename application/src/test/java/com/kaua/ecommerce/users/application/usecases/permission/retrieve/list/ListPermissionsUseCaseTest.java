@@ -1,8 +1,6 @@
 package com.kaua.ecommerce.users.application.usecases.permission.retrieve.list;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
-import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.DefaultListPermissionsUseCase;
-import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.ListPermissionsOutput;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
