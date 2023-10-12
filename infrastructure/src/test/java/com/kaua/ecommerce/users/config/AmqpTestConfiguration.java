@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users;
+package com.kaua.ecommerce.users.config;
 
 import com.rabbitmq.client.Channel;
 import org.mockito.BDDMockito;

@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users;
+package com.kaua.ecommerce.users.config;
 
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;

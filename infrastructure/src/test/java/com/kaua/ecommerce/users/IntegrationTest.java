@@ -1,5 +1,7 @@
 package com.kaua.ecommerce.users;
 
+import com.kaua.ecommerce.users.config.AmqpTestConfiguration;
+import com.kaua.ecommerce.users.config.JpaCleanUpExtension;
 import com.kaua.ecommerce.users.infrastructure.Main;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.data.redis.AutoConfigureDataRedis;
@@ -12,8 +14,8 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("test")
-@SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class})
+@SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class })
 @AutoConfigureDataRedis
-@ExtendWith(CleanUpExtension.class)
+@ExtendWith(JpaCleanUpExtension.class)
 public @interface IntegrationTest {
 }

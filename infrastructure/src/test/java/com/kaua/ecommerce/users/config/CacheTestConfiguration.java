@@ -1,4 +1,4 @@
-package com.kaua.ecommerce.users;
+package com.kaua.ecommerce.users.config;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
