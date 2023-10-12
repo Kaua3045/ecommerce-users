@@ -3,16 +3,22 @@ package com.kaua.ecommerce.users.infrastructure.account;
 import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
+import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RolePermission;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.accounts.AccountCacheGateway;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheEntity;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
+import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.Set;
 
 @CacheGatewayTest
 public class AccountCacheGatewayTest {
@@ -26,6 +32,9 @@ public class AccountCacheGatewayTest {
     @Autowired
     private RoleJpaRepository roleRepository;
 
+    @Autowired
+    private PermissionJpaRepository permissionRepository;
+
     @Test
     void givenAValidAccount_whenCallSave_shouldReturnAccountSavedInCache() {
         final var aFirstName = "Fulano";
@@ -33,8 +42,14 @@ public class AccountCacheGatewayTest {
         final var aEmail = "teste@teste.com";
         final var aPassword = "1234567Ab";
         final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
+        final var aPermission = Permission.newPermission("create-user", null);
+        final var aRolePermission = RolePermission.newRolePermission(aPermission.getId(), aPermission.getName());
+
+        aRole.addPermissions(Set.of(aRolePermission));
 
         Account aAccount = Account.newAccount(aFirstName, aLastName, aEmail, aPassword, aRole);
+
+        permissionRepository.save(PermissionJpaEntity.toEntity(aPermission));
 
         roleRepository.save(RoleJpaEntity.toEntity(aRole));
 
@@ -53,6 +68,7 @@ public class AccountCacheGatewayTest {
         Assertions.assertNull(actualAccount.getAvatarUrl());
         Assertions.assertEquals(aAccount.getMailStatus(), actualAccount.getMailStatus());
         Assertions.assertEquals(aAccount.getRole(), actualAccount.getRole());
+        Assertions.assertEquals(aRolePermission.getPermissionName(), actualAccount.getRole().getPermissions().stream().findFirst().get().getPermissionName());
         Assertions.assertEquals(aAccount.getCreatedAt(), actualAccount.getCreatedAt());
         Assertions.assertEquals(aAccount.getUpdatedAt(), actualAccount.getUpdatedAt());
 
