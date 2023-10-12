@@ -6,6 +6,8 @@ import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import jakarta.persistence.Id;
 import org.springframework.data.redis.core.RedisHash;
 
+import java.time.Instant;
+
 @RedisHash(value = "account", timeToLive = 60 * 60 * 24 * 7) // 7 days
 public class AccountCacheEntity {
 
@@ -18,6 +20,8 @@ public class AccountCacheEntity {
     private AccountMailStatus mailStatus;
     private String avatarUrl;
     private RoleJpaEntity role;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     public AccountCacheEntity() {}
 
@@ -28,7 +32,9 @@ public class AccountCacheEntity {
             final String email,
             final AccountMailStatus mailStatus,
             final String avatarUrl,
-            final RoleJpaEntity role
+            final RoleJpaEntity role,
+            final Instant createdAt,
+            final Instant updatedAt
     ) {
         this.id = id;
         this.firstName = firstName;
@@ -37,6 +43,8 @@ public class AccountCacheEntity {
         this.mailStatus = mailStatus;
         this.avatarUrl = avatarUrl;
         this.role = role;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public static AccountCacheEntity toEntity(final Account aAccount) {
@@ -47,7 +55,9 @@ public class AccountCacheEntity {
                 aAccount.getEmail(),
                 aAccount.getMailStatus(),
                 aAccount.getAvatarUrl(),
-                RoleJpaEntity.toEntity(aAccount.getRole())
+                RoleJpaEntity.toEntity(aAccount.getRole()),
+                aAccount.getCreatedAt(),
+                aAccount.getUpdatedAt()
         );
     }
 
@@ -61,8 +71,8 @@ public class AccountCacheEntity {
                 null,
                 getAvatarUrl(),
                 getRole().toDomain(),
-                null,
-                null,
+                getCreatedAt(),
+                getUpdatedAt(),
                 null
         );
     }
@@ -93,5 +103,13 @@ public class AccountCacheEntity {
 
     public RoleJpaEntity getRole() {
         return role;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 }
