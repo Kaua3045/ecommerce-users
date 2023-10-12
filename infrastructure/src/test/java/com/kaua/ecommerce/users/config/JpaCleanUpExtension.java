@@ -1,7 +1,6 @@
 package com.kaua.ecommerce.users;
 
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaRepository;
-import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
@@ -13,7 +12,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Collection;
 import java.util.List;
 
-public class CleanUpExtension implements BeforeEachCallback {
+public class JpaCleanUpExtension implements BeforeEachCallback {
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
@@ -23,8 +22,7 @@ public class CleanUpExtension implements BeforeEachCallback {
                 appContext.getBean(AccountMailJpaRepository.class),
                 appContext.getBean(AccountJpaRepository.class),
                 appContext.getBean(RoleJpaRepository.class),
-                appContext.getBean(PermissionJpaRepository.class),
-                appContext.getBean(AccountCacheRepository.class)
+                appContext.getBean(PermissionJpaRepository.class)
         ));
     }
 
