@@ -2,13 +2,15 @@ package com.kaua.ecommerce.users.infrastructure.accounts.persistence;
 
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleCacheEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import jakarta.persistence.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 import java.time.Instant;
 
-@RedisHash(value = "account", timeToLive = 60 * 60 * 24 * 7) // 7 days
+@RedisHash(value = "account", timeToLive = 60 * 60 * 24) // 1 day
 public class AccountCacheEntity {
 
     @Id
@@ -19,7 +21,7 @@ public class AccountCacheEntity {
     private String email;
     private AccountMailStatus mailStatus;
     private String avatarUrl;
-    private RoleJpaEntity role;
+    private RoleCacheEntity role;
     private Instant createdAt;
     private Instant updatedAt;
 
@@ -32,7 +34,7 @@ public class AccountCacheEntity {
             final String email,
             final AccountMailStatus mailStatus,
             final String avatarUrl,
-            final RoleJpaEntity role,
+            final RoleCacheEntity role,
             final Instant createdAt,
             final Instant updatedAt
     ) {
@@ -55,7 +57,7 @@ public class AccountCacheEntity {
                 aAccount.getEmail(),
                 aAccount.getMailStatus(),
                 aAccount.getAvatarUrl(),
-                RoleJpaEntity.toEntity(aAccount.getRole()),
+                RoleCacheEntity.toEntity(aAccount.getRole()),
                 aAccount.getCreatedAt(),
                 aAccount.getUpdatedAt()
         );
@@ -101,7 +103,7 @@ public class AccountCacheEntity {
         return avatarUrl;
     }
 
-    public RoleJpaEntity getRole() {
+    public RoleCacheEntity getRole() {
         return role;
     }
 
