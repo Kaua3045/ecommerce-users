@@ -157,6 +157,6 @@ public class RoleJpaEntity {
     }
 
     public Set<RolePermissionJpaEntity> getPermissions() {
-        return permissions == null || permissions.isEmpty() ? new HashSet<>() : permissions;
+        return permissions;
     }
 }
