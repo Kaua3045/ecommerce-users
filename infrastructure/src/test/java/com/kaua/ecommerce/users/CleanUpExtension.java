@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users;
 
 import com.kaua.ecommerce.users.infrastructure.accounts.mail.persistence.AccountMailJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
 import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
@@ -22,7 +23,8 @@ public class CleanUpExtension implements BeforeEachCallback {
                 appContext.getBean(AccountMailJpaRepository.class),
                 appContext.getBean(AccountJpaRepository.class),
                 appContext.getBean(RoleJpaRepository.class),
-                appContext.getBean(PermissionJpaRepository.class)
+                appContext.getBean(PermissionJpaRepository.class),
+                appContext.getBean(AccountCacheRepository.class)
         ));
     }
 
