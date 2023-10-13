@@ -43,7 +43,7 @@ public class AccountUseCaseConfig {
 
     @Bean
     public CreateAccountUseCase createAccountUseCase() {
-        return new DefaultCreateAccountUseCase(accountGateway, encrypterGateway, roleGateway);
+        return new DefaultCreateAccountUseCase(accountGateway, accountCacheGateway, encrypterGateway, roleGateway);
     }
 
     @Bean
