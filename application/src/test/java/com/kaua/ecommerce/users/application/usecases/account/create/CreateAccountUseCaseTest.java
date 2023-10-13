@@ -1,8 +1,10 @@
 package com.kaua.ecommerce.users.application.usecases.account.create;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -26,6 +28,9 @@ public class CreateAccountUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
+
+    @Mock
+    private CacheGateway<Account> accountCacheGateway;
 
     @InjectMocks
     private DefaultCreateAccountUseCase useCase;
@@ -82,6 +87,8 @@ public class CreateAccountUseCaseTest {
                 ));
         Mockito.verify(encrypterGateway, Mockito.times(1))
                 .encrypt(aPassword);
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .save(Mockito.any());
     }
 
     @Test
@@ -114,6 +121,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -146,6 +155,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -187,6 +198,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -218,6 +231,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -249,6 +264,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -290,6 +307,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -321,6 +340,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -353,6 +374,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -384,6 +407,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -415,6 +440,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -456,6 +483,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -487,6 +516,8 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -527,5 +558,7 @@ public class CreateAccountUseCaseTest {
                 .create(Mockito.any());
         Mockito.verify(encrypterGateway, Mockito.never())
                 .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 }
