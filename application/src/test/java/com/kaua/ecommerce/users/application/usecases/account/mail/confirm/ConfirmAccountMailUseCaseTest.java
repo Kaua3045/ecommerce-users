@@ -92,7 +92,7 @@ public class ConfirmAccountMailUseCaseTest {
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .deleteById(Mockito.any());
         Mockito.verify(accountCacheGateway, Mockito.times(1))
-                .delete(Mockito.any());
+                .save(Mockito.any());
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ConfirmAccountMailUseCaseTest {
         Mockito.verify(accountMailGateway, Mockito.times(0))
                 .deleteById(Mockito.any());
         Mockito.verify(accountCacheGateway, Mockito.times(0))
-                .delete(Mockito.any());
+                .save(Mockito.any());
     }
 
     @Test
@@ -164,6 +164,6 @@ public class ConfirmAccountMailUseCaseTest {
         Mockito.verify(accountMailGateway, Mockito.times(0))
                 .deleteById(Mockito.any());
         Mockito.verify(accountCacheGateway, Mockito.times(0))
-                .delete(Mockito.any());
+                .save(Mockito.any());
     }
 }
