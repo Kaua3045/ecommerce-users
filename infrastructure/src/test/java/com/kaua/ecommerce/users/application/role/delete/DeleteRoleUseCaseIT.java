@@ -1,6 +1,6 @@
 package com.kaua.ecommerce.users.application.role.delete;
 
-import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleUseCase;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@IntegrationTest
+@CacheGatewayTest
 public class DeleteRoleUseCaseIT {
 
     @Autowired
