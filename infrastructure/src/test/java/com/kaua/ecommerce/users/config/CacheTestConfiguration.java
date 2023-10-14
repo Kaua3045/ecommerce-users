@@ -9,10 +9,10 @@ import redis.embedded.RedisServer;
 @TestConfiguration
 public class CacheTestConfiguration {
 
-    private RedisServer redisServer;
+    private final RedisServer redisServer;
 
-    public CacheTestConfiguration(RedisProperties redisProperties) {
-        this.redisServer = new RedisServer(redisProperties.getPort());
+    public CacheTestConfiguration() {
+        this.redisServer = new RedisServer(6880);
     }
 
     @PostConstruct
