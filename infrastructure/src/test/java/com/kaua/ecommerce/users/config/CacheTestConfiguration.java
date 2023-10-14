@@ -11,8 +11,8 @@ public class CacheTestConfiguration {
 
     private final RedisServer redisServer;
 
-    public CacheTestConfiguration() {
-        this.redisServer = new RedisServer(6880);
+    public CacheTestConfiguration(RedisProperties redisProperties) {
+        this.redisServer = new RedisServer(redisProperties.getPort());
     }
 
     @PostConstruct
