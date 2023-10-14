@@ -1,7 +1,3 @@
-redis:
-  host: localhost
-  port: 6379
-
 spring:
   autoconfigure:
     exclude:
