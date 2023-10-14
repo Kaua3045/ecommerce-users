@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.usecases.account.update.role;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
@@ -13,6 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Objects;
@@ -25,6 +27,9 @@ public class UpdateAccountRoleUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
+
+    @Spy
+    private CacheGateway<Account> accountCacheGateway;
 
     @Mock
     private RoleGateway roleGateway;
@@ -77,6 +82,8 @@ public class UpdateAccountRoleUseCaseTest {
                                 Objects.nonNull(account.getUpdatedAt()) &&
                                 Objects.equals(aRole, account.getRole())
                 ));
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .save(Mockito.any());
     }
 
     @Test
@@ -103,6 +110,8 @@ public class UpdateAccountRoleUseCaseTest {
                 .findById(Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(0))
                 .update(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -137,5 +146,7 @@ public class UpdateAccountRoleUseCaseTest {
                 .findById(Mockito.any());
         Mockito.verify(accountGateway, Mockito.times(0))
                 .update(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 }

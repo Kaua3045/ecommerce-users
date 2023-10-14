@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.usecases.account.mail.confirm;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
 import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountMailStatus;
 import com.kaua.ecommerce.users.domain.accounts.mail.AccountMail;
@@ -33,6 +34,9 @@ public class ConfirmAccountMailUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
+
+    @Mock
+    private CacheGateway<Account> accountCacheGateway;
 
     @InjectMocks
     private DefaultConfirmAccountMailUseCase useCase;
@@ -87,6 +91,8 @@ public class ConfirmAccountMailUseCaseTest {
                 ));
         Mockito.verify(accountMailGateway, Mockito.times(1))
                 .deleteById(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(1))
+                .save(Mockito.any());
     }
 
     @Test
@@ -130,6 +136,8 @@ public class ConfirmAccountMailUseCaseTest {
                 .update(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(0))
                 .deleteById(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 
     @Test
@@ -155,5 +163,7 @@ public class ConfirmAccountMailUseCaseTest {
                 .update(Mockito.any());
         Mockito.verify(accountMailGateway, Mockito.times(0))
                 .deleteById(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
     }
 }

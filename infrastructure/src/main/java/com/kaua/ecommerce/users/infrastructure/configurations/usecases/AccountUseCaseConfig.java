@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
+import com.kaua.ecommerce.users.application.gateways.*;
 import com.kaua.ecommerce.users.application.usecases.account.create.CreateAccountUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.create.DefaultCreateAccountUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.delete.DefaultDeleteAccountUseCase;
@@ -10,7 +11,7 @@ import com.kaua.ecommerce.users.application.usecases.account.update.avatar.Defau
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.DefaultUpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
-import com.kaua.ecommerce.users.application.gateways.*;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 public class AccountUseCaseConfig {
 
     private final AccountGateway accountGateway;
+    private final CacheGateway<Account> accountCacheGateway;
     private final EncrypterGateway encrypterGateway;
     private final AccountMailGateway accountMailGateway;
     private final AvatarGateway avatarGateway;
@@ -25,12 +27,14 @@ public class AccountUseCaseConfig {
 
     public AccountUseCaseConfig(
             final AccountGateway accountGateway,
+            final CacheGateway<Account> accountCacheGateway,
             final EncrypterGateway encrypterGateway,
             final AccountMailGateway accountMailGateway,
             final AvatarGateway avatarGateway,
             final RoleGateway roleGateway
     ) {
         this.accountGateway = accountGateway;
+        this.accountCacheGateway = accountCacheGateway;
         this.encrypterGateway = encrypterGateway;
         this.accountMailGateway = accountMailGateway;
         this.avatarGateway = avatarGateway;
@@ -39,22 +43,22 @@ public class AccountUseCaseConfig {
 
     @Bean
     public CreateAccountUseCase createAccountUseCase() {
-        return new DefaultCreateAccountUseCase(accountGateway, encrypterGateway, roleGateway);
+        return new DefaultCreateAccountUseCase(accountGateway, accountCacheGateway, encrypterGateway, roleGateway);
     }
 
     @Bean
     public GetAccountByIdUseCase getAccountByIdUseCase() {
-        return new DefaultGetAccountByIdUseCase(accountGateway);
+        return new DefaultGetAccountByIdUseCase(accountGateway, accountCacheGateway);
     }
 
     @Bean
     public UpdateAvatarUseCase updateAvatarUseCase() {
-        return new DefaultUpdateAvatarUseCase(avatarGateway, accountGateway);
+        return new DefaultUpdateAvatarUseCase(avatarGateway, accountGateway, accountCacheGateway);
     }
 
     @Bean
     public UpdateAccountRoleUseCase updateAccountRoleUseCase() {
-        return new DefaultUpdateAccountRoleUseCase(accountGateway, roleGateway);
+        return new DefaultUpdateAccountRoleUseCase(accountGateway, accountCacheGateway, roleGateway);
     }
 
     @Bean

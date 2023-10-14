@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.core.env.AbstractEnvironment;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import software.amazon.awssdk.services.s3.S3Client;
 
 @SpringBootApplication
+@EnableRedisRepositories
 public class Main {
 
     @Autowired

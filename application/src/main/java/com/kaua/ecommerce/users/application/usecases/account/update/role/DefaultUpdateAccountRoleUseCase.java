@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.application.usecases.account.update.role;
 
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -12,10 +13,16 @@ import java.util.Objects;
 public class DefaultUpdateAccountRoleUseCase extends UpdateAccountRoleUseCase {
 
     private final AccountGateway accountGateway;
+    private final CacheGateway<Account> accountCacheGateway;
     private final RoleGateway roleGateway;
 
-    public DefaultUpdateAccountRoleUseCase(final AccountGateway accountGateway, final RoleGateway roleGateway) {
+    public DefaultUpdateAccountRoleUseCase(
+            final AccountGateway accountGateway,
+            final CacheGateway<Account> accountCacheGateway,
+            final RoleGateway roleGateway
+    ) {
         this.accountGateway = Objects.requireNonNull(accountGateway);
+        this.accountCacheGateway = Objects.requireNonNull(accountCacheGateway);
         this.roleGateway = Objects.requireNonNull(roleGateway);
     }
 
@@ -31,6 +38,9 @@ public class DefaultUpdateAccountRoleUseCase extends UpdateAccountRoleUseCase {
         final var aAccountUpdated = aAccount.changeRole(aRole);
         aAccountUpdated.validate(notification);
 
-        return UpdateAccountRoleOutput.from(this.accountGateway.update(aAccountUpdated));
+        final var aAccountSaved = this.accountGateway.update(aAccountUpdated);
+        this.accountCacheGateway.save(aAccountSaved);
+
+        return UpdateAccountRoleOutput.from(aAccountSaved);
     }
 }

@@ -8,7 +8,6 @@ import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
 public class Account extends AggregateRoot<AccountID> {
 
@@ -43,8 +42,8 @@ public class Account extends AggregateRoot<AccountID> {
         this.password = aPassword;
         this.avatarUrl = aAvatarUrl;
         this.role = aRole;
-        this.createdAt = Objects.requireNonNull(aCreatedAt, "'createdAt' must not be null");
-        this.updatedAt = Objects.requireNonNull(aUpdatedAt, "'updatedAt' must not be null");
+        this.createdAt = aCreatedAt;
+        this.updatedAt = aUpdatedAt;
     }
 
     public static Account newAccount(

@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.configurations.usecases;
 
+import com.kaua.ecommerce.users.application.gateways.*;
 import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.ConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.DefaultConfirmAccountMailUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.mail.confirm.request.DefaultRequestAccountConfirmUseCase;
@@ -10,10 +11,7 @@ import com.kaua.ecommerce.users.application.usecases.account.update.password.Def
 import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.DefaultResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordUseCase;
-import com.kaua.ecommerce.users.application.gateways.AccountGateway;
-import com.kaua.ecommerce.users.application.gateways.AccountMailGateway;
-import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
-import com.kaua.ecommerce.users.application.gateways.QueueGateway;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.infrastructure.configurations.annotations.EmailQueue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,17 +23,20 @@ public class AccountMailUseCaseConfig {
 
     private final AccountMailGateway accountMailGateway;
     private final AccountGateway accountGateway;
+    private final CacheGateway<Account> accountCacheGateway;
     private final QueueGateway queueGateway;
     private final EncrypterGateway encrypterGateway;
 
     public AccountMailUseCaseConfig(
             final AccountMailGateway accountMailGateway,
             final AccountGateway accountGateway,
+            final CacheGateway<Account> accountCacheGateway,
             @EmailQueue final QueueGateway queueGateway,
             final EncrypterGateway encrypterGateway
     ) {
         this.accountMailGateway = Objects.requireNonNull(accountMailGateway);
         this.accountGateway = Objects.requireNonNull(accountGateway);
+        this.accountCacheGateway = Objects.requireNonNull(accountCacheGateway);
         this.queueGateway = Objects.requireNonNull(queueGateway);
         this.encrypterGateway = Objects.requireNonNull(encrypterGateway);
     }
@@ -52,7 +53,7 @@ public class AccountMailUseCaseConfig {
 
     @Bean
     public ConfirmAccountMailUseCase confirmAccountMailUseCase() {
-        return new DefaultConfirmAccountMailUseCase(accountMailGateway, accountGateway);
+        return new DefaultConfirmAccountMailUseCase(accountMailGateway, accountGateway, accountCacheGateway);
     }
 
     @Bean

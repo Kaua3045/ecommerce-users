@@ -6,6 +6,10 @@ amqp:
   username: ecommerce_users_admin
   password: ecommerce_users_admin123456
 
+redis:
+  host: localhost
+  port: 6379
+
 logging:
   level:
     com.kaua.ecommerce.users.infrastructure: DEBUG

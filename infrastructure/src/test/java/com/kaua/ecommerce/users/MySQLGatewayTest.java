@@ -1,11 +1,10 @@
 package com.kaua.ecommerce.users;
 
-import org.junit.jupiter.api.TestInstance;
+import com.kaua.ecommerce.users.config.JpaCleanUpExtension;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.lang.annotation.*;
@@ -21,6 +20,6 @@ import java.lang.annotation.*;
         includeFilters = {
                 @ComponentScan.Filter(type = FilterType.REGEX, pattern = ".*MySQLGateway")}
 )
-@ExtendWith(CleanUpExtension.class)
+@ExtendWith(JpaCleanUpExtension.class)
 public @interface MySQLGatewayTest {
 }

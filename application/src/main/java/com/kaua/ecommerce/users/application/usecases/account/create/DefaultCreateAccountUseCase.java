@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.usecases.account.create;
 
 import com.kaua.ecommerce.users.application.either.Either;
 import com.kaua.ecommerce.users.application.gateways.AccountGateway;
+import com.kaua.ecommerce.users.application.gateways.CacheGateway;
 import com.kaua.ecommerce.users.application.gateways.EncrypterGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.domain.accounts.Account;
@@ -16,15 +17,18 @@ import java.util.Objects;
 public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
 
     private final AccountGateway accountGateway;
+    private final CacheGateway<Account> accountCacheGateway;
     private final EncrypterGateway encrypterGateway;
     private final RoleGateway roleGateway;
 
     public DefaultCreateAccountUseCase(
             final AccountGateway accountGateway,
+            final CacheGateway<Account> accountCacheGateway,
             final EncrypterGateway encrypterGateway,
             final RoleGateway roleGateway
     ) {
         this.accountGateway = Objects.requireNonNull(accountGateway);
+        this.accountCacheGateway = Objects.requireNonNull(accountCacheGateway);
         this.encrypterGateway = Objects.requireNonNull(encrypterGateway);
         this.roleGateway = Objects.requireNonNull(roleGateway);
     }
@@ -51,10 +55,10 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
 
         return notification.hasError()
                 ? Either.left(notification)
-                : Either.right(CreateAccountOutput.from(accountWithPasswordEncodded(aAccount)));
+                : Either.right(CreateAccountOutput.from(accountWithPasswordEncoded(aAccount)));
     }
 
-    private Account accountWithPasswordEncodded(final Account aAccount) {
+    private Account accountWithPasswordEncoded(final Account aAccount) {
         aAccount.registerEvent(new AccountCreatedEvent(
                 aAccount.getId().getValue(),
                 aAccount.getFirstName(),
@@ -76,6 +80,7 @@ public class DefaultCreateAccountUseCase extends CreateAccountUseCase {
                         aAccount.getUpdatedAt(),
                         aAccount.getDomainEvents())
         );
+        this.accountCacheGateway.save(aAccount);
 
         return aAccount;
     }

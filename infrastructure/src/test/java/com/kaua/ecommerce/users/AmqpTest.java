@@ -1,5 +1,6 @@
 package com.kaua.ecommerce.users;
 
+import com.kaua.ecommerce.users.config.AmqpTestConfiguration;
 import com.kaua.ecommerce.users.infrastructure.Main;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
