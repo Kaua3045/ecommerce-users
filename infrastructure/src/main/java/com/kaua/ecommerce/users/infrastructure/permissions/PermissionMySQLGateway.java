@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.utils.SpecificationUtils;
@@ -21,9 +22,14 @@ import java.util.stream.Collectors;
 public class PermissionMySQLGateway implements PermissionGateway {
 
     private final PermissionJpaRepository permissionRepository;
+    private final AccountCacheRepository accountCacheRepository;
 
-    public PermissionMySQLGateway(final PermissionJpaRepository permissionRepository) {
+    public PermissionMySQLGateway(
+            final PermissionJpaRepository permissionRepository,
+            final AccountCacheRepository accountCacheRepository
+    ) {
         this.permissionRepository = Objects.requireNonNull(permissionRepository);
+        this.accountCacheRepository = Objects.requireNonNull(accountCacheRepository);
     }
 
     @Override
@@ -74,6 +80,7 @@ public class PermissionMySQLGateway implements PermissionGateway {
     public void deleteById(String aId) {
         if (this.permissionRepository.existsById(aId)) {
             this.permissionRepository.deleteById(aId);
+            this.accountCacheRepository.deleteAll();
         }
     }
 
