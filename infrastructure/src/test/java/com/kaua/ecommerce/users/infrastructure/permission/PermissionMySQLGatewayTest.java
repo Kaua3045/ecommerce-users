@@ -1,27 +1,55 @@
 package com.kaua.ecommerce.users.infrastructure.permission;
 
+import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.config.CacheTestConfiguration;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RolePermission;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheEntity;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
 import com.kaua.ecommerce.users.infrastructure.permissions.PermissionMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
 
-@IntegrationTest
-public class PermissionMySQLGatewayTest {
+@CacheGatewayTest
+public class PermissionMySQLGatewayTest extends CacheTestConfiguration {
+
+    @BeforeAll
+    void setup() {
+        init();
+    }
+
+    @AfterAll
+    void cleanUp() {
+        stop();
+    }
 
     @Autowired
     private PermissionMySQLGateway permissionGateway;
 
     @Autowired
     private PermissionJpaRepository permissionRepository;
+
+    @Autowired
+    private AccountCacheRepository accountCacheRepository;
+
+    @Autowired
+    private RoleJpaRepository roleJpaRepository;
 
     @Test
     void givenAValidPermissionWithDescription_whenCallCreate_shouldReturnANewPermission() {
@@ -81,7 +109,7 @@ public class PermissionMySQLGatewayTest {
 
 
     @Test
-    void givenAValidNameButNotExistis_whenCallExistsByName_shouldReturnFalse() {
+    void givenAValidNameButNotExists_whenCallExistsByName_shouldReturnFalse() {
         final var aName = "create-role";
 
         Assertions.assertEquals(0, permissionRepository.count());
@@ -104,10 +132,21 @@ public class PermissionMySQLGatewayTest {
 
     @Test
     void givenAPrePersistedPermission_whenCallDeleteById_shouldBeOk() {
+        final var aRole = Role.newRole("admin", "Admin", RoleTypes.EMPLOYEES, false);
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@testes.com",
+                "1234567Ab*",
+                aRole
+        );
         final var aPermission = Permission.newPermission("create-role", "Create a new role");
         final var aId = aPermission.getId().getValue();
 
+        aRole.addPermissions(Set.of(RolePermission.newRolePermission(aPermission.getId(), aPermission.getName())));
         permissionRepository.saveAndFlush(PermissionJpaEntity.toEntity(aPermission));
+        roleJpaRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
+        accountCacheRepository.save(AccountCacheEntity.toEntity(aAccount));
 
         Assertions.assertEquals(1, permissionRepository.count());
 
