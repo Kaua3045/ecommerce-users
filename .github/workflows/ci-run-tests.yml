@@ -25,4 +25,4 @@ jobs:
           distribution: 'temurin'
 
       - name: Run application tests
-        run: ./gradlew test
+        run: ./gradlew test --rerun-tasks
