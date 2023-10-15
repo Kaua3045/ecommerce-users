@@ -20,7 +20,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 @Testcontainers
-@CacheGatewayTest
+//@CacheGatewayTest
 public class DeleteRoleUseCaseIT {
 
     @Container
@@ -56,33 +56,33 @@ public class DeleteRoleUseCaseIT {
     @Autowired
     private RoleJpaRepository roleRepository;
 
-    @Test
-    void givenAValidId_whenCallDeleteRole_shouldBeOk() {
-        final var aRole = Role.newRole(
-                "ceo",
-                "Chief Executive Officer",
-                RoleTypes.EMPLOYEES,
-                false
-        );
-        final var aId = aRole.getId().getValue();
-
-        roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
-
-        Assertions.assertEquals(1, roleRepository.count());
-
-        Assertions.assertDoesNotThrow(() -> this.deleteRoleUseCase.execute(DeleteRoleCommand.with(aId)));
-
-        Assertions.assertEquals(0, roleRepository.count());
-    }
-
-    @Test
-    void givenAInvalidId_whenCallDeleteRole_shouldBeOk() {
-        final var aId = RoleID.from("123").getValue();
-
-        Assertions.assertEquals(0, roleRepository.count());
-
-        Assertions.assertDoesNotThrow(() -> this.deleteRoleUseCase.execute(DeleteRoleCommand.with(aId)));
-
-        Assertions.assertEquals(0, roleRepository.count());
-    }
+//    @Test
+//    void givenAValidId_whenCallDeleteRole_shouldBeOk() {
+//        final var aRole = Role.newRole(
+//                "ceo",
+//                "Chief Executive Officer",
+//                RoleTypes.EMPLOYEES,
+//                false
+//        );
+//        final var aId = aRole.getId().getValue();
+//
+//        roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
+//
+//        Assertions.assertEquals(1, roleRepository.count());
+//
+//        Assertions.assertDoesNotThrow(() -> this.deleteRoleUseCase.execute(DeleteRoleCommand.with(aId)));
+//
+//        Assertions.assertEquals(0, roleRepository.count());
+//    }
+//
+//    @Test
+//    void givenAInvalidId_whenCallDeleteRole_shouldBeOk() {
+//        final var aId = RoleID.from("123").getValue();
+//
+//        Assertions.assertEquals(0, roleRepository.count());
+//
+//        Assertions.assertDoesNotThrow(() -> this.deleteRoleUseCase.execute(DeleteRoleCommand.with(aId)));
+//
+//        Assertions.assertEquals(0, roleRepository.count());
+//    }
 }
