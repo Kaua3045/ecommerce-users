@@ -1,6 +1,6 @@
 redis:
   host: localhost
-  port: 6880
+  port: ${redis.port}
 
 spring:
   autoconfigure:
