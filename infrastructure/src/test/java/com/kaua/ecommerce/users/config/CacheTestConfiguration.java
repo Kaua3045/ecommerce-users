@@ -1,27 +1,19 @@
 package com.kaua.ecommerce.users.config;
 
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
-import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
-import org.springframework.boot.test.context.TestConfiguration;
 import redis.embedded.RedisServer;
 
-@TestConfiguration
-public class CacheTestConfiguration {
+import java.util.concurrent.ThreadLocalRandom;
 
-    private final RedisServer redisServer;
+public abstract class CacheTestConfiguration {
 
-    public CacheTestConfiguration(RedisProperties redisProperties) {
-        this.redisServer = new RedisServer(redisProperties.getPort());
-    }
+    private static RedisServer redisServer;
 
-    @PostConstruct
-    public void postConstruct() {
+    public void init() {
+        redisServer = new RedisServer(ThreadLocalRandom.current().nextInt(1000, 9999));
         redisServer.start();
     }
 
-    @PreDestroy
-    public void preDestroy() {
+    public void stop() {
         redisServer.stop();
     }
 }
