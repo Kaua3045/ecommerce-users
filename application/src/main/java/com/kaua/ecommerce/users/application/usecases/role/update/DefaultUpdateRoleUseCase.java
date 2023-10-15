@@ -37,9 +37,11 @@ public class DefaultUpdateRoleUseCase extends UpdateRoleUseCase {
         final var aRolePermissions = toRolePermission(aCommand.permissions(), aRole.getPermissions());
 
         final var aRoleUpdated = aRole.update(
-                aCommand.name(),
+                aCommand.name() == null || aCommand.name().isBlank()
+                        ? aRole.getName() : aCommand.name(),
                 aCommand.description(),
-                getRoleType(aCommand.roleType()),
+                aCommand.roleType() == null || aCommand.roleType().isBlank()
+                        ? aRole.getRoleType() : getRoleType(aCommand.roleType()),
                 aCommand.isDefault(),
                 aRolePermissions.isEmpty() ? aRole.getPermissions() : aRolePermissions
         );
