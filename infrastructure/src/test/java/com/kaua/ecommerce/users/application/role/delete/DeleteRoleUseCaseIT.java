@@ -27,7 +27,7 @@ public class DeleteRoleUseCaseIT extends CacheTestConfiguration {
     private static final GenericContainer<?> redis = new GenericContainer<>(
             DockerImageName.parse("redis:alpine"))
             .withExposedPorts(6379)
-            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*\\n", 1));
+            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*", 1));
 
     @DynamicPropertySource
     public static void redisProperties(final DynamicPropertyRegistry propertySources) {
