@@ -9,21 +9,18 @@ import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @CacheGatewayTest
 public class DeleteRoleUseCaseIT extends CacheTestConfiguration {
 
-    @BeforeAll
+    @BeforeEach
     void setup() {
         init();
     }
 
-    @AfterAll
+    @AfterEach
     void cleanUp() {
         stop();
     }

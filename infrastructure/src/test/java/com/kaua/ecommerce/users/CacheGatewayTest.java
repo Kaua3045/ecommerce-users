@@ -18,6 +18,6 @@ import java.lang.annotation.*;
 @ActiveProfiles("test-cache-integration")
 @SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class })
 @ExtendWith({ CacheCleanUpExtension.class, JpaCleanUpExtension.class })
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public @interface CacheGatewayTest {
 }
