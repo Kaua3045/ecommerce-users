@@ -19,7 +19,5 @@ import java.lang.annotation.*;
 @ActiveProfiles("test-cache-integration")
 @SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class })
 @ExtendWith({ CacheCleanUpExtension.class, JpaCleanUpExtension.class })
-@AutoConfigureDataRedis
-@TestInstance(TestInstance.Lifecycle.PER_METHOD)
 public @interface CacheGatewayTest {
 }

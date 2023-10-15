@@ -1,21 +1,19 @@
 package com.kaua.ecommerce.users.config;
 
-import redis.embedded.RedisServer;
+import org.springframework.boot.test.context.TestConfiguration;
 
-import java.util.random.RandomGenerator;
-
+@TestConfiguration
 public abstract class CacheTestConfiguration {
 
-    private static RedisServer redisServer;
-
-    public void init() {
-        final var port = RandomGenerator.getDefault().nextInt(1000, 9999);
-        redisServer = new RedisServer(port);
-        System.out.println(redisServer.ports());
-        redisServer.start();
-    }
-
-    public void stop() {
-        redisServer.stop();
-    }
+//    private static RedisServer redisServer;
+//
+//    public void init() {
+//        final var port = RandomGenerator.getDefault().nextInt(1000, 9999);
+//        redisServer = new RedisServer(port);
+//        redisServer.start();
+//    }
+//
+//    public void stop() {
+//        redisServer.stop();
+//    }
 }
