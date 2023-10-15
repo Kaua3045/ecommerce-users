@@ -1,9 +1,10 @@
 package com.kaua.ecommerce.users.application.role.update;
 
-import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleUseCase;
+import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -13,7 +14,9 @@ import com.kaua.ecommerce.users.infrastructure.permissions.persistence.Permissio
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,8 +24,18 @@ import org.springframework.boot.test.mock.mockito.SpyBean;
 
 import java.util.Set;
 
-@IntegrationTest
-public class UpdateRoleUseCaseIT {
+@CacheGatewayTest
+public class UpdateRoleUseCaseIT extends CacheTestConfiguration {
+
+    @BeforeAll
+    void setup() {
+        init();
+    }
+
+    @AfterAll
+    void cleanUp() {
+        stop();
+    }
 
     @Autowired
     private UpdateRoleUseCase updateRoleUseCase;
@@ -109,7 +122,7 @@ public class UpdateRoleUseCaseIT {
     }
 
     @Test
-    void givenAnInvalidName_whenCallUpdateRole_thenShouldReturnDomainException() {
+    void givenAnInvalidName_whenCallUpdateRole_thenShouldReturnOldRoleName() {
         final var aRole = Role.newRole("user", null, RoleTypes.COMMON, false);
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
@@ -121,19 +134,16 @@ public class UpdateRoleUseCaseIT {
         final Set<String> aPermissions = null;
         final var aId = aRole.getId().getValue();
 
-        final var expectedErrorMessage = "'name' should not be null or blank";
-        final var expectedErrorCount = 1;
-
         final var aCommand = UpdateRoleCommand.with(aId, aName, aDescription, aRoleType.name(), aIsDefault, aPermissions);
 
         Assertions.assertEquals(1, roleRepository.count());
 
-        final var notification = this.updateRoleUseCase.execute(aCommand).getLeft();
+        final var aResult = this.updateRoleUseCase.execute(aCommand).getRight();
 
-        Assertions.assertEquals(expectedErrorCount, notification.getErrors().size());
-        Assertions.assertEquals(expectedErrorMessage, notification.getErrors().get(0).message());
+        Assertions.assertNotNull(aResult);
+        Assertions.assertNotNull(aResult.id());
 
-        Mockito.verify(roleGateway, Mockito.times(0)).update(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).update(Mockito.any());
     }
 
     @Test

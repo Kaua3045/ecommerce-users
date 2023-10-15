@@ -3,17 +3,30 @@ package com.kaua.ecommerce.users.application.role.delete;
 import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.role.delete.DeleteRoleUseCase;
+import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @CacheGatewayTest
-public class DeleteRoleUseCaseIT {
+public class DeleteRoleUseCaseIT extends CacheTestConfiguration {
+
+    @BeforeAll
+    void setup() {
+        init();
+    }
+
+    @AfterAll
+    void cleanUp() {
+        stop();
+    }
 
     @Autowired
     private DeleteRoleUseCase deleteRoleUseCase;
