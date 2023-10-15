@@ -34,7 +34,7 @@ public class PermissionMySQLGatewayTest extends CacheTestConfiguration {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(
-            DockerImageName.parse("redis:6-alpine"))
+            DockerImageName.parse("redis:7-alpine"))
             .withExposedPorts(6379);
 
     @DynamicPropertySource

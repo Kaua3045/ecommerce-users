@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
 import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
@@ -24,13 +25,19 @@ public class DeleteRoleUseCaseIT extends CacheTestConfiguration {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(
-            DockerImageName.parse("redis:6-alpine"))
-            .withExposedPorts(6379);
+            DockerImageName.parse("redis:7-alpine"))
+            .withExposedPorts(6379)
+            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*\\n", 1));
 
     @DynamicPropertySource
     static void redisProperties(final DynamicPropertyRegistry propertySources) {
         propertySources.add("redis.host", redis::getHost);
         propertySources.add("redis.port", redis::getFirstMappedPort);
+    }
+
+    @Test
+    void ok() {
+        Assertions.assertTrue(redis.isRunning());
     }
 
 //    @BeforeEach
