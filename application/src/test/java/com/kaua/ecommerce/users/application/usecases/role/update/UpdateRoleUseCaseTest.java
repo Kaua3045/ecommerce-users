@@ -2,6 +2,7 @@ package com.kaua.ecommerce.users.application.usecases.role.update;
 
 import com.kaua.ecommerce.users.application.gateways.PermissionGateway;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
+import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -433,7 +434,7 @@ public class UpdateRoleUseCaseTest {
     @Test
     void givenAnInvalidRoleTypeNull_whenCallUpdateRole_shouldReturnOldRoleType() {
         // given
-        final String aName = null;
+        final var aName = "ceo";
         final var aDescription = RandomStringUtils.generateValue(100);
         final String aRoleType = null;
         final var aIsDefault = false;
@@ -473,6 +474,90 @@ public class UpdateRoleUseCaseTest {
                         Objects.equals(aIsDefault, cmd.isDefault()) &&
                         Objects.equals(0, cmd.getPermissions().size())
         ));
+    }
+
+    @Test
+    void givenAnInvalidRoleTypeBlank_whenCallUpdateRole_shouldReturnOldRoleType() {
+        // given
+        final var aName = "ceo";
+        final var aDescription = RandomStringUtils.generateValue(100);
+        final var aRoleType = "";
+        final var aIsDefault = false;
+        final Set<String> aPermissions = null;
+
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+
+        final var aCommnad = UpdateRoleCommand.with(
+                aRole.getId().getValue(),
+                aName,
+                aDescription,
+                aRoleType,
+                aIsDefault,
+                aPermissions
+        );
+
+        // when
+        Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
+        Mockito.when(roleGateway.update(Mockito.any())).thenAnswer(returnsFirstArg());
+
+        final var aResult = useCase.execute(aCommnad).getRight();
+
+        // then
+        Assertions.assertNotNull(aResult);
+        Assertions.assertNotNull(aResult.id());
+
+        Mockito.verify(roleGateway, Mockito.times(0)).findDefaultRole();
+        Mockito.verify(roleGateway, Mockito.times(1)).findById(Mockito.anyString());
+        Mockito.verify(permissionGateway, Mockito.times(0)).findAllByIds(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1)).update(argThat(cmd ->
+                Objects.equals(aRole.getName(), cmd.getName()) &&
+                        Objects.equals(aDescription, cmd.getDescription()) &&
+                        Objects.equals(aRole.getRoleType().name().toLowerCase(), cmd.getRoleType().name().toLowerCase()) &&
+                        Objects.nonNull(cmd.getId()) &&
+                        Objects.nonNull(cmd.getCreatedAt()) &&
+                        Objects.nonNull(cmd.getUpdatedAt()) &&
+                        Objects.equals(aIsDefault, cmd.isDefault()) &&
+                        Objects.equals(0, cmd.getPermissions().size())
+        ));
+    }
+
+    @Test
+    void givenAnInvalidRoleTypeName_whenCallUpdateRole_shouldReturnDomainException() {
+        // given
+        final String aName = null;
+        final var aDescription = RandomStringUtils.generateValue(100);
+        final String aRoleType = "not-exists";
+        final var aIsDefault = false;
+        final Set<String> aPermissions = null;
+
+        final var expectedErrorMessage = "RoleType not found, role types available: [COMMON, EMPLOYEES]";
+        final var expectedErrorCount = 1;
+
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+
+        final var aCommnad = UpdateRoleCommand.with(
+                aRole.getId().getValue(),
+                aName,
+                aDescription,
+                aRoleType,
+                aIsDefault,
+                aPermissions
+        );
+
+        // when
+        Mockito.when(roleGateway.findById(Mockito.anyString())).thenReturn(Optional.of(aRole));
+
+        final var aResult = Assertions.assertThrows(DomainException.class,
+                () -> useCase.execute(aCommnad));
+
+        // then
+        Assertions.assertEquals(expectedErrorMessage, aResult.getErrors().get(0).message());
+        Assertions.assertEquals(expectedErrorCount, aResult.getErrors().size());
+
+        Mockito.verify(roleGateway, Mockito.times(0)).findDefaultRole();
+        Mockito.verify(roleGateway, Mockito.times(1)).findById(Mockito.anyString());
+        Mockito.verify(permissionGateway, Mockito.times(0)).findAllByIds(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(0)).update(Mockito.any());
     }
 
     @Test
