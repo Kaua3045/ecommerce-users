@@ -1,7 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.role;
 
 import com.kaua.ecommerce.users.CacheGatewayTest;
-import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -14,7 +13,8 @@ import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRe
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -29,7 +29,7 @@ import java.util.Set;
 
 @CacheGatewayTest
 @Testcontainers
-public class RoleMySQLGatewayTest extends CacheTestConfiguration {
+public class RoleMySQLGatewayTest {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(

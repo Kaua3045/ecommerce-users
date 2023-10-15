@@ -4,7 +4,6 @@ import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleUseCase;
-import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -30,7 +29,7 @@ import java.util.Set;
 
 @CacheGatewayTest
 @Testcontainers
-public class UpdateRoleUseCaseIT extends CacheTestConfiguration {
+public class UpdateRoleUseCaseIT {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(

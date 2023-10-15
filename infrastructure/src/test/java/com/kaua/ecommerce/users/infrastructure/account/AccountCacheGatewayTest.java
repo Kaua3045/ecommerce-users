@@ -1,7 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.account;
 
 import com.kaua.ecommerce.users.CacheGatewayTest;
-import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
@@ -29,7 +28,7 @@ import java.util.Set;
 
 @CacheGatewayTest
 @Testcontainers
-public class AccountCacheGatewayTest extends CacheTestConfiguration {
+public class AccountCacheGatewayTest {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(

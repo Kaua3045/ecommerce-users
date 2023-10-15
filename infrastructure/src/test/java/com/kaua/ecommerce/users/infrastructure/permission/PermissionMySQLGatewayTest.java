@@ -1,7 +1,6 @@
 package com.kaua.ecommerce.users.infrastructure.permission;
 
 import com.kaua.ecommerce.users.CacheGatewayTest;
-import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
@@ -31,7 +30,7 @@ import java.util.Set;
 
 @CacheGatewayTest
 @Testcontainers
-public class PermissionMySQLGatewayTest extends CacheTestConfiguration {
+public class PermissionMySQLGatewayTest {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(
