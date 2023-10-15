@@ -15,7 +15,8 @@ import com.kaua.ecommerce.users.infrastructure.permissions.persistence.Permissio
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -43,16 +44,6 @@ public class PermissionMySQLGatewayTest {
         propertySources.add("redis.hosts", redis::getHost);
         propertySources.add("redis.ports", redis::getFirstMappedPort);
     }
-
-//    @BeforeEach
-//    void setup() {
-//        init();
-//    }
-//
-//    @AfterEach
-//    void cleanUp() {
-//        stop();
-//    }
 
     @Autowired
     private PermissionMySQLGateway permissionGateway;

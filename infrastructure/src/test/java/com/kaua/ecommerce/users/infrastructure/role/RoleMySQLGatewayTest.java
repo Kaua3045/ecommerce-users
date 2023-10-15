@@ -43,16 +43,6 @@ public class RoleMySQLGatewayTest {
         propertySources.add("redis.ports", redis::getFirstMappedPort);
     }
 
-//    @BeforeEach
-//    void setup() {
-//        init();
-//    }
-//
-//    @AfterEach
-//    void cleanUp() {
-//        stop();
-//    }
-
     @Autowired
     private RoleMySQLGateway roleGateway;
 

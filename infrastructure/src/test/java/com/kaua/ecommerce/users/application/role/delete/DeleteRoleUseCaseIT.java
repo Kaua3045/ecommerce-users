@@ -35,21 +35,6 @@ public class DeleteRoleUseCaseIT {
         propertySources.add("redis.ports", redis::getFirstMappedPort);
     }
 
-    @Test
-    void ok() {
-        Assertions.assertTrue(redis.isRunning());
-    }
-
-//    @BeforeEach
-//    void setup() {
-//        init();
-//    }
-//
-//    @AfterEach
-//    void cleanUp() {
-//        stop();
-//    }
-
     @Autowired
     private DeleteRoleUseCase deleteRoleUseCase;
 
