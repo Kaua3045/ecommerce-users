@@ -48,9 +48,15 @@ dependencies {
 
     testRuntimeOnly 'com.h2database:h2'
 
-    testImplementation 'it.ozimov:embedded-redis:0.7.2'
-    testImplementation 'com.google.guava:guava:31.1-jre'
-    testImplementation 'commons-io:commons-io:2.10.0'
+    testImplementation('it.ozimov:embedded-redis:0.7.2') {
+        version { strictly '0.7.2' }
+    }
+    testImplementation('com.google.guava:guava:31.1-jre') {
+        version { strictly '31.1-jre' }
+    }
+    testImplementation('commons-io:commons-io:2.10.0') {
+        version { strictly '2.10.0' }
+    }
 }
 
 testCodeCoverageReport {
