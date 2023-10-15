@@ -32,12 +32,12 @@ public class RoleMySQLGatewayTest extends CacheTestConfiguration {
 
     @Container
     private static final GenericContainer<?> redis = new GenericContainer<>(
-            DockerImageName.parse("redis:7-alpine"))
+            DockerImageName.parse("redis:6-alpine"))
             .withExposedPorts(6379);
 
     @DynamicPropertySource
     static void redisProperties(final DynamicPropertyRegistry propertySources) {
-//        propertySources.add("spring.redis.host", redis::getHost);
+        propertySources.add("redis.host", redis::getHost);
         propertySources.add("redis.port", redis::getFirstMappedPort);
     }
 

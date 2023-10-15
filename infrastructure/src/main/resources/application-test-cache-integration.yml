@@ -1,5 +1,5 @@
 redis:
-  host: localhost
+  host: ${redis.host}
   port: ${redis.port}
 
 spring:
@@ -18,6 +18,3 @@ spring:
   flyway:
     enabled: true
     locations: classpath:db/dev/migration
-  redis:
-    ssl:
-      enabled: true
