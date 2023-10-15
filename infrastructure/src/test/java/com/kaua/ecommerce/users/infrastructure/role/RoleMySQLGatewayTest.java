@@ -1,6 +1,7 @@
 package com.kaua.ecommerce.users.infrastructure.role;
 
 import com.kaua.ecommerce.users.CacheGatewayTest;
+import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -13,7 +14,9 @@ import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRe
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -21,7 +24,17 @@ import java.util.List;
 import java.util.Set;
 
 @CacheGatewayTest
-public class RoleMySQLGatewayTest {
+public class RoleMySQLGatewayTest extends CacheTestConfiguration {
+
+    @BeforeAll
+    void setup() {
+        init();
+    }
+
+    @AfterAll
+    void cleanUp() {
+        stop();
+    }
 
     @Autowired
     private RoleMySQLGateway roleGateway;
