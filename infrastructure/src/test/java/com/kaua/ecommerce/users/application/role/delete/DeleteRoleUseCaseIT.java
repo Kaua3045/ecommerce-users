@@ -30,7 +30,7 @@ public class DeleteRoleUseCaseIT extends CacheTestConfiguration {
             .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*\\n", 1));
 
     @DynamicPropertySource
-    static void redisProperties(final DynamicPropertyRegistry propertySources) {
+    public static void redisProperties(final DynamicPropertyRegistry propertySources) {
         propertySources.add("redis.host", redis::getHost);
         propertySources.add("redis.port", redis::getFirstMappedPort);
     }

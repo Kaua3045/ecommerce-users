@@ -49,8 +49,8 @@ dependencies {
 
     testRuntimeOnly 'com.h2database:h2'
 
-    testImplementation 'org.testcontainers:testcontainers-bom:1.18.3'
-    testImplementation 'org.testcontainers:junit-jupiter:1.18.3'
+    testImplementation 'org.testcontainers:testcontainers-bom:1.17.5'
+    testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
 }
 
 testCodeCoverageReport {

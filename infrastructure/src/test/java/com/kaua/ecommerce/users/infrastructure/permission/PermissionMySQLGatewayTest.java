@@ -38,7 +38,7 @@ public class PermissionMySQLGatewayTest extends CacheTestConfiguration {
             .withExposedPorts(6379);
 
     @DynamicPropertySource
-    static void redisProperties(final DynamicPropertyRegistry propertySources) {
+    public static void redisProperties(final DynamicPropertyRegistry propertySources) {
         propertySources.add("redis.host", redis::getHost);
         propertySources.add("redis.port", redis::getFirstMappedPort);
     }
