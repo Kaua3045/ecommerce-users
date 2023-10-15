@@ -39,8 +39,8 @@ public class PermissionMySQLGatewayTest extends CacheTestConfiguration {
 
     @DynamicPropertySource
     public static void redisProperties(final DynamicPropertyRegistry propertySources) {
-        propertySources.add("redis.host", redis::getHost);
-        propertySources.add("redis.port", redis::getFirstMappedPort);
+        propertySources.add("redis.hosts", redis::getHost);
+        propertySources.add("redis.ports", redis::getFirstMappedPort);
     }
 
 //    @BeforeEach

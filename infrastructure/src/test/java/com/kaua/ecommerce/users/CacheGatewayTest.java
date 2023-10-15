@@ -18,9 +18,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @ActiveProfiles("test-cache-integration")
-@ComponentScan(basePackages = "com.kaua.ecommerce.users")
 @SpringBootTest(classes = { Main.class, AmqpTestConfiguration.class })
-@AutoConfigureDataRedis
 @ExtendWith({ CacheCleanUpExtension.class, JpaCleanUpExtension.class })
 public @interface CacheGatewayTest {
 }

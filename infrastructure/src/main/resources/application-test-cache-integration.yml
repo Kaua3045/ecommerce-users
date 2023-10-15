@@ -1,6 +1,6 @@
 redis:
-  host: ${redis.host}
-  port: ${redis.port}
+  host: ${redis.hosts}
+  port: ${redis.ports}
 
 spring:
   autoconfigure:
