@@ -11,6 +11,7 @@ public abstract class CacheTestConfiguration {
     public void init() {
         final var port = RandomGenerator.getDefault().nextInt(1000, 9999);
         redisServer = new RedisServer(port);
+        System.out.println(redisServer.ports());
         redisServer.start();
     }
 
