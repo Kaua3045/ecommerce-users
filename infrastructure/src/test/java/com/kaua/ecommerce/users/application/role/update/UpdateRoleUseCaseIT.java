@@ -4,6 +4,7 @@ import com.kaua.ecommerce.users.CacheGatewayTest;
 import com.kaua.ecommerce.users.application.gateways.RoleGateway;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleUseCase;
+import com.kaua.ecommerce.users.config.CacheTestConfiguration;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.roles.Role;
@@ -18,31 +19,11 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.test.context.DynamicPropertyRegistry;
-import org.springframework.test.context.DynamicPropertySource;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
-import org.testcontainers.utility.DockerImageName;
 
 import java.util.Set;
 
 @CacheGatewayTest
-@Testcontainers
-public class UpdateRoleUseCaseIT {
-
-    @Container
-    private static final GenericContainer<?> redis = new GenericContainer<>(
-            DockerImageName.parse("redis:alpine"))
-            .withExposedPorts(6379)
-            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*", 1));
-
-    @DynamicPropertySource
-    public static void redisProperties(final DynamicPropertyRegistry propertySources) {
-        propertySources.add("redis.hosts", redis::getHost);
-        propertySources.add("redis.ports", redis::getFirstMappedPort);
-    }
+public class UpdateRoleUseCaseIT extends CacheTestConfiguration {
 
     @Autowired
     private UpdateRoleUseCase updateRoleUseCase;
