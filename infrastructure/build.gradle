@@ -22,6 +22,7 @@ dependencies {
     implementation(project(":application"))
 
     implementation 'mysql:mysql-connector-java:8.0.26'
+    implementation 'io.lettuce:lettuce-core:6.2.5.RELEASE'
 
     implementation('org.springframework.boot:spring-boot-starter-web:3.1.2') {
         exclude module: 'spring-boot-starter-tomcat'
@@ -48,9 +49,8 @@ dependencies {
 
     testRuntimeOnly 'com.h2database:h2'
 
-    testImplementation 'it.ozimov:embedded-redis:0.7.2'
-    testImplementation 'com.google.guava:guava:31.1-jre'
-    testImplementation 'commons-io:commons-io:2.10.0'
+    testImplementation 'org.testcontainers:testcontainers-bom:1.17.5'
+    testImplementation 'org.testcontainers:junit-jupiter:1.17.6'
 }
 
 testCodeCoverageReport {

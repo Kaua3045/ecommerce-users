@@ -1,27 +1,61 @@
 package com.kaua.ecommerce.users.infrastructure.permission;
 
-import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.CacheGatewayTest;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.permissions.Permission;
 import com.kaua.ecommerce.users.domain.permissions.PermissionID;
+import com.kaua.ecommerce.users.domain.roles.Role;
+import com.kaua.ecommerce.users.domain.roles.RolePermission;
+import com.kaua.ecommerce.users.domain.roles.RoleTypes;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheEntity;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
 import com.kaua.ecommerce.users.infrastructure.permissions.PermissionMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.permissions.persistence.PermissionJpaRepository;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
 import java.util.Set;
 
-@IntegrationTest
+@CacheGatewayTest
+@Testcontainers
 public class PermissionMySQLGatewayTest {
+
+    @Container
+    private static final GenericContainer<?> redis = new GenericContainer<>(
+            DockerImageName.parse("redis:alpine"))
+            .withExposedPorts(6379)
+            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*", 1));
+
+    @DynamicPropertySource
+    public static void redisProperties(final DynamicPropertyRegistry propertySources) {
+        propertySources.add("redis.hosts", redis::getHost);
+        propertySources.add("redis.ports", redis::getFirstMappedPort);
+    }
 
     @Autowired
     private PermissionMySQLGateway permissionGateway;
 
     @Autowired
     private PermissionJpaRepository permissionRepository;
+
+    @Autowired
+    private AccountCacheRepository accountCacheRepository;
+
+    @Autowired
+    private RoleJpaRepository roleJpaRepository;
 
     @Test
     void givenAValidPermissionWithDescription_whenCallCreate_shouldReturnANewPermission() {
@@ -81,7 +115,7 @@ public class PermissionMySQLGatewayTest {
 
 
     @Test
-    void givenAValidNameButNotExistis_whenCallExistsByName_shouldReturnFalse() {
+    void givenAValidNameButNotExists_whenCallExistsByName_shouldReturnFalse() {
         final var aName = "create-role";
 
         Assertions.assertEquals(0, permissionRepository.count());
@@ -104,10 +138,21 @@ public class PermissionMySQLGatewayTest {
 
     @Test
     void givenAPrePersistedPermission_whenCallDeleteById_shouldBeOk() {
+        final var aRole = Role.newRole("admin", "Admin", RoleTypes.EMPLOYEES, false);
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@testes.com",
+                "1234567Ab*",
+                aRole
+        );
         final var aPermission = Permission.newPermission("create-role", "Create a new role");
         final var aId = aPermission.getId().getValue();
 
+        aRole.addPermissions(Set.of(RolePermission.newRolePermission(aPermission.getId(), aPermission.getName())));
         permissionRepository.saveAndFlush(PermissionJpaEntity.toEntity(aPermission));
+        roleJpaRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
+        accountCacheRepository.save(AccountCacheEntity.toEntity(aAccount));
 
         Assertions.assertEquals(1, permissionRepository.count());
 

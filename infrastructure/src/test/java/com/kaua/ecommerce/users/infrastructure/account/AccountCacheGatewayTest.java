@@ -17,11 +17,31 @@ import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaReposito
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.Set;
 
 @CacheGatewayTest
+@Testcontainers
 public class AccountCacheGatewayTest {
+
+    @Container
+    private static final GenericContainer<?> redis = new GenericContainer<>(
+            DockerImageName.parse("redis:alpine"))
+            .withExposedPorts(6379)
+            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*", 1));
+
+    @DynamicPropertySource
+    public static void redisProperties(final DynamicPropertyRegistry propertySources) {
+        propertySources.add("redis.hosts", redis::getHost);
+        propertySources.add("redis.ports", redis::getFirstMappedPort);
+    }
 
     @Autowired
     private AccountCacheGateway accountCacheGateway;
@@ -207,3 +227,4 @@ public class AccountCacheGatewayTest {
         Assertions.assertEquals(0, accountRepository.count());
     }
 }
+

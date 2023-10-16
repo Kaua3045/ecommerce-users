@@ -1,27 +1,59 @@
 package com.kaua.ecommerce.users.infrastructure.role;
 
-import com.kaua.ecommerce.users.IntegrationTest;
+import com.kaua.ecommerce.users.CacheGatewayTest;
+import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleID;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheEntity;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountCacheRepository;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaEntity;
+import com.kaua.ecommerce.users.infrastructure.accounts.persistence.AccountJpaRepository;
 import com.kaua.ecommerce.users.infrastructure.roles.RoleMySQLGateway;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.containers.wait.strategy.Wait;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.utility.DockerImageName;
 
 import java.util.List;
+import java.util.Set;
 
-@IntegrationTest
+@CacheGatewayTest
+@Testcontainers
 public class RoleMySQLGatewayTest {
+
+    @Container
+    private static final GenericContainer<?> redis = new GenericContainer<>(
+            DockerImageName.parse("redis:alpine"))
+            .withExposedPorts(6379)
+            .waitingFor(Wait.forLogMessage(".*Ready to accept connections.*", 1));
+
+    @DynamicPropertySource
+    public static void redisProperties(final DynamicPropertyRegistry propertySources) {
+        propertySources.add("redis.hosts", redis::getHost);
+        propertySources.add("redis.ports", redis::getFirstMappedPort);
+    }
 
     @Autowired
     private RoleMySQLGateway roleGateway;
 
     @Autowired
     private RoleJpaRepository roleRepository;
+
+    @Autowired
+    private AccountJpaRepository accountJpaRepository;
+
+    @Autowired
+    private AccountCacheRepository accountCacheRepository;
 
     @Test
     void givenAValidRoleWithDescription_whenCallCreate_shouldReturnANewRole() {
@@ -192,17 +224,65 @@ public class RoleMySQLGatewayTest {
     }
 
     @Test
-    void givenAPrePersistedRole_whenCallDeleteById_shouldBeOk() {
-        final var aRole = Role.newRole("User", "Common user", RoleTypes.COMMON, true);
+    void givenAPrePersistedRoleAndAccountUsingRoleAndAccountSavedInCache_whenCallDeleteById_shouldBeOk() {
+        roleRepository.saveAndFlush(
+                RoleJpaEntity.toEntity(Role
+                        .newRole("User", "Common user", RoleTypes.COMMON, true)));
+
+        final var aRole = Role.newRole("Admin", null, RoleTypes.COMMON, false);
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "123456Ab*",
+                aRole
+        );
+
         final var aId = aRole.getId().getValue();
 
         roleRepository.saveAndFlush(RoleJpaEntity.toEntity(aRole));
+        accountJpaRepository.saveAndFlush(AccountJpaEntity.toEntity(aAccount));
+        accountCacheRepository.save(AccountCacheEntity.toEntity(aAccount));
 
-        Assertions.assertEquals(1, roleRepository.count());
+        Assertions.assertEquals(2, roleRepository.count());
+        Assertions.assertEquals(1, accountJpaRepository.count());
+        Assertions.assertEquals(1, accountCacheRepository.count());
 
         Assertions.assertDoesNotThrow(() -> roleGateway.deleteById(aId));
 
-        Assertions.assertEquals(0, roleRepository.count());
+        Assertions.assertEquals(1, roleRepository.count());
+        Assertions.assertEquals(1, accountJpaRepository.count());
+        Assertions.assertEquals(0, accountCacheRepository.count());
+    }
+
+    @Test
+    void givenAPrePersistedRoleAndAccountNotUsingRole_whenCallDeleteById_shouldBeOk() {
+        final var aDefaultRole = Role
+                .newRole("User", "Common user", RoleTypes.COMMON, true);
+        final var aRole = Role.newRole("Admin", null, RoleTypes.COMMON, false);
+        final var aAccount = Account.newAccount(
+                "teste",
+                "testes",
+                "teste@teste.com",
+                "123456Ab*",
+                aRole
+        );
+
+        final var aId = aDefaultRole.getId().getValue();
+
+        roleRepository.saveAllAndFlush(Set.of(RoleJpaEntity.toEntity(aRole), RoleJpaEntity.toEntity(aDefaultRole)));
+        accountJpaRepository.saveAndFlush(AccountJpaEntity.toEntity(aAccount));
+        accountCacheRepository.save(AccountCacheEntity.toEntity(aAccount));
+
+        Assertions.assertEquals(2, roleRepository.count());
+        Assertions.assertEquals(1, accountJpaRepository.count());
+        Assertions.assertEquals(1, accountCacheRepository.count());
+
+        Assertions.assertDoesNotThrow(() -> roleGateway.deleteById(aId));
+
+        Assertions.assertEquals(1, roleRepository.count());
+        Assertions.assertEquals(1, accountJpaRepository.count());
+        Assertions.assertEquals(1, accountCacheRepository.count());
     }
 
     @Test
