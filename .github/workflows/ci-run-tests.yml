@@ -8,6 +8,7 @@ on:
       - hotfix/*
       - bugfix/*
       - release/*
+      - fix/*
   workflow_dispatch:
 
 jobs:

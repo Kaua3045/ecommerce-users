@@ -7,6 +7,7 @@ import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -32,7 +33,7 @@ public class RoleJpaEntity {
     @Column(name = "is_default", nullable = false)
     private boolean isDefault;
 
-    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "role", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<RolePermissionJpaEntity> permissions;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
@@ -86,6 +87,19 @@ public class RoleJpaEntity {
                 getRoleType(),
                 isDefault(),
                 getRolePermissions(),
+                getCreatedAt(),
+                getUpdatedAt()
+        );
+    }
+
+    public Role toDomainPagination() {
+        return Role.with(
+                getId(),
+                getName(),
+                getDescription(),
+                getRoleType(),
+                isDefault(),
+                Collections.emptySet(),
                 getCreatedAt(),
                 getUpdatedAt()
         );
