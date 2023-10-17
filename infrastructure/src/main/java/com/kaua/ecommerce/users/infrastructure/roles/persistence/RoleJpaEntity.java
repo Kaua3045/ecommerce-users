@@ -42,7 +42,7 @@ public class RoleJpaEntity {
     @Column(name = "updated_at", nullable = false, columnDefinition = "DATETIME(6)")
     private Instant updatedAt;
 
-    private RoleJpaEntity() {}
+    public RoleJpaEntity() {}
 
     private RoleJpaEntity(
             final String id,
