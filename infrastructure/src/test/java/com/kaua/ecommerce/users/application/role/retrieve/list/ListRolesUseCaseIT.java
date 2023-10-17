@@ -2,8 +2,8 @@ package com.kaua.ecommerce.users.application.role.retrieve.list;
 
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.ListRolesUseCase;
-import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
+import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaEntity;
 import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaRepository;
@@ -37,7 +37,7 @@ public class ListRolesUseCaseIT {
     }
 
     @Test
-    void givenAValidTerm_whenTermDoesNotMatchsPrePersisted_shouldReturnEmptyPage() {
+    void givenAValidTerm_whenTermDoesNotMatchesPrePersisted_shouldReturnEmptyPage() {
         final var aPage = 0;
         final var aPerPage = 10;
         final var aTerm = "invalid";
