@@ -16,6 +16,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -47,11 +48,13 @@ public class RoleMySQLGateway implements RoleGateway {
         return this.roleRepository.existsByName(aName);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Role> findById(String aId) {
         return this.roleRepository.findById(aId).map(RoleJpaEntity::toDomain);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Role> findDefaultRole() {
         return this.roleRepository.findIsDefaultTrue().map(RoleJpaEntity::toDomain);
@@ -78,7 +81,7 @@ public class RoleMySQLGateway implements RoleGateway {
                 aPageResult.getSize(),
                 aPageResult.getTotalPages(),
                 aPageResult.getTotalElements(),
-                aPageResult.map(RoleJpaEntity::toDomain).toList()
+                aPageResult.map(RoleJpaEntity::toDomainPagination).toList()
         );
     }
 
