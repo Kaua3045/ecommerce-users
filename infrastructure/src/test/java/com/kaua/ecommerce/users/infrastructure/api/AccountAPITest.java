@@ -10,6 +10,8 @@ import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccoun
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdCommand;
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdOutput;
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.list.ListAccountsOutput;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.list.ListAccountsUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarOutput;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarUseCase;
@@ -18,6 +20,8 @@ import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateA
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.domain.utils.RandomStringUtils;
@@ -41,6 +45,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -70,6 +75,9 @@ public class AccountAPITest {
 
     @MockBean
     private UpdateAccountRoleUseCase updateAccountRoleUseCase;
+
+    @MockBean
+    private ListAccountsUseCase listAccountsUseCase;
 
     @Test
     void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
@@ -848,5 +856,67 @@ public class AccountAPITest {
 
         Assertions.assertEquals(aAccountId, actualCmd.id());
         Assertions.assertEquals(aRoleId, actualCmd.roleId());
+    }
+
+    @Test
+    void givenAValidParams_whenCallListAccounts_shouldReturnAccounts() throws Exception {
+        final var aRole = Role.newRole("User", "Common User", RoleTypes.COMMON, true);
+        final var aAccount = Account.newAccount(
+                "fulano",
+                "teste",
+                "fulano.teste@test.com",
+                "12345677Ab*",
+                aRole
+        );
+
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTerms = "ful";
+        final var aSort = "firstName";
+        final var aDirection = "asc";
+        final var aTotalItems = 1;
+        final var aTotalPage = 1;
+        final var aItems = List.of(ListAccountsOutput.from(aAccount));
+
+        Mockito.when(listAccountsUseCase.execute(Mockito.any(SearchQuery.class)))
+                .thenReturn(new Pagination<>(
+                        aPage,
+                        aPerPage,
+                        aTotalPage,
+                        aTotalItems,
+                        aItems
+                ));
+
+        final var request = MockMvcRequestBuilders.get("/accounts")
+                .queryParam("page", String.valueOf(aPage))
+                .queryParam("perPage", String.valueOf(aPerPage))
+                .queryParam("sort", aSort)
+                .queryParam("dir", aDirection)
+                .queryParam("search", aTerms)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        this.mvc.perform(request)
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.header().string("Content-Type", MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.currentPage", equalTo(aPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.perPage", equalTo(aPerPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalPages", equalTo(aTotalPage)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.totalItems", equalTo(aTotalItems)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items", hasSize(aItems.size())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].id", equalTo(aAccount.getId().getValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].first_name", equalTo(aAccount.getFirstName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].last_name", equalTo(aAccount.getLastName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].email", equalTo(aAccount.getEmail())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.items[0].created_at", equalTo(aAccount.getCreatedAt().toString())));
+
+        Mockito.verify(listAccountsUseCase, Mockito.times(1)).execute(argThat(query ->
+                Objects.equals(aPage, query.page()) &&
+                        Objects.equals(aPerPage, query.perPage()) &&
+                        Objects.equals(aSort, query.sort()) &&
+                        Objects.equals(aDirection, query.direction()) &&
+                        Objects.equals(aTerms, query.terms())
+        ));
     }
 }
