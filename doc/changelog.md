@@ -1,3 +1,6 @@
+# 0.8.0
+- Foi adicionado o swagger e suas configurações
+
 # 0.7.0
 - Foi adicionado a invalidação do cache quando alguma coisa da role é alterada
 - Foi adicionado a invalidação do cache quando alguma coisa da permission é alterada
