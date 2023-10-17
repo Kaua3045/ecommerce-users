@@ -1,7 +1,9 @@
 package com.kaua.ecommerce.users.infrastructure.api;
 
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.GetAccountPresenter;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.ListAccountsPresenter;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.UpdateAccountRoleApiInput;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,15 @@ public interface AccountAPI {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     GetAccountPresenter getAccount(@PathVariable String id);
+
+    @GetMapping
+    Pagination<ListAccountsPresenter> listAccounts(
+            @RequestParam(name = "search", required = false, defaultValue = "") final String search,
+            @RequestParam(name = "page", required = false, defaultValue = "0") final int page,
+            @RequestParam(name = "perPage", required = false, defaultValue = "10") final int perPage,
+            @RequestParam(name = "sort", required = false, defaultValue = "name") final String sort,
+            @RequestParam(name = "dir", required = false, defaultValue = "asc") final String direction
+    );
 
     @PatchMapping("{id}/avatar")
     ResponseEntity<?> updateAccountAvatar(
