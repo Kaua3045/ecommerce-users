@@ -74,7 +74,7 @@ docker-compose -f docker-compose-dev.yml up -d
 ```
 5. A url base da aplicação é: *localhost:8080/*
 
-6. Para acessar o swagger da aplicação, acesse: *[Swagger url](http://localhost:8080/swagger-ui/index.html)*
+6. Para acessar o swagger da aplicação após o container estar online, acesse: *[Swagger url](http://localhost:8080/swagger-ui/index.html)*
 
 7. Ou então importe a collection do insomnia que esta na pasta [doc/insomnia](doc/insomnia)
 
