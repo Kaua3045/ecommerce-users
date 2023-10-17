@@ -17,6 +17,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -57,11 +58,13 @@ public class AccountMySQLGateway implements AccountGateway {
         return this.accountJpaRepository.existsByEmail(aEmail);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Account> findById(String aId) {
         return this.accountJpaRepository.findById(aId).map(AccountJpaEntity::toDomain);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public Optional<Account> findByEmail(String aEmail) {
         return this.accountJpaRepository.findByEmail(aEmail).map(AccountJpaEntity::toDomain);
@@ -88,7 +91,7 @@ public class AccountMySQLGateway implements AccountGateway {
                 aPageResult.getSize(),
                 aPageResult.getTotalPages(),
                 aPageResult.getTotalElements(),
-                aPageResult.map(AccountJpaEntity::toDomain).toList()
+                aPageResult.map(AccountJpaEntity::toDomainPagination).toList()
         );
     }
 
