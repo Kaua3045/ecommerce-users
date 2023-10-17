@@ -35,7 +35,7 @@ public class AccountJpaEntity {
     private AccountMailStatus mailStatus;
 
     @JoinColumn(name = "role_id", nullable = false)
-    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     private RoleJpaEntity roleJpaEntity;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
@@ -95,6 +95,22 @@ public class AccountJpaEntity {
                 getPassword(),
                 getAvatarUrl(),
                 getRoleJpaEntity().toDomain(),
+                getCreatedAt(),
+                getUpdatedAt(),
+                null
+        );
+    }
+
+    public Account toDomainPagination() {
+        return Account.with(
+                getId(),
+                getFirstName(),
+                getLastName(),
+                getEmail(),
+                getMailStatus(),
+                getPassword(),
+                getAvatarUrl(),
+                null,
                 getCreatedAt(),
                 getUpdatedAt(),
                 null
