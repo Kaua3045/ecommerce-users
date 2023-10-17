@@ -7,6 +7,8 @@ import com.kaua.ecommerce.users.application.usecases.account.delete.DefaultDelet
 import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.DefaultGetAccountByIdUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.list.DefaultListAccountsUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.list.ListAccountsUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.DefaultUpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.DefaultUpdateAccountRoleUseCase;
@@ -49,6 +51,11 @@ public class AccountUseCaseConfig {
     @Bean
     public GetAccountByIdUseCase getAccountByIdUseCase() {
         return new DefaultGetAccountByIdUseCase(accountGateway, accountCacheGateway);
+    }
+
+    @Bean
+    public ListAccountsUseCase listAccountsUseCase() {
+        return new DefaultListAccountsUseCase(accountGateway);
     }
 
     @Bean

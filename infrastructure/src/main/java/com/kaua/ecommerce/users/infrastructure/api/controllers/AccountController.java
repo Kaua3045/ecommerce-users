@@ -6,12 +6,16 @@ import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccoun
 import com.kaua.ecommerce.users.application.usecases.account.delete.DeleteAccountUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdCommand;
 import com.kaua.ecommerce.users.application.usecases.account.retrieve.get.GetAccountByIdUseCase;
+import com.kaua.ecommerce.users.application.usecases.account.retrieve.list.ListAccountsUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.avatar.UpdateAvatarUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
+import com.kaua.ecommerce.users.domain.pagination.Pagination;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.CreateAccountApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.GetAccountPresenter;
+import com.kaua.ecommerce.users.infrastructure.accounts.models.ListAccountsPresenter;
 import com.kaua.ecommerce.users.infrastructure.accounts.models.UpdateAccountRoleApiInput;
 import com.kaua.ecommerce.users.infrastructure.accounts.presenters.AccountApiPresenter;
 import com.kaua.ecommerce.users.infrastructure.api.AccountAPI;
@@ -29,19 +33,22 @@ public class AccountController implements AccountAPI {
     private final GetAccountByIdUseCase getAccountByIdUseCase;
     private final UpdateAvatarUseCase updateAvatarUseCase;
     private final UpdateAccountRoleUseCase updateAccountRoleUseCase;
+    private final ListAccountsUseCase listAccountsUseCase;
 
     public AccountController(
             final CreateAccountUseCase createAccountUseCase,
             final DeleteAccountUseCase deleteAccountUseCase,
             final GetAccountByIdUseCase getAccountByIdUseCase,
             final UpdateAvatarUseCase updateAvatarUseCase,
-            final UpdateAccountRoleUseCase updateAccountRoleUseCase
+            final UpdateAccountRoleUseCase updateAccountRoleUseCase,
+            final ListAccountsUseCase listAccountsUseCase
     ) {
         this.createAccountUseCase = createAccountUseCase;
         this.deleteAccountUseCase = deleteAccountUseCase;
         this.getAccountByIdUseCase = getAccountByIdUseCase;
         this.updateAvatarUseCase = updateAvatarUseCase;
         this.updateAccountRoleUseCase = updateAccountRoleUseCase;
+        this.listAccountsUseCase = listAccountsUseCase;
     }
 
     @Override
@@ -64,6 +71,13 @@ public class AccountController implements AccountAPI {
     public GetAccountPresenter getAccount(String id) {
         return AccountApiPresenter.present(this.getAccountByIdUseCase
                 .execute(GetAccountByIdCommand.with(id)));
+    }
+
+    @Override
+    public Pagination<ListAccountsPresenter> listAccounts(String search, int page, int perPage, String sort, String direction) {
+        return this.listAccountsUseCase
+                .execute(new SearchQuery(page, perPage, search, sort, direction))
+                .map(AccountApiPresenter::present);
     }
 
     @Override

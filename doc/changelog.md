@@ -1,3 +1,11 @@
+# 0.7.0
+- Foi adicionado a invalidação do cache quando alguma coisa da role é alterada
+- Foi adicionado a invalidação do cache quando alguma coisa da permission é alterada
+- Foi adicionado o cache de account
+- Foi adicionado a paginação de accounts
+- Foi corrigido o erro quando tentava adicionar uma permissão que já existe a uma role
+- Foi alterado o modo de carregamento das roles e permissions, antes era tudo carregado logo no inicio, agora só carregamos quando precisamos
+
 # 0.5.0
 - Os usecases foram movido agora para a pasta usecases na application layer
 

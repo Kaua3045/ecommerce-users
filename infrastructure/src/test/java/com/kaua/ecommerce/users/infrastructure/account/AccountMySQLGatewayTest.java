@@ -3,6 +3,7 @@ package com.kaua.ecommerce.users.infrastructure.account;
 import com.kaua.ecommerce.users.IntegrationTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.accounts.AccountID;
+import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
 import com.kaua.ecommerce.users.domain.roles.Role;
 import com.kaua.ecommerce.users.domain.roles.RoleTypes;
 import com.kaua.ecommerce.users.infrastructure.accounts.AccountMySQLGateway;
@@ -13,6 +14,8 @@ import com.kaua.ecommerce.users.infrastructure.roles.persistence.RoleJpaReposito
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 @IntegrationTest
 public class AccountMySQLGatewayTest {
@@ -257,5 +260,205 @@ public class AccountMySQLGatewayTest {
         Assertions.assertDoesNotThrow(() -> accountGateway.deleteById(aId));
 
         Assertions.assertEquals(0, accountRepository.count());
+    }
+
+    @Test
+    void givenPrePersistedAccounts_whenCallFindAll_shouldReturnPaginated() {
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
+        roleRepository.save(RoleJpaEntity.toEntity(aRole));
+
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 2;
+        final var aTotalPages = 2;
+
+        final var aAccountOne = Account.newAccount(
+                "one",
+                "ones",
+                "one.ones@test.com",
+                "1234567Ab*",
+                aRole
+        );
+
+        final var aAccountTwo = Account.newAccount(
+                "two",
+                "twos",
+                "two.twos@test.com",
+                "1234567Ab*",
+                aRole
+        );
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        accountRepository.saveAll(List.of(
+                AccountJpaEntity.toEntity(aAccountOne),
+                AccountJpaEntity.toEntity(aAccountTwo)
+        ));
+
+        Assertions.assertEquals(2, accountRepository.count());
+
+        final var aQuery = new SearchQuery(0, 1, "", "firstName", "asc");
+        final var aResult = accountGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAccountOne.getId().getValue(), aResult.items().get(0).getId().getValue());
+    }
+
+    @Test
+    void givenEmptyAccountsTable_whenCallFindAll_shouldReturnEmptyPage() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 0;
+        final var aTotalPages = 0;
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        final var aQuery = new SearchQuery(0, 1, "", "firstName", "asc");
+        final var aResult = accountGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(0, aResult.items().size());
+    }
+
+    @Test
+    void givenFollowPagination_whenCallFindAllWithPageOne_shouldReturnPaginated() {
+        var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 3;
+        final var aTotalPages = 3;
+
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON, true);
+
+        final var aAccountOne = Account.newAccount(
+                "one",
+                "ones",
+                "one.ones@test.com",
+                "1234567Ab*",
+                aRoleUser
+        );
+
+        final var aAccountTwo = Account.newAccount(
+                "two",
+                "twos",
+                "two.twos@test.com",
+                "1234567Ab*",
+                aRoleUser
+        );
+
+        final var aAccountThree = Account.newAccount(
+                "z",
+                "z",
+                "zzzz.zzzz@test.com",
+                "1234567Ab*",
+                aRoleUser
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRoleUser));
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        accountRepository.saveAll(List.of(
+                AccountJpaEntity.toEntity(aAccountOne),
+                AccountJpaEntity.toEntity(aAccountTwo),
+                AccountJpaEntity.toEntity(aAccountThree)
+        ));
+
+        Assertions.assertEquals(3, accountRepository.count());
+
+        // Page 0
+        var aQuery = new SearchQuery(0, 1, "", "firstName", "asc");
+        var aResult = accountGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAccountOne.getId().getValue(), aResult.items().get(0).getId().getValue());
+
+        // Page 1
+        aPage = 1;
+
+        aQuery = new SearchQuery(1, 1, "", "firstName", "asc");
+        aResult = accountGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAccountTwo.getId().getValue(), aResult.items().get(0).getId().getValue());
+
+        // Page 2
+        aPage = 2;
+
+        aQuery = new SearchQuery(2, 1, "", "firstName", "asc");
+        aResult = accountGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAccountThree.getId(), aResult.items().get(0).getId());
+    }
+
+    @Test
+    void givenPrePersistedAccountsAndFulAsTerm_whenCallFindAll_shouldReturnPaginated() {
+        final var aPage = 0;
+        final var aPerPage = 1;
+        final var aTotalItems = 1;
+        final var aTotalPages = 1;
+
+        final var aRoleUser = Role.newRole("User", null, RoleTypes.COMMON, true);
+
+        final var aAccountOne = Account.newAccount(
+                "fulano",
+                "fulaninho",
+                "one.ones@test.com",
+                "1234567Ab*",
+                aRoleUser
+        );
+
+        final var aAccountTwo = Account.newAccount(
+                "two",
+                "twos",
+                "two.twos@test.com",
+                "1234567Ab*",
+                aRoleUser
+        );
+
+        roleRepository.save(RoleJpaEntity.toEntity(aRoleUser));
+
+        Assertions.assertEquals(0, accountRepository.count());
+
+        accountRepository.saveAll(List.of(
+                AccountJpaEntity.toEntity(aAccountOne),
+                AccountJpaEntity.toEntity(aAccountTwo)
+        ));
+
+        Assertions.assertEquals(2, accountRepository.count());
+
+        final var aQuery = new SearchQuery(0, 1, "ful", "firstName", "asc");
+        final var aResult = accountGateway.findAll(aQuery);
+
+        Assertions.assertEquals(aPage, aResult.currentPage());
+        Assertions.assertEquals(aPerPage, aResult.perPage());
+        Assertions.assertEquals(aTotalItems, aResult.totalItems());
+        Assertions.assertEquals(aTotalPages, aResult.totalPages());
+        Assertions.assertEquals(aPerPage, aResult.items().size());
+
+        Assertions.assertEquals(aAccountOne.getId(), aResult.items().get(0).getId());
     }
 }
