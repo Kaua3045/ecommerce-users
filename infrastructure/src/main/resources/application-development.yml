@@ -21,6 +21,10 @@ server:
       io: 2
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+      - org.springframework.boot.autoconfigure.security.oauth2.resource.servlet.OAuth2ResourceServerAutoConfiguration
   datasource:
     url: jdbc:mysql://localhost:3306/poc-oauth2?useSSL=true&serverTimezone=UTC
     username: root
