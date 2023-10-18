@@ -2,6 +2,9 @@ redis:
   host: ${redis.hosts}
   port: ${redis.ports}
 
+resource-server:
+  issuer-uri: http://localhost:8081
+
 spring:
   autoconfigure:
     exclude:

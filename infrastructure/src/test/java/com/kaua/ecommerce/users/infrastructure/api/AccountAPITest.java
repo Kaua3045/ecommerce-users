@@ -18,6 +18,7 @@ import com.kaua.ecommerce.users.application.usecases.account.update.avatar.Updat
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleOutput;
 import com.kaua.ecommerce.users.application.usecases.account.update.role.UpdateAccountRoleUseCase;
+import com.kaua.ecommerce.users.config.ApiTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
@@ -80,7 +81,7 @@ public class AccountAPITest {
     private ListAccountsUseCase listAccountsUseCase;
 
     @Test
-    void givenAValidCommand_whenCallCreateAccount_thenShouldReturneAnAccountId() throws Exception {
+    void givenAValidCommand_whenCallCreateAccount_thenShouldReturnAnAccountId() throws Exception {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -95,6 +96,7 @@ public class AccountAPITest {
                         .from(aId, aEmail, aPassword)));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -128,6 +130,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -160,6 +163,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -192,6 +196,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -224,6 +229,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -256,6 +262,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -288,6 +295,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -320,6 +328,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -352,6 +361,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -384,6 +394,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -416,6 +427,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -448,6 +460,7 @@ public class AccountAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -479,6 +492,7 @@ public class AccountAPITest {
         final var aId = aAccount.getId().getValue();
 
         final var request = MockMvcRequestBuilders.delete("/accounts/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -495,6 +509,7 @@ public class AccountAPITest {
         final var aId = "invalid";
 
         final var request = MockMvcRequestBuilders.delete("/accounts/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -506,7 +521,7 @@ public class AccountAPITest {
     }
 
     @Test
-    void givenAValidCommand_whenCallGetAccount_thenShouldReturneAnAccount() throws Exception {
+    void givenAValidCommand_whenCallGetAccount_thenShouldReturnAnAccount() throws Exception {
         // given
         final var aFirstName = "Fulano";
         final var aLastName = "Silveira";
@@ -525,6 +540,7 @@ public class AccountAPITest {
                 .thenReturn(GetAccountByIdOutput.from(aAccount));
 
         final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -554,6 +570,7 @@ public class AccountAPITest {
                 .thenThrow(NotFoundException.with(Account.class, aId).get());
 
         final var request = MockMvcRequestBuilders.get("/accounts/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -591,6 +608,7 @@ public class AccountAPITest {
         final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
         this.mvc.perform(request)
@@ -635,6 +653,7 @@ public class AccountAPITest {
         final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
         this.mvc.perform(request)
@@ -671,6 +690,7 @@ public class AccountAPITest {
         final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
         this.mvc.perform(request)
@@ -699,6 +719,7 @@ public class AccountAPITest {
         final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
         this.mvc.perform(request)
@@ -735,6 +756,7 @@ public class AccountAPITest {
         final var request = MockMvcRequestBuilders.multipart(HttpMethod.PATCH, "/accounts/{id}/avatar", aId)
                 .file(aImage)
                 .accept(MediaType.APPLICATION_JSON)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.MULTIPART_FORM_DATA);
 
         this.mvc.perform(request)
@@ -765,6 +787,7 @@ public class AccountAPITest {
                 .thenReturn(UpdateAccountRoleOutput.from(aAccount));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
@@ -799,6 +822,7 @@ public class AccountAPITest {
                 .thenThrow(NotFoundException.with(Account.class, aAccountId).get());
 
         final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
@@ -839,6 +863,7 @@ public class AccountAPITest {
                 .thenThrow(NotFoundException.with(Role.class, aRoleId).get());
 
         final var request = MockMvcRequestBuilders.patch("/accounts/{id}/role", aAccountId)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
@@ -893,6 +918,7 @@ public class AccountAPITest {
                 .queryParam("sort", aSort)
                 .queryParam("dir", aDirection)
                 .queryParam("search", aTerms)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 

@@ -17,6 +17,7 @@ import com.kaua.ecommerce.users.application.usecases.role.retrieve.list.ListRole
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleCommand;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleOutput;
 import com.kaua.ecommerce.users.application.usecases.role.update.UpdateRoleUseCase;
+import com.kaua.ecommerce.users.config.ApiTest;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
@@ -93,6 +94,7 @@ public class RoleAPITest {
                 .thenReturn(Either.right(CreateRoleOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -127,6 +129,7 @@ public class RoleAPITest {
                 .thenReturn(Either.right(CreateRoleOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -161,6 +164,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -196,6 +200,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -231,6 +236,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -266,6 +272,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -301,6 +308,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -336,6 +344,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -371,6 +380,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -406,6 +416,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -441,6 +452,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/roles")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -477,6 +489,7 @@ public class RoleAPITest {
                 .thenReturn(Either.right(UpdateRoleOutput.from(aRole)));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -516,6 +529,7 @@ public class RoleAPITest {
                 .thenReturn(Either.right(UpdateRoleOutput.from(aRole)));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -555,6 +569,7 @@ public class RoleAPITest {
                 .thenThrow(NotFoundException.with(Role.class, aId).get());
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -592,6 +607,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -630,6 +646,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -668,6 +685,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -706,6 +724,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -744,6 +763,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -782,6 +802,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -820,6 +841,7 @@ public class RoleAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -846,6 +868,7 @@ public class RoleAPITest {
         final var aId = aRole.getId().getValue();
 
         final var request = MockMvcRequestBuilders.delete("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -862,6 +885,7 @@ public class RoleAPITest {
         final var aId = "invalid";
 
         final var request = MockMvcRequestBuilders.delete("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -873,7 +897,7 @@ public class RoleAPITest {
     }
 
     @Test
-    void givenAValidCommand_whenCallGetRole_thenShouldReturneAnRole() throws Exception {
+    void givenAValidCommand_whenCallGetRole_thenShouldReturnAnRole() throws Exception {
         // given
         final var aRolePermission = RolePermission.newRolePermission(PermissionID.unique(), "create-user");
 
@@ -890,6 +914,7 @@ public class RoleAPITest {
                 .thenReturn(GetRoleByIdOutput.from(aRole));
 
         final var request = MockMvcRequestBuilders.get("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -919,6 +944,7 @@ public class RoleAPITest {
                 .thenThrow(NotFoundException.with(Role.class, aId).get());
 
         final var request = MockMvcRequestBuilders.get("/roles/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -959,6 +985,7 @@ public class RoleAPITest {
                 .queryParam("sort", aSort)
                 .queryParam("dir", aDirection)
                 .queryParam("search", aTerms)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -1004,6 +1031,7 @@ public class RoleAPITest {
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -1036,6 +1064,7 @@ public class RoleAPITest {
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -1069,6 +1098,7 @@ public class RoleAPITest {
                 .execute(Mockito.any(RemoveRolePermissionCommand.class));
 
         final var request = MockMvcRequestBuilders.patch("/roles/{roleId}/permissions", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 

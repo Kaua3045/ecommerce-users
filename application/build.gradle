@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.kaua.ecommerce.users.application'
-version '0.9.0'
+version '1.0.0'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
