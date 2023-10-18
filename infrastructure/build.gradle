@@ -1,8 +1,8 @@
 plugins {
     id 'java'
     id 'jacoco-report-aggregation'
-    id 'org.springframework.boot' version '3.1.2'
-    id 'io.spring.dependency-management' version '1.1.2'
+    id 'org.springframework.boot' version '3.1.4'
+    id 'io.spring.dependency-management' version '1.1.3'
     id 'org.flywaydb.flyway' version '9.8.1'
 }
 
@@ -24,35 +24,35 @@ dependencies {
     implementation 'mysql:mysql-connector-java:8.0.33'
     implementation 'io.lettuce:lettuce-core:6.2.5.RELEASE'
 
-    implementation('org.springframework.boot:spring-boot-starter-web:3.1.2') {
+    implementation('org.springframework.boot:spring-boot-starter-web:3.1.4') {
         exclude module: 'spring-boot-starter-tomcat'
     }
-    implementation 'org.springframework.boot:spring-boot-starter-undertow:3.1.2'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.0.1'
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.1.2'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.0.1'
-    implementation 'org.springframework.boot:spring-boot-starter-amqp:3.1.2'
+    implementation 'org.springframework.boot:spring-boot-starter-undertow:3.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa:3.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis:3.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server:3.1.4'
+    implementation 'org.springframework.boot:spring-boot-starter-amqp:3.1.4'
 
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.1.0'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-api:2.2.0'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
 
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-mysql'
 
-    implementation 'com.fasterxml.jackson.module:jackson-module-afterburner:2.14.2'
+    implementation 'com.fasterxml.jackson.module:jackson-module-afterburner:2.15.3'
 
-    implementation platform('software.amazon.awssdk:bom:2.20.25')
-    implementation 'software.amazon.awssdk:s3-transfer-manager:2.20.109'
+    implementation platform('software.amazon.awssdk:bom:2.21.1')
+    implementation 'software.amazon.awssdk:s3-transfer-manager:2.21.1'
 
     implementation('org.yaml:snakeyaml:2.0') {
         version { strictly("2.0")}
     }
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
-    testImplementation 'org.springframework.amqp:spring-rabbit-test:2.4.14'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.4'
+    testImplementation 'org.springframework.amqp:spring-rabbit-test:3.0.10'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
 
     testRuntimeOnly 'com.h2database:h2'
 
