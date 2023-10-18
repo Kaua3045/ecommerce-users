@@ -7,3 +7,6 @@ amqp:
 redis:
   host: ${REDIS_HOST}
   port: ${REDIS_PORT}
+
+resource-server:
+  issuer-uri: ${RESOURCE_SERVER_ISSUER_URI}
