@@ -50,6 +50,7 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.4'
     testImplementation 'org.springframework.amqp:spring-rabbit-test:3.0.10'
+    testImplementation 'org.springframework.security:spring-security-test:6.1.2'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.3'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.9.3'
