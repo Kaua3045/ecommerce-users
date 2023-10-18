@@ -10,6 +10,10 @@
 ![AWS](https://img.shields.io/badge/AWS-%23FF9900.svg?style=for-the-badge&logo=amazon-aws&logoColor=white)
 ![RabbitMQ](https://img.shields.io/badge/Rabbitmq-FF6600?style=for-the-badge&logo=rabbitmq&logoColor=white)
 
+## Projetos complementares do ecommerce
+- [Ecommerce](https://github.com/Kaua3045/ecommerce)
+
+
 ## Sobre
 
 Esse projeto está sendo criado para gerenciar os usuários, permissões e roles do meu projeto de e-commerce que será construído no futuro.
