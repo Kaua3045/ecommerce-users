@@ -70,3 +70,9 @@ spring:
       database: 0
       host: ${redis.host}
       port: ${redis.port}
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${resource-server.issuer-uri}
