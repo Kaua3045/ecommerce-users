@@ -1,3 +1,10 @@
+# 1.0.0
+- Foi adicionado a configuração do oauth2 resource server e a conversão do jwt token
+- Foi adicionado as permissões nas rotas
+
+# 0.9.0
+- Atualizado as versões do spring de 3.1.2 para 3.1.4
+
 # 0.8.0
 - Foi adicionado o swagger e suas configurações
 
