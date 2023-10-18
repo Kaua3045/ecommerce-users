@@ -10,6 +10,7 @@ import com.kaua.ecommerce.users.application.usecases.account.mail.create.CreateA
 import com.kaua.ecommerce.users.application.usecases.account.update.password.RequestResetPasswordUseCase;
 import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordCommand;
 import com.kaua.ecommerce.users.application.usecases.account.update.password.reset.ResetPasswordUseCase;
+import com.kaua.ecommerce.users.config.ApiTest;
 import com.kaua.ecommerce.users.domain.accounts.Account;
 import com.kaua.ecommerce.users.domain.exceptions.DomainException;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
@@ -58,7 +59,7 @@ public class AccountMailAPITest {
     private ResetPasswordUseCase resetPasswordUseCase;
 
     @Test
-    void givenAValidCommand_whenCallConfirmAccount_thenShouldReturneNoContent() throws Exception {
+    void givenAValidCommand_whenCallConfirmAccount_thenShouldReturnNoContent() throws Exception {
         // given
         final var aInput = RandomStringUtils.generateValue(36);
 
@@ -66,6 +67,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.right(true));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/confirm/{token}", aInput)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -75,7 +77,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    void givenAnInvalidTokenExpired_whenCallConfirmAccount_thenShouldReturneAnError() throws Exception {
+    void givenAnInvalidTokenExpired_whenCallConfirmAccount_thenShouldReturnAnError() throws Exception {
         // given
         final var expectedErrorMessage = "Token expired";
         final var aInput = RandomStringUtils.generateValue(36);
@@ -84,6 +86,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/confirm/{token}", aInput)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
@@ -95,7 +98,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    void givenAValidCommand_whenCallCreateConfirmationCode_thenShouldReturneAnAccountMailId() throws Exception {
+    void givenAValidCommand_whenCallCreateConfirmationCode_thenShouldReturnAnAccountMailId() throws Exception {
         // given
         final var aAccount = Account.newAccount(
                 "teste",
@@ -110,6 +113,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.right(CreateAccountMailOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -144,6 +148,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON)
                 .content(String.format("{\"%s\": null}", field));
@@ -165,6 +170,7 @@ public class AccountMailAPITest {
                 .thenThrow(DomainException.with(new Error(expectedErrorMessage)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -193,6 +199,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount.getId().getValue())
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -215,6 +222,7 @@ public class AccountMailAPITest {
                 .thenThrow(NotFoundException.with(Account.class, aAccount).get());
 
         final var request = MockMvcRequestBuilders.post("/accounts/confirm/{accountId}", aAccount)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON);
 
@@ -239,6 +247,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.right(CreateAccountMailOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -264,6 +273,7 @@ public class AccountMailAPITest {
                 .thenThrow(NotFoundException.with(Account.class, aEmail).get());
 
         final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -278,7 +288,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    void givenAValidCommand_whenCallResetPassword_thenShouldReturneNoContent() throws Exception {
+    void givenAValidCommand_whenCallResetPassword_thenShouldReturnNoContent() throws Exception {
         // given
         final var aToken = RandomStringUtils.generateValue(36);
         final var aPassword = "1234567Ab*";
@@ -289,6 +299,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.right(true));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
@@ -299,7 +310,7 @@ public class AccountMailAPITest {
     }
 
     @Test
-    void givenAnInvalidTokenExpired_whenCallResetPassword_thenShouldReturneAnError() throws Exception {
+    void givenAnInvalidTokenExpired_whenCallResetPassword_thenShouldReturnAnError() throws Exception {
         // given
         final var expectedErrorMessage = "Token expired";
         final var aToken = RandomStringUtils.generateValue(36);
@@ -334,6 +345,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -362,6 +374,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -390,6 +403,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -418,6 +432,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/accounts/reset-password/{token}", aToken)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -445,6 +460,7 @@ public class AccountMailAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/accounts/request-reset-password")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 

@@ -15,6 +15,7 @@ import com.kaua.ecommerce.users.application.usecases.permission.retrieve.list.Li
 import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionCommand;
 import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionOutput;
 import com.kaua.ecommerce.users.application.usecases.permission.update.UpdatePermissionUseCase;
+import com.kaua.ecommerce.users.config.ApiTest;
 import com.kaua.ecommerce.users.domain.exceptions.NotFoundException;
 import com.kaua.ecommerce.users.domain.pagination.Pagination;
 import com.kaua.ecommerce.users.domain.pagination.SearchQuery;
@@ -80,6 +81,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.right(CreatePermissionOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -108,6 +110,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.right(CreatePermissionOutput.from(aId)));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -136,6 +139,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -164,6 +168,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -192,6 +197,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -220,6 +226,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -248,6 +255,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -276,6 +284,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.post("/permissions")
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -299,6 +308,7 @@ public class PermissionAPITest {
         final var aId = aPermission.getId().getValue();
 
         final var request = MockMvcRequestBuilders.delete("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -315,6 +325,7 @@ public class PermissionAPITest {
         final var aId = "invalid";
 
         final var request = MockMvcRequestBuilders.delete("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -337,6 +348,7 @@ public class PermissionAPITest {
                 .thenReturn(GetPermissionByIdOutput.from(aPermission));
 
         final var request = MockMvcRequestBuilders.get("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -363,6 +375,7 @@ public class PermissionAPITest {
                 .thenThrow(NotFoundException.with(Permission.class, aId).get());
 
         final var request = MockMvcRequestBuilders.get("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON);
 
         this.mvc.perform(request)
@@ -389,6 +402,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.right(UpdatePermissionOutput.from(aPermission)));
 
         final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -421,6 +435,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.right(UpdatePermissionOutput.from(aPermission)));
 
         final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -442,7 +457,6 @@ public class PermissionAPITest {
     @Test
     void givenAnInvalidCommandNotExistsPermission_whenCallUpdatePermission_thenShouldReturnNotFoundException() throws Exception {
         final var aId = "123";
-        final var aName = "create-an-admin-role";
         final var aDescription = "Create a new admin role";
         final var expectedErrorMessage = "Permission with id 123 was not found";
 
@@ -452,6 +466,7 @@ public class PermissionAPITest {
                 .thenThrow(NotFoundException.with(Permission.class, aId).get());
 
         final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -480,6 +495,7 @@ public class PermissionAPITest {
                 .thenReturn(Either.left(NotificationHandler.create(new Error(expectedErrorMessage))));
 
         final var request = MockMvcRequestBuilders.patch("/permissions/{id}", aId)
+                .with(ApiTest.ADMIN_JWT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(this.mapper.writeValueAsString(aInput));
 
@@ -523,6 +539,7 @@ public class PermissionAPITest {
                 .queryParam("sort", aSort)
                 .queryParam("dir", aDirection)
                 .queryParam("search", aTerms)
+                .with(ApiTest.ADMIN_JWT)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON);
 
