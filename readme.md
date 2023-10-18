@@ -13,7 +13,6 @@
 ## Projetos complementares do ecommerce
 - [Ecommerce](https://github.com/Kaua3045/ecommerce)
 
-
 ## Sobre
 
 Esse projeto está sendo criado para gerenciar os usuários, permissões e roles do meu projeto de e-commerce que será construído no futuro.
