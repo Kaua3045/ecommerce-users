@@ -44,6 +44,10 @@ dependencies {
     implementation platform('software.amazon.awssdk:bom:2.20.25')
     implementation 'software.amazon.awssdk:s3-transfer-manager:2.20.109'
 
+    implementation('org.yaml:snakeyaml:2.0') {
+        version { strictly("2.0")}
+    }
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test:3.1.2'
     testImplementation 'org.springframework.amqp:spring-rabbit-test:2.4.14'
 
