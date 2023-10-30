@@ -35,7 +35,7 @@ public class AccountJpaEntity {
     private AccountMailStatus mailStatus;
 
     @JoinColumn(name = "role_id", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.MERGE)
     private RoleJpaEntity roleJpaEntity;
 
     @Column(name = "created_at", nullable = false, columnDefinition = "DATETIME(6)")
