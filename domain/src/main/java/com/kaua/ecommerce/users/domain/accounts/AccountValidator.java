@@ -4,6 +4,8 @@ import com.kaua.ecommerce.users.domain.validation.Error;
 import com.kaua.ecommerce.users.domain.validation.ValidationHandler;
 import com.kaua.ecommerce.users.domain.validation.Validator;
 
+import java.util.regex.Pattern;
+
 import static com.kaua.ecommerce.users.domain.utils.CommonErrorsMessages.commonLengthErrorMessage;
 import static com.kaua.ecommerce.users.domain.utils.CommonErrorsMessages.commonNullOrBlankErrorMessage;
 
@@ -14,6 +16,8 @@ public class AccountValidator extends Validator {
     private static final int PASSWORD_MAXIMUM_LENGTH = 255;
     private static final int NAME_MINIMUM_LENGTH = 3;
     private static final int NAME_MAXIMUM_LENGTH = 255;
+
+    private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$");
 
     public AccountValidator(final Account aAccount, final ValidationHandler aHandler) {
         super(aHandler);
@@ -56,6 +60,11 @@ public class AccountValidator extends Validator {
     private void checkEmailConstraints() {
         if (this.account.getEmail() == null || this.account.getEmail().isBlank()) {
             this.validationHandler().append(new Error(commonNullOrBlankErrorMessage("email")));
+            return;
+        }
+
+        if (!this.account.getEmail().matches(EMAIL_PATTERN.pattern())) {
+            this.validationHandler().append(new Error("'email' must be a valid email address"));
         }
     }
 
