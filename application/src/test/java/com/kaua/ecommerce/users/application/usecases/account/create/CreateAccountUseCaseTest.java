@@ -561,4 +561,38 @@ public class CreateAccountUseCaseTest {
         Mockito.verify(accountCacheGateway, Mockito.times(0))
                 .save(Mockito.any());
     }
+
+    @Test
+    void givenAnInvalidEmailFormat_whenCallCreateAccount_thenShouldReturnAnError() {
+        // given
+        final var aFirstName = "Teste";
+        final var aLastName = "Silveira";
+        final var aEmail = "testes@teste";
+        final var aPassword = "1234567Ab";
+        final var expectedErrorMessage = "'email' must be a valid email address";
+        final var expectedErrorCount = 1;
+
+        final var aCommand = CreateAccountCommand.with(aFirstName, aLastName, aEmail, aPassword);
+
+        // when
+        Mockito.when(roleGateway.findDefaultRole())
+                .thenReturn(Optional.of(Role.newRole("user", null, RoleTypes.COMMON, true)));
+
+        final var aNotification = useCase.execute(aCommand).getLeft();
+
+        // then
+        Assertions.assertEquals(expectedErrorCount, aNotification.getErrors().size());
+        Assertions.assertEquals(expectedErrorMessage, aNotification.getErrors().get(0).message());
+
+        Mockito.verify(accountGateway, Mockito.times(1))
+                .existsByEmail(Mockito.any());
+        Mockito.verify(roleGateway, Mockito.times(1))
+                .findDefaultRole();
+        Mockito.verify(accountGateway, Mockito.never())
+                .create(Mockito.any());
+        Mockito.verify(encrypterGateway, Mockito.never())
+                .encrypt(Mockito.any());
+        Mockito.verify(accountCacheGateway, Mockito.times(0))
+                .save(Mockito.any());
+    }
 }

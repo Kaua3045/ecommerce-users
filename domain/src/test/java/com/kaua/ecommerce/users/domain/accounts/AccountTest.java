@@ -872,4 +872,60 @@ public class AccountTest {
         //then
         Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
     }
+
+    @Test
+    void givenAnInvalidEmailFormatWithoutAtSign_whenCallNewAccount_shouldReturnAnDomainException() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "email_sem_arroba.com";
+        final var aPassword = "12345678Ab";
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
+        final var expectedErrorMessage = "'email' must be a valid email address";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword,
+                aRole
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
+
+    @Test
+    void givenAnInvalidEmailFormatWithoutDotInFinal_whenCallNewAccount_shouldReturnAnDomainException() {
+        // given
+        final var aFirstName = "Kaua";
+        final var aLastName = "Pereira";
+        final var aEmail = "email_com_arroba@aaaa";
+        final var aPassword = "12345678Ab";
+        final var aRole = Role.newRole("Ceo", null, RoleTypes.EMPLOYEES, false);
+        final var expectedErrorMessage = "'email' must be a valid email address";
+
+        // when
+        final var aAccount = Account.newAccount(
+                aFirstName,
+                aLastName,
+                aEmail,
+                aPassword,
+                aRole
+        );
+
+        final var aTestValidationHandler = new TestValidationHandler();
+        final var aAccountValidator = new AccountValidator(aAccount, aTestValidationHandler);
+
+        aAccountValidator.validate();
+
+        //then
+        Assertions.assertEquals(expectedErrorMessage, aTestValidationHandler.getErrors().get(0).message());
+    }
 }
